@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Github, Linkedin, Mail, MapPin } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
 
 import heroDoodle from "@/assets/hero-doodle-teal.png";
 import stampStrip from "@/assets/stamp-strip-teal.png";
@@ -113,20 +113,101 @@ function StampRail({ side }: { side: "left" | "right" }) {
   );
 }
 
-const NAV = [
+type NavChild = {
+  label: string;
+  href: string;
+  note: string;
+  external?: boolean;
+  icon?: "mail" | "github" | "linkedin" | "spark";
+};
+
+const NAV: {
+  id: string;
+  label: string;
+  hint: string;
+  doodle: string;
+  children?: NavChild[];
+}[] = [
   { id: "about", label: "about", hint: "who I am", doodle: "✺ ☺ ✎" },
-  { id: "work", label: "work", hint: "what I ship", doodle: "▣ ☺ ➤" },
-  { id: "connect", label: "connect", hint: "say hello", doodle: "in ✕ ☺" },
+  {
+    id: "work",
+    label: "work",
+    hint: "what I ship",
+    doodle: "▣ ☺ ➤",
+    children: [
+      { label: "experience", href: "#experience", note: "where I've worked" },
+      { label: "selected work", href: "#work", note: "achievements" },
+      { label: "certifications", href: "#certifications", note: "badges earned" },
+    ],
+  },
+  {
+    id: "connect",
+    label: "connect",
+    hint: "say hello",
+    doodle: "in ✕ ☺",
+    children: [
+      {
+        label: "email",
+        href: "mailto:maazmohammed112@gmail.com",
+        note: "maazmohammed112@gmail.com",
+        icon: "mail",
+        external: true,
+      },
+      {
+        label: "github",
+        href: "https://github.com/maazmohammed112",
+        note: "code I ship",
+        icon: "github",
+        external: true,
+      },
+      {
+        label: "linkedin",
+        href: "https://www.linkedin.com/in/mohammed-maaz-a-0aa730217",
+        note: "let's network",
+        icon: "linkedin",
+        external: true,
+      },
+      { label: "connect", href: "#connect", note: "what I look for", icon: "spark" },
+    ],
+  },
 ];
 
+function NavChildIcon({ icon }: { icon?: NavChild["icon"] }) {
+  const cls = "h-4 w-4 shrink-0 text-primary";
+  if (icon === "mail") return <Mail className={cls} />;
+  if (icon === "github") return <Github className={cls} />;
+  if (icon === "linkedin") return <Linkedin className={cls} />;
+  if (icon === "spark") return <Sparkles className={cls} />;
+  return <span className="font-marker text-sm text-primary">→</span>;
+}
+
 function Nav() {
+  const [open, setOpen] = useState<string | null>(null);
+
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement)?.closest?.("[data-nav-item]")) setOpen(null);
+    };
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, []);
+
   return (
-    <nav className="relative z-30 flex items-end justify-center gap-10 pt-16 pb-2 md:gap-16">
+    <nav className="relative z-40 flex items-end justify-center gap-10 pt-16 pb-2 md:gap-16">
       {NAV.map((item) => (
+        <div key={item.id} data-nav-item className="relative">
         <a
-          key={item.id}
           href={`#${item.id}`}
-          className="group relative font-marker text-base text-chalk/85 transition-colors hover:text-chalk md:text-lg"
+          onClick={(e) => {
+            if (item.children) {
+              e.preventDefault();
+              setOpen((cur) => (cur === item.id ? null : item.id));
+            } else {
+              setOpen(null);
+            }
+          }}
+          aria-expanded={item.children ? open === item.id : undefined}
+          className="group relative block font-marker text-base text-chalk/85 transition-colors hover:text-chalk md:text-lg"
         >
           <span
             aria-hidden="true"
@@ -148,6 +229,36 @@ function Nav() {
             {item.hint}
           </span>
         </a>
+
+        {item.children && open === item.id && (
+          <div className="absolute left-1/2 top-[calc(100%+1.5rem)] z-50 w-60 -translate-x-1/2 rounded-[18px] border border-border bg-paper p-2 shadow-[var(--shadow-paper)]">
+            <span
+              aria-hidden="true"
+              className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-border bg-paper"
+            />
+            {item.children.map((child) => (
+              <a
+                key={child.label}
+                href={child.href}
+                target={child.external ? "_blank" : undefined}
+                rel={child.external ? "noreferrer" : undefined}
+                onClick={() => setOpen(null)}
+                className="flex items-start gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-paper-deep"
+              >
+                <span className="mt-1">
+                  <NavChildIcon icon={child.icon} />
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-marker text-sm text-ink">{child.label}</span>
+                  <span className="block truncate font-monohand text-[11px] text-ink/60">
+                    {child.note}
+                  </span>
+                </span>
+              </a>
+            ))}
+          </div>
+        )}
+        </div>
       ))}
     </nav>
   );
@@ -603,7 +714,7 @@ function PageBody() {
         </section>
 
         {/* EXPERIENCE */}
-        <section className="mt-16 md:mt-24" data-reveal>
+        <section id="experience" className="mt-16 md:mt-24" data-reveal>
           <h2 className="font-serif text-3xl text-chalk md:text-4xl">Where I've worked</h2>
           <div className="mt-8 space-y-6">
             {[
@@ -708,7 +819,10 @@ function PageBody() {
               </p>
             </div>
           </div>
-          <div className="paper-grid rounded-[26px] bg-paper-deep p-8 shadow-[var(--shadow-paper)]">
+          <div
+            id="certifications"
+            className="paper-grid scroll-mt-24 rounded-[26px] bg-paper-deep p-8 shadow-[var(--shadow-paper)]"
+          >
             <h2 className="font-serif text-2xl text-primary">Certifications</h2>
             <div className="mt-5 flex flex-wrap gap-2">
               {[
