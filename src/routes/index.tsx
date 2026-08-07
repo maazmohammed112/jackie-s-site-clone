@@ -183,7 +183,7 @@ function DoodleConnect() {
   );
 }
 
-const NAV_DOODLES: Record<string, () => JSX.Element> = {
+const NAV_DOODLES: Record<string, () => React.ReactElement> = {
   about: DoodleFace,
   work: DoodleBadge,
   connect: DoodleConnect,
