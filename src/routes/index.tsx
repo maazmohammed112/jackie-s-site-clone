@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Github, Linkedin, Mail, MapPin } from "lucide-react";
 
 import heroDoodle from "@/assets/hero-doodle-teal.png";
 import stampStrip from "@/assets/stamp-strip-teal.png";
 import doodleComputer from "@/assets/doodle-computer.png";
 import doodleMisc from "@/assets/doodle-misc.png";
+import maazPoster from "@/assets/maaz-poster.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
