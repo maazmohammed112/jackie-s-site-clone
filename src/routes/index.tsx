@@ -206,7 +206,6 @@ const NAV: {
       { label: "experience", href: "#experience", note: "where I've worked" },
       { label: "selected work", href: "#work", note: "achievements" },
       { label: "certifications", href: "#certifications", note: "badges earned" },
-      { label: "new project", href: "https://github.com/maazmohammed112", note: "start one with me" },
     ],
   },
   {
