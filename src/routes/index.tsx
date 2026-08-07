@@ -7,6 +7,7 @@ import stampStrip from "@/assets/stamp-strip-teal.png";
 import doodleComputer from "@/assets/doodle-computer.png";
 import doodleMisc from "@/assets/doodle-misc.png";
 import maazPoster from "@/assets/maaz-poster.png.asset.json";
+import portfolioFilm from "@/assets/maaz-portfolio.mp4.asset.json";
 import ResumeReveal from "@/components/ResumeReveal";
 
 export const Route = createFileRoute("/")({
@@ -175,6 +176,23 @@ function PinnedPoster() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [p, setP] = useState(0);
   const [open, setOpen] = useState(false);
+  const [video, setVideo] = useState(false);
+
+  useEffect(() => {
+    if (!open && !video) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      setVideo(false);
+    };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open, video]);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -231,6 +249,68 @@ function PinnedPoster() {
           </span>
         </button>
       </div>
+
+      {/* play my portfolio film */}
+      <div className="relative z-10 mt-6 flex justify-center px-4">
+        <button
+          type="button"
+          onClick={() => setVideo(true)}
+          className="group flex max-w-full items-center gap-3 rounded-[14px] border-[3px] border-primary bg-paper/95 px-5 py-3 text-left shadow-[0_14px_30px_rgba(0,0,0,.4)] transition-transform hover:-rotate-1"
+        >
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary text-background">
+            <svg viewBox="0 0 24 24" className="h-5 w-5 translate-x-[1px]" fill="currentColor" aria-hidden="true">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </span>
+          <span className="min-w-0">
+            <span className="block font-marker text-sm text-primary">play my portfolio film</span>
+            <span className="block truncate font-hand text-xl text-ink/70">15 seconds · paper-craft cinema</span>
+          </span>
+        </button>
+      </div>
+
+      {video && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Portfolio video"
+          onClick={() => setVideo(false)}
+          className="fixed inset-0 z-[110] grid place-items-center bg-background/95 p-3 backdrop-blur-sm sm:p-6"
+        >
+          <div
+            className="w-full max-w-[min(96vw,1000px)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="rounded-[12px] bg-paper p-2 shadow-[var(--shadow-paper)] sm:p-3">
+              <video
+                src={portfolioFilm.url}
+                controls
+                autoPlay
+                playsInline
+                controlsList="nodownload"
+                className="max-h-[72vh] w-full rounded-[6px] bg-background"
+              />
+            </div>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => setVideo(false)}
+                className="rounded-[14px] border-[3px] border-primary px-5 py-2 font-marker text-sm text-primary transition-transform hover:-rotate-2"
+              >
+                ← back
+              </button>
+              <button
+                type="button"
+                onClick={() => setVideo(false)}
+                aria-label="Close video"
+                className="font-marker text-sm text-chalk/70 underline underline-offset-4 hover:text-chalk"
+              >
+                close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {open && (
         <div
