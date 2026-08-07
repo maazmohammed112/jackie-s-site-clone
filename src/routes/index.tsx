@@ -283,6 +283,7 @@ function Page() {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-background">
+      <ClickBurst />
       <StampRail side="left" />
       <StampRail side="right" />
 
