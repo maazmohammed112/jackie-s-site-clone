@@ -7,6 +7,7 @@ import stampStrip from "@/assets/stamp-strip-teal.png";
 import doodleComputer from "@/assets/doodle-computer.png";
 import doodleMisc from "@/assets/doodle-misc.png";
 import maazPoster from "@/assets/maaz-poster.png.asset.json";
+import ResumeReveal from "@/components/ResumeReveal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -329,6 +330,7 @@ function PageBody() {
   ];
   const [checked, setChecked] = useState<string[]>([]);
   const [resumeOnly, setResumeOnly] = useState(false);
+  const [revealOpen, setRevealOpen] = useState(false);
 
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
@@ -356,6 +358,7 @@ function PageBody() {
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-background">
       <ClickBurst />
+      <ResumeReveal open={revealOpen} onClose={() => setRevealOpen(false)} />
       <StampRail side="left" />
       <StampRail side="right" />
 
@@ -678,13 +681,13 @@ function PageBody() {
                   </li>
                 </ul>
                 {resumeOnly ? (
-                  <a
-                    href="/Mohammed-Maaz-Resume.pdf"
-                    download
+                  <button
+                    type="button"
+                    onClick={() => setRevealOpen(true)}
                     className="mt-8 inline-block rounded-[14px] border-[3px] border-primary px-8 py-3 font-marker text-base text-primary transition-transform hover:-rotate-2"
                   >
                     download resume
-                  </a>
+                  </button>
                 ) : (
                   <a
                     href="mailto:maazmohammed112@gmail.com"
