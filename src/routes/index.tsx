@@ -508,6 +508,7 @@ function Page() {
                         <button
                           type="button"
                           aria-pressed={isOn}
+                          disabled={resumeOnly}
                           onClick={() =>
                             setChecked((prev) =>
                               prev.includes(item)
@@ -515,7 +516,7 @@ function Page() {
                                 : [...prev, item],
                             )
                           }
-                          className="flex w-full items-center gap-4 text-left font-marker text-base text-primary transition-transform hover:translate-x-1"
+                          className="flex w-full items-center gap-4 text-left font-marker text-base text-primary transition-transform hover:translate-x-1 disabled:pointer-events-none disabled:opacity-40"
                         >
                           <span className="relative grid h-6 w-6 shrink-0 place-items-center rounded-[5px] border-2 border-primary">
                             <svg
@@ -542,13 +543,53 @@ function Page() {
                       </li>
                     );
                   })}
+                  <li className="border-b border-dashed border-primary/40 pb-4">
+                    <button
+                      type="button"
+                      aria-pressed={resumeOnly}
+                      onClick={() => setResumeOnly((v) => !v)}
+                      className="flex w-full items-center gap-4 text-left font-marker text-base text-primary transition-transform hover:translate-x-1"
+                    >
+                      <span className="relative grid h-6 w-6 shrink-0 place-items-center rounded-[5px] border-2 border-primary">
+                        <svg
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                          className={`h-5 w-5 transition-all duration-300 ${
+                            resumeOnly ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                          }`}
+                        >
+                          <path
+                            d="M4 13.5 L9.5 19 L20 5"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span className={resumeOnly ? "line-through decoration-2 opacity-70" : ""}>
+                        Download my resume
+                      </span>
+                    </button>
+                  </li>
                 </ul>
-                <a
-                  href="mailto:maazmohammed112@gmail.com"
-                  className="mt-8 inline-block rounded-[14px] border-[3px] border-primary px-8 py-3 font-marker text-base text-primary transition-transform hover:-rotate-2"
-                >
-                  let's chat!
-                </a>
+                {resumeOnly ? (
+                  <a
+                    href="/Mohammed-Maaz-Resume.pdf"
+                    download
+                    className="mt-8 inline-block rounded-[14px] border-[3px] border-primary px-8 py-3 font-marker text-base text-primary transition-transform hover:-rotate-2"
+                  >
+                    download resume
+                  </a>
+                ) : (
+                  <a
+                    href="mailto:maazmohammed112@gmail.com"
+                    className="mt-8 inline-block rounded-[14px] border-[3px] border-primary px-8 py-3 font-marker text-base text-primary transition-transform hover:-rotate-2"
+                  >
+                    let's chat!
+                  </a>
+                )}
               </div>
               <div className="min-h-[240px] rounded-[10px] border-[10px] border-primary p-6">
                 <ul className="space-y-5">
