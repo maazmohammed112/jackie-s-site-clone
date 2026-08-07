@@ -261,8 +261,10 @@ function Nav() {
   }, []);
 
   return (
-    <nav className="relative z-40 flex items-end justify-center gap-10 pt-16 pb-2 md:gap-16">
-      {NAV.map((item) => (
+    <nav className="relative z-40 flex items-end justify-center gap-6 px-4 pt-28 pb-4 sm:gap-10 md:gap-16">
+      {NAV.map((item, idx) => {
+        const Doodle = NAV_DOODLES[item.id];
+        return (
         <div key={item.id} data-nav-item className="relative">
         <a
           href={`#${item.id}`}
@@ -275,14 +277,16 @@ function Nav() {
             }
           }}
           aria-expanded={item.children ? open === item.id : undefined}
-          className="group relative block font-marker text-base text-chalk/85 transition-colors hover:text-chalk md:text-lg"
+          className="group relative block font-marker text-sm text-chalk/85 transition-colors hover:text-chalk sm:text-base md:text-lg"
         >
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap font-hand text-3xl text-chalk opacity-0 transition-all duration-300 group-hover:-top-14 group-hover:opacity-100"
-          >
-            {item.doodle}
-          </span>
+          {Doodle && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-full left-1/2 mb-2 h-14 w-24 -translate-x-1/2 translate-y-3 scale-90 text-chalk opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 sm:h-16 sm:w-28 md:h-20 md:w-36"
+            >
+              <Doodle />
+            </span>
+          )}
           <span className="relative inline-block px-4 py-1">
             <span
               aria-hidden="true"
@@ -292,17 +296,21 @@ function Nav() {
           </span>
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap font-marker text-xs text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            className="pointer-events-none absolute -bottom-5 left-1/2 -translate-x-1/2 translate-y-1 whitespace-nowrap font-marker text-[10px] text-primary opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 sm:text-xs"
           >
             {item.hint}
           </span>
         </a>
 
         {item.children && open === item.id && (
-          <div className="absolute left-1/2 top-[calc(100%+1.5rem)] z-50 w-60 -translate-x-1/2 rounded-[18px] border border-border bg-paper p-2 shadow-[var(--shadow-paper)]">
+          <div
+            className={`absolute top-[calc(100%+1.5rem)] z-50 w-[min(15rem,calc(100vw-2rem))] rounded-[18px] border border-border bg-paper p-2 shadow-[var(--shadow-paper)] sm:left-1/2 sm:right-auto sm:-translate-x-1/2 ${
+              idx === NAV.length - 1 ? "right-0" : "left-0"
+            }`}
+          >
             <span
               aria-hidden="true"
-              className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-border bg-paper"
+              className="absolute -top-2 left-1/2 hidden h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-border bg-paper sm:block"
             />
             {item.children.map((child) => (
               <a
@@ -327,7 +335,8 @@ function Nav() {
           </div>
         )}
         </div>
-      ))}
+        );
+      })}
     </nav>
   );
 }
