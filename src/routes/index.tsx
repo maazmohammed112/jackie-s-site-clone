@@ -622,45 +622,7 @@ function Page() {
                   </a>
                 )}
               </div>
-              <div className="min-h-[240px] rounded-[10px] border-[10px] border-primary p-6">
-                <ul className="space-y-5">
-                  <li>
-                    <a
-                      href="mailto:maazmohammed112@gmail.com"
-                      className="flex items-center gap-3 font-monohand text-sm text-ink transition-colors hover:text-primary"
-                    >
-                      <Mail className="h-5 w-5 text-primary" />
-                      maazmohammed112@gmail.com
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://www.linkedin.com/in/mohammed-maaz-a-0aa730217"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-3 font-monohand text-sm text-ink transition-colors hover:text-primary"
-                    >
-                      <Linkedin className="h-5 w-5 text-primary" />
-                      mohammed-maaz-a
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://github.com/maazmohammed112"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-3 font-monohand text-sm text-ink transition-colors hover:text-primary"
-                    >
-                      <Github className="h-5 w-5 text-primary" />
-                      maazmohammed112
-                    </a>
-                  </li>
-                  <li className="flex items-center gap-3 font-monohand text-sm text-ink/70">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    Bengaluru, Karnataka, India
-                  </li>
-                </ul>
-              </div>
+              <ContactScraps />
             </div>
           </div>
         </section>
