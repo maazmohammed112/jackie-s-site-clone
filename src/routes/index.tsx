@@ -141,6 +141,7 @@ function PaperCard({
 
 function Index() {
   const LOOKING_FOR = [
+*** placeholder
     "Impactful automation work",
     "Agentic AI in real workflows",
     "A sharp, curious team",
