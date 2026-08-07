@@ -341,16 +341,44 @@ function Nav() {
             className="fixed z-50 animate-scale-in"
             style={{ top: pos.top, left: pos.left, width: pos.width }}
           >
+            {/* stacked paper behind, for depth */}
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 translate-x-1.5 translate-y-2 rotate-[1.6deg] torn-paper bg-paper-deep/80"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 -translate-x-1 translate-y-1 -rotate-[2deg] torn-paper bg-paper/60"
+            />
             {/* torn paper scrap */}
-            <div className="relative -rotate-[0.8deg] paper-grid torn-paper bg-paper p-3 pt-5 shadow-[var(--shadow-paper)]">
+            <div className="relative -rotate-[0.8deg] paper-grid torn-paper bg-paper p-3 pt-6 pl-7 shadow-[0_30px_60px_-18px_rgba(0,0,0,.75),0_2px_0_rgba(0,0,0,.35)] ring-1 ring-ink/10">
               {/* washi tape */}
               <span
                 aria-hidden="true"
-                className="absolute -top-3 left-1/2 h-6 w-16 -translate-x-1/2 rotate-[-3deg] bg-primary/35 shadow-[0_2px_6px_rgba(0,0,0,.25)]"
+                className="absolute -top-3 left-1/2 h-6 w-20 -translate-x-1/2 rotate-[-3deg] bg-primary/40 shadow-[0_2px_6px_rgba(0,0,0,.35)]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(90deg, rgba(255,255,255,.35) 0 2px, transparent 2px 6px)",
+                }}
               />
+              {/* punched holes down the left margin */}
+              <span aria-hidden="true" className="absolute left-2.5 top-8 h-2 w-2 rounded-full bg-ink/70 shadow-[inset_0_1px_2px_rgba(0,0,0,.6)]" />
+              <span aria-hidden="true" className="absolute left-2.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-ink/70 shadow-[inset_0_1px_2px_rgba(0,0,0,.6)]" />
+              <span aria-hidden="true" className="absolute bottom-8 left-2.5 h-2 w-2 rounded-full bg-ink/70 shadow-[inset_0_1px_2px_rgba(0,0,0,.6)]" />
+              {/* red notebook margin rule */}
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-2 rounded-[10px] border border-dashed border-ink/15"
+                className="pointer-events-none absolute inset-y-3 left-5 w-px bg-[repeating-linear-gradient(180deg,var(--color-primary)_0_4px,transparent_4px_9px)] opacity-60"
+              />
+              {/* dotted cut-here border */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-2 rounded-[10px] border-2 border-dotted border-ink/25"
+              />
+              {/* folded corner curl */}
+              <span
+                aria-hidden="true"
+                className="absolute bottom-0 right-0 h-6 w-6 bg-[linear-gradient(135deg,transparent_50%,var(--color-paper-deep)_50%)] shadow-[-2px_-2px_6px_rgba(0,0,0,.25)]"
               />
               <div className="relative">
                 {item.children.map((child, i) => (
@@ -360,15 +388,19 @@ function Nav() {
                     target={child.external ? "_blank" : undefined}
                     rel={child.external ? "noreferrer" : undefined}
                     onClick={() => setOpen(null)}
-                    className={`flex items-start gap-3 px-2 py-2 transition-transform hover:translate-x-1 ${
-                      i > 0 ? "border-t border-dashed border-ink/20" : ""
+                    className={`group/nc flex items-start gap-3 px-2 py-2 transition-transform hover:translate-x-1 ${
+                      i > 0
+                        ? "border-t-2 border-dotted border-ink/25"
+                        : ""
                     }`}
                   >
                     <span className="mt-1">
                       <NavChildIcon icon={child.icon} />
                     </span>
                     <span className="min-w-0">
-                      <span className="block font-marker text-sm text-ink">{child.label}</span>
+                      <span className="block font-marker text-sm text-ink underline decoration-primary/0 decoration-wavy underline-offset-4 transition-colors group-hover/nc:decoration-primary/70">
+                        {child.label}
+                      </span>
                       <span className="block truncate font-monohand text-[11px] text-ink/60">
                         {child.note}
                       </span>
