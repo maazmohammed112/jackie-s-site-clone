@@ -476,6 +476,30 @@ html {
   );
 }
 
+@keyframes crt-hint-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.crt-hint { animation: crt-hint-in 0.25s ease-out both; }
+
+@keyframes work-grid-open {
+  from { opacity: 0; transform: translateY(-14px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.work-grid-open { animation: work-grid-open 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.work-toggle-arrow { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.work-toggle-arrow.is-open { transform: rotate(180deg); }
+
+.crt-arrow-legacy {
+  width: 16px;
+  height: 16px;
+  background: var(--paper);
+  clip-path: polygon(
+    0% 0%, 40% 0%, 40% 20%, 60% 20%, 60% 40%, 80% 40%,
+    80% 60%, 60% 60%, 60% 80%, 40% 80%, 40% 100%, 0% 100%
+  );
+}
+
 @media (prefers-reduced-motion: reduce) {
   .crt-stage, .crt-screen, .crt-screen::after, .crt-power-dot { animation: none !important; }
   .crt-stage { opacity: 1; transform: none; }

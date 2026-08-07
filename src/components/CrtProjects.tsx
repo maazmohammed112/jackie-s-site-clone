@@ -5,7 +5,7 @@ type CrtProject = {
   title: string;
   tag: string;
   lines: string[];
-  href: string;
+  href: string | null;
 };
 
 const PROJECTS: CrtProject[] = [
@@ -14,58 +14,69 @@ const PROJECTS: CrtProject[] = [
     title: "PrimKart",
     tag: "e-commerce / full stack",
     lines: ["React + Next.js storefront", "payment workflow", "admin dashboard"],
-    href: "https://github.com/maazmohammed112",
+    href: "https://primkart.app",
   },
   {
     index: "02",
     title: "BunkBuddy",
     tag: "hackathon winner",
     lines: ["1st place, Education Track", "CODE4HOPE / ImpactX", "attendance intelligence"],
-    href: "https://github.com/maazmohammed112",
+    href: null,
   },
   {
     index: "03",
     title: "DukaanSetu",
     tag: "openai codex hackathon",
     lines: ["top 30% of 2,989 teams", "agentic retail workflows", "OpenAI x NamasteDev"],
-    href: "https://github.com/maazmohammed112",
+    href: null,
   },
   {
     index: "04",
     title: "Neuro SAN",
     tag: "multi-agent ai",
     lines: ["Cognizant Neuro SAN challenge", "agent orchestration", "tool-calling pipelines"],
-    href: "https://github.com/maazmohammed112",
+    href: null,
   },
   {
     index: "05",
     title: "Discuss",
     tag: "founder / solo dev",
     lines: ["social platform", "live on Google Play", "end-to-end product"],
-    href: "https://github.com/maazmohammed112",
+    href: "https://discussit.in",
   },
   {
     index: "06",
     title: "SAP BPA flows",
     tag: "enterprise automation",
     lines: ["approval automation", "SAP BTP + Build Process", "UiPath handoffs"],
-    href: "https://github.com/maazmohammed112",
+    href: null,
   },
 ];
 
 export default function CrtProjects() {
   const [i, setI] = useState(0);
   const [glitching, setGlitching] = useState(false);
+  const [hint, setHint] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const p = PROJECTS[i]!;
 
   const next = useCallback(() => {
+    setHint(false);
     setGlitching(true);
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => {
       setI((v) => (v + 1) % PROJECTS.length);
       setGlitching(false);
     }, 260);
+  }, []);
+
+  useEffect(() => {
+    const show = setTimeout(() => setHint(true), 1600);
+    const hide = setTimeout(() => setHint(false), 4400);
+    return () => {
+      clearTimeout(show);
+      clearTimeout(hide);
+    };
   }, []);
 
   useEffect(
@@ -105,6 +116,12 @@ export default function CrtProjects() {
             <div className="crt-vignette" />
             <div className="crt-glitch" />
 
+            {hint && (
+              <div className="crt-hint absolute bottom-5 right-20 z-[5] max-w-[60%] rounded-md bg-paper px-3 py-1.5 text-right font-monohand text-[10px] font-bold uppercase leading-tight tracking-widest text-ink shadow-[3px_3px_0_rgba(0,0,0,.45)]">
+                click next to browse →
+              </div>
+            )}
+
             <button
               type="button"
               onClick={next}
@@ -116,14 +133,23 @@ export default function CrtProjects() {
           </div>
 
           <div className="relative z-[2] mx-1 mt-3 flex flex-wrap items-center justify-between gap-2">
-            <a
-              href={p.href}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="rounded-full bg-paper px-4 py-2 font-monohand text-[11px] font-bold uppercase tracking-widest text-ink shadow-[0_4px_0_rgba(0,0,0,.35)] transition-transform hover:-translate-y-0.5"
-            >
-              Visit ↗
-            </a>
+            {p.href ? (
+              <a
+                href={p.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="rounded-full bg-paper px-4 py-2 font-monohand text-[11px] font-bold uppercase tracking-widest text-ink shadow-[0_4px_0_rgba(0,0,0,.35)] transition-transform hover:-translate-y-0.5"
+              >
+                Visit ↗
+              </a>
+            ) : (
+              <span
+                aria-disabled="true"
+                className="cursor-not-allowed rounded-full bg-paper/30 px-4 py-2 font-monohand text-[11px] font-bold uppercase tracking-widest text-paper/50"
+              >
+                No live link
+              </span>
+            )}
             <span className="font-monohand text-[11px] tracking-[2px] text-paper/70">
               {p.index} / {String(PROJECTS.length).padStart(2, "0")}
             </span>
