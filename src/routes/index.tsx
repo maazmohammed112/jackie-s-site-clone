@@ -222,6 +222,7 @@ function Index() {
     <main className="relative min-h-screen overflow-x-hidden bg-background">
       <StampRail side="left" />
       <StampRail side="right" />
+      <ScrollPin />
 
       <div className="relative mx-auto max-w-5xl px-5 pb-24 md:px-8">
         <Nav />
