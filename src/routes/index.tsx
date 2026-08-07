@@ -24,6 +24,74 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Automation, SAP, data analytics and Agentic AI — built to feel effortless.",
       },
+      { property: "og:type", content: "profile" },
+      { property: "og:url", content: "/" },
+      {
+        property: "og:image",
+        content:
+          "https://project--91d6d64e-f900-417c-a466-6e4c8cd0e07c.lovable.app/og-image.jpg",
+      },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Handwritten M monogram on torn craft paper" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Mohammed Maaz — Automation Analyst & AI Engineer" },
+      {
+        name: "twitter:description",
+        content: "Automation, SAP, data analytics and Agentic AI — built to feel effortless.",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://project--91d6d64e-f900-417c-a466-6e4c8cd0e07c.lovable.app/og-image.jpg",
+      },
+      { name: "geo.region", content: "IN-KA" },
+      { name: "geo.placename", content: "Bengaluru, Karnataka, India" },
+      { name: "geo.position", content: "12.9716;77.5946" },
+      { name: "ICBM", content: "12.9716, 77.5946" },
+      {
+        name: "keywords",
+        content:
+          "Mohammed Maaz, Automation Analyst Bengaluru, RPA developer, UiPath, Power Automate, SAP Build, AI automation, Agentic AI, Python, SQL, AWS certified",
+      },
+    ],
+    links: [{ rel: "canonical", href: "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Mohammed Maaz",
+          jobTitle: "Automation Analyst",
+          email: "mailto:maazmohammed112@gmail.com",
+          url: "https://project--91d6d64e-f900-417c-a466-6e4c8cd0e07c.lovable.app/",
+          image:
+            "https://project--91d6d64e-f900-417c-a466-6e4c8cd0e07c.lovable.app/og-image.jpg",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Bengaluru",
+            addressRegion: "Karnataka",
+            addressCountry: "IN",
+          },
+          knowsAbout: [
+            "AI automation",
+            "Agentic AI",
+            "RPA",
+            "UiPath",
+            "Power Automate",
+            "SAP Build",
+            "Python",
+            "SQL",
+            "AWS",
+            "Data analytics",
+          ],
+          sameAs: [
+            "https://www.linkedin.com/in/mohammed-maaz-a-0aa730217",
+            "https://github.com/maazmohammed112",
+          ],
+        }),
+      },
     ],
   }),
   component: Index,
