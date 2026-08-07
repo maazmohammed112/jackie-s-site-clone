@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Github, Linkedin, Mail, MapPin } from "lucide-react";
 
 import heroDoodle from "@/assets/hero-doodle.png";
 import stampStrip from "@/assets/stamp-strip.png";
@@ -8,16 +10,16 @@ import doodleMisc from "@/assets/doodle-misc.png";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Jamie — Product Designer in Cape Town" },
+      { title: "Mohammed Maaz — Automation Analyst & AI Engineer" },
       {
         name: "description",
         content:
-          "Portfolio of Jamie, a product designer who believes software should feel natural. Work, beliefs and a way to say hello.",
+          "Portfolio of Mohammed Maaz — Automation Analyst in Bengaluru working with UiPath, SAP BPA, Python, Agentic AI and cloud automation.",
       },
-      { property: "og:title", content: "Jamie — Product Designer in Cape Town" },
+      { property: "og:title", content: "Mohammed Maaz — Automation Analyst & AI Engineer" },
       {
         property: "og:description",
-        content: "A product designer who believes software should feel natural.",
+        content: "Automation, SAP, data analytics and Agentic AI — built to feel effortless.",
       },
     ],
   }),
@@ -40,20 +42,83 @@ function StampRail({ side }: { side: "left" | "right" }) {
   );
 }
 
+const NAV = [
+  { id: "about", label: "about", hint: "who I am", doodle: "✺ ☺ ✎" },
+  { id: "work", label: "work", hint: "what I ship", doodle: "▣ ☺ ➤" },
+  { id: "connect", label: "connect", hint: "say hello", doodle: "in ✕ ☺" },
+];
+
 function Nav() {
   return (
-    <nav className="relative z-30 flex items-center justify-center gap-8 pt-10 pb-2 text-2xl md:gap-14">
-      <span className="text-3xl text-primary">☺</span>
-      {["about", "work", "connect"].map((item) => (
+    <nav className="relative z-30 flex items-end justify-center gap-10 pt-16 pb-2 md:gap-16">
+      {NAV.map((item) => (
         <a
-          key={item}
-          href={`#${item}`}
-          className="font-marker text-base text-foreground transition-transform hover:-rotate-2 hover:text-primary md:text-lg"
+          key={item.id}
+          href={`#${item.id}`}
+          className="group relative font-marker text-base text-chalk/85 transition-colors hover:text-chalk md:text-lg"
         >
-          {item}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap font-hand text-3xl text-chalk opacity-0 transition-all duration-300 group-hover:-top-14 group-hover:opacity-100"
+          >
+            {item.doodle}
+          </span>
+          <span className="relative inline-block px-4 py-1">
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 scale-75 rounded-[50%] border-2 border-chalk/70 opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100"
+            />
+            {item.label}
+          </span>
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap font-marker text-xs text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          >
+            {item.hint}
+          </span>
         </a>
       ))}
     </nav>
+  );
+}
+
+const TITLES = [
+  "Automation Analyst",
+  "AWS Certified",
+  "SAP Certified",
+  "Microsoft Certified",
+  "RPA Developer",
+  "AI Automation",
+  "Agentic AI",
+  "Gen AI",
+  "Data Analyst",
+  "Full Stack Developer",
+];
+
+function RotatingTitle() {
+  const [i, setI] = useState(0);
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    const out = setTimeout(() => setShow(false), 1900);
+    const next = setTimeout(() => {
+      setI((p) => (p + 1) % TITLES.length);
+      setShow(true);
+    }, 2200);
+    return () => {
+      clearTimeout(out);
+      clearTimeout(next);
+    };
+  }, [i]);
+
+  return (
+    <span
+      className={`inline-block transition-all duration-300 ${
+        show ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
+      }`}
+    >
+      {TITLES[i]}
+    </span>
   );
 }
 
