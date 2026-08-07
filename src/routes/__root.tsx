@@ -77,17 +77,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Jamie — Product Designer" },
+      { title: "Mohammed Maaz — Automation Analyst" },
       {
         name: "description",
         content:
-          "Product designer making software that feels natural, warm and human. Based in Cape Town.",
+          "Automation Analyst in Bengaluru working with UiPath, SAP, Python, data analytics and Agentic AI.",
       },
-      { name: "author", content: "Jamie" },
-      { property: "og:title", content: "Jamie — Product Designer" },
+      { name: "author", content: "Mohammed Maaz" },
+      { property: "og:title", content: "Mohammed Maaz — Automation Analyst" },
       {
         property: "og:description",
-        content: "Product designer making software that feels natural, warm and human.",
+        content: "Automation, SAP, data analytics and Agentic AI — built to feel effortless.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
