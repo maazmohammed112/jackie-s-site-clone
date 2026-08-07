@@ -200,6 +200,44 @@
 }
 
 /* Scroll reveal */
+@keyframes burst-line {
+  0% { opacity: 0; transform: rotate(var(--a)) translateY(0) scaleY(0.4); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(var(--d) * -1)) scaleY(1); }
+}
+
+.click-burst {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.click-burst i {
+  position: absolute;
+  left: -1.5px;
+  top: 0;
+  display: block;
+  width: 3px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--primary);
+  transform-origin: 50% 100%;
+  animation: burst-line 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Torn paper edges */
+@utility torn-paper {
+  clip-path: polygon(
+    0% 6%, 3% 2%, 9% 5%, 16% 1%, 24% 4%, 33% 0%, 42% 4%, 51% 1%, 60% 5%, 70% 1%,
+    79% 4%, 88% 1%, 95% 5%, 100% 3%, 99% 12%, 100% 24%, 98% 36%, 100% 48%,
+    99% 62%, 100% 74%, 98% 86%, 100% 97%, 92% 95%, 84% 99%, 74% 96%, 64% 100%,
+    54% 96%, 44% 99%, 34% 95%, 25% 99%, 16% 96%, 8% 99%, 1% 95%, 2% 84%,
+    0% 72%, 2% 60%, 0% 47%, 2% 34%, 0% 21%
+  );
+}
+
 .reveal-init {
   opacity: 0;
   transform: translateY(28px) scale(0.985);
