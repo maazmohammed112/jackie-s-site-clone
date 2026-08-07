@@ -26,55 +26,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function ScrollPin() {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none fixed right-2 top-[8vh] z-40 h-[84vh] w-8 md:right-4"
-    >
-      {/* thread line */}
-      <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-primary/70" />
-      {/* needle pin + leaf badge */}
-      <div
-        className="absolute left-1/2 -translate-x-1/2 transition-transform duration-150 ease-out"
-        style={{ top: `calc(${progress * 100}% - 22px)` }}
-      >
-        <svg width="32" height="44" viewBox="0 0 32 44" fill="none">
-          <path
-            d="M16 3c-2.6 0-4.4 2-4.4 4.6 0 2.2 1.3 3.4 2.4 4.6 1.1 1.2 1.6 2.2 1.6 3.6v22"
-            stroke="var(--paper)"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
-          <ellipse cx="16" cy="7.4" rx="3.4" ry="4.4" stroke="var(--paper)" strokeWidth="1.4" />
-          <circle cx="22" cy="20" r="6.4" fill="var(--paper)" />
-          <path
-            d="M22 16.4c3.2 0 4.6 1.6 4.6 3.8 0 2-1.6 3.6-4.2 3.6-2.4 0-4.2-1.4-4.2-3.4 0-2.2 1.6-4 3.8-4Z"
-            fill="var(--primary)"
-          />
-          <path d="M25.6 17.4 19 22.6" stroke="var(--paper)" strokeWidth="1" strokeLinecap="round" />
-        </svg>
-      </div>
-    </div>
-  );
-}
-
 function StampRail({ side }: { side: "left" | "right" }) {
   return (
     <div
@@ -222,7 +173,6 @@ function Index() {
     <main className="relative min-h-screen overflow-x-hidden bg-background">
       <StampRail side="left" />
       <StampRail side="right" />
-      <ScrollPin />
 
       <div className="relative mx-auto max-w-5xl px-5 pb-24 md:px-8">
         <Nav />
