@@ -7,6 +7,7 @@ import stampStrip from "@/assets/stamp-strip-teal.png";
 import doodleComputer from "@/assets/doodle-computer.png";
 import doodleMisc from "@/assets/doodle-misc.png";
 import maazPoster from "@/assets/maaz-poster.png.asset.json";
+import ResumeReveal from "@/components/ResumeReveal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -329,6 +330,7 @@ function PageBody() {
   ];
   const [checked, setChecked] = useState<string[]>([]);
   const [resumeOnly, setResumeOnly] = useState(false);
+  const [revealOpen, setRevealOpen] = useState(false);
 
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
