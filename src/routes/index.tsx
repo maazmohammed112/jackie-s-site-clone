@@ -435,7 +435,10 @@ function Page() {
         </section>
 
         {/* EDUCATION + CERTS */}
-        <section className="mt-16 grid gap-6 md:mt-24 md:grid-cols-2" data-reveal>
+        <section
+          className="relative z-10 mt-16 grid gap-6 bg-background md:mt-24 md:grid-cols-2"
+          data-reveal
+        >
           <div className="rounded-[26px] bg-paper p-8 shadow-[var(--shadow-paper)]">
             <h2 className="font-serif text-2xl text-primary">Education</h2>
             <div className="mt-5 space-y-5 font-monohand text-sm text-ink/80">
