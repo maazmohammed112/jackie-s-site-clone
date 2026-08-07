@@ -140,6 +140,86 @@ function PaperCard({
 }
 
 function Index() {
+  return <Page />;
+}
+
+function PinnedPoster() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [p, setP] = useState(0);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        const vh = window.innerHeight;
+        // 0 = fully hidden behind the certifications card, 1 = fully out
+        const t = (vh - r.top) / (vh * 0.75);
+        setP(Math.min(1, Math.max(0, t)));
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  return (
+    <>
+      <div ref={wrapRef} className="relative z-0 -mt-24 flex justify-center md:-mt-32">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Open portrait of Mohammed Maaz"
+          className="relative rounded-[10px] bg-paper p-4 pt-9 shadow-[var(--shadow-paper)] transition-transform duration-300 will-change-transform hover:rotate-0"
+          style={{
+            transform: `translateY(${(1 - p) * 260}px) rotate(${-2 + p * 2}deg)`,
+            opacity: 0.25 + p * 0.75,
+          }}
+        >
+          <span
+            aria-hidden="true"
+            className="absolute left-1/2 top-3 h-4 w-4 -translate-x-1/2 rounded-full bg-primary shadow-[0_2px_6px_rgba(0,0,0,.45)]"
+          />
+          <img
+            src={maazPoster.url}
+            alt="Portrait of Mohammed Maaz with a hand-drawn mecha helmet doodle"
+            loading="lazy"
+            className="w-56 rounded-[4px] md:w-72"
+          />
+          <span className="mt-3 block text-center font-hand text-2xl text-ink/80">
+            pinned — that's me
+          </span>
+        </button>
+      </div>
+
+      {open && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-50 grid place-items-center bg-background/85 p-6 backdrop-blur-sm animate-fade-in"
+        >
+          <img
+            src={maazPoster.url}
+            alt="Portrait of Mohammed Maaz"
+            className="max-h-[85vh] rounded-[8px] bg-paper p-3 shadow-[var(--shadow-paper)]"
+          />
+        </div>
+      )}
+    </>
+  );
+}
+
+function Page() {
   const LOOKING_FOR = [
     "Impactful automation work",
     "Agentic AI in real workflows",
