@@ -250,6 +250,78 @@ function PinnedPoster() {
 }
 
 function Page() {
+  return <PageBody />;
+}
+
+const CONTACTS = [
+  {
+    icon: Mail,
+    label: "maazmohammed112@gmail.com",
+    href: "mailto:maazmohammed112@gmail.com",
+  },
+  {
+    icon: Linkedin,
+    label: "mohammed-maaz-a",
+    href: "https://www.linkedin.com/in/mohammed-maaz-a-0aa730217",
+  },
+  {
+    icon: Github,
+    label: "maazmohammed112",
+    href: "https://github.com/maazmohammed112",
+  },
+  {
+    icon: MapPin,
+    label: "Bengaluru, Karnataka, India",
+    href: "https://maps.google.com/?q=Bengaluru,Karnataka,India",
+  },
+];
+
+function ContactScraps() {
+  return (
+    <div className="relative pt-24 sm:pt-20">
+      {/* torn scrap notes */}
+      <div className="pointer-events-none absolute left-0 top-0 z-10 w-[52%] max-w-[220px] -rotate-6">
+        <div className="torn-paper bg-secondary px-5 py-4 shadow-[var(--shadow-paper)]">
+          <p className="font-marker text-base leading-snug text-ink">
+            Let's connect.
+            <br />
+            Let's create.
+          </p>
+        </div>
+      </div>
+      <div className="pointer-events-none absolute right-0 top-0 z-10 w-[46%] max-w-[190px] rotate-6">
+        <div className="torn-paper paper-grid bg-paper-deep px-5 py-4 shadow-[var(--shadow-paper)]">
+          <p className="font-marker text-base leading-snug text-ink">
+            Software
+            <br />
+            should empower.
+          </p>
+        </div>
+      </div>
+
+      {/* main torn contact sheet */}
+      <div className="torn-paper relative bg-paper-deep px-6 py-8 shadow-[var(--shadow-paper)] sm:px-8">
+        <ul className="space-y-1">
+          {CONTACTS.map(({ icon: Icon, label, href }) => (
+            <li key={label}>
+              <a
+                href={href}
+                target={href.startsWith("http") ? "_blank" : undefined}
+                rel="noreferrer"
+                className="flex items-center gap-4 border-b border-primary/60 py-3 font-monohand text-[13px] leading-snug text-ink transition-transform hover:translate-x-1 hover:text-primary sm:text-sm"
+              >
+                <Icon className="h-5 w-5 shrink-0 text-primary" />
+                <span className="break-all">{label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function PageBody() {
   const LOOKING_FOR = [
     "Impactful automation work",
     "Agentic AI in real workflows",
