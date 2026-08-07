@@ -17,23 +17,23 @@ export const MainVideo: React.FC = () => (
   <AbsoluteFill>
     <Backdrop />
     <TransitionSeries>
-      <TransitionSeries.Sequence durationInFrames={105}>
+      <TransitionSeries.Sequence durationInFrames={100}>
         <S1Title />
       </TransitionSeries.Sequence>
       <TransitionSeries.Transition presentation={wipe({ direction: "from-bottom-right" })} timing={t(16)} />
-      <TransitionSeries.Sequence durationInFrames={140}>
+      <TransitionSeries.Sequence durationInFrames={130}>
         <S2Stack />
       </TransitionSeries.Sequence>
       <TransitionSeries.Transition presentation={slide({ direction: "from-right" })} timing={t(16)} />
-      <TransitionSeries.Sequence durationInFrames={112}>
+      <TransitionSeries.Sequence durationInFrames={105}>
         <S3Certs />
       </TransitionSeries.Sequence>
       <TransitionSeries.Transition presentation={fade()} timing={t(14)} />
-      <TransitionSeries.Sequence durationInFrames={112}>
+      <TransitionSeries.Sequence durationInFrames={105}>
         <S4Portrait />
       </TransitionSeries.Sequence>
       <TransitionSeries.Transition presentation={slide({ direction: "from-bottom" })} timing={t(14)} />
-      <TransitionSeries.Sequence durationInFrames={71}>
+      <TransitionSeries.Sequence durationInFrames={70}>
         <S5Contact />
       </TransitionSeries.Sequence>
     </TransitionSeries>
