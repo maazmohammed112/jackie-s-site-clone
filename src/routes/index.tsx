@@ -6,8 +6,8 @@ import heroDoodle from "@/assets/hero-doodle-teal.png";
 import stampStrip from "@/assets/stamp-strip-teal.png";
 import doodleComputer from "@/assets/doodle-computer.png";
 import doodleMisc from "@/assets/doodle-misc.png";
-import maazPoster from "@/assets/maaz-poster.png.asset.json";
-import portfolioFilm from "@/assets/maaz-portfolio.mp4.asset.json";
+const maazPoster = { url: "/maaz-poster.png" };
+const portfolioFilm = { url: "/maaz-portfolio-15s.mp4" };
 import ResumeReveal from "@/components/ResumeReveal";
 
 export const Route = createFileRoute("/")({
