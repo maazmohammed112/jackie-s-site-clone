@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Github, Linkedin, Mail, MapPin } from "lucide-react";
 
 import heroDoodle from "@/assets/hero-doodle-teal.png";
 import stampStrip from "@/assets/stamp-strip-teal.png";
 import doodleComputer from "@/assets/doodle-computer.png";
 import doodleMisc from "@/assets/doodle-misc.png";
+import maazPoster from "@/assets/maaz-poster.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -139,12 +140,93 @@ function PaperCard({
 }
 
 function Index() {
+  return <Page />;
+}
+
+function PinnedPoster() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [p, setP] = useState(0);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        const vh = window.innerHeight;
+        // 0 = fully hidden behind the certifications card, 1 = fully out
+        const t = (vh - r.top) / (vh * 0.75);
+        setP(Math.min(1, Math.max(0, t)));
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  return (
+    <>
+      <div ref={wrapRef} className="relative z-0 -mt-24 flex justify-center md:-mt-32">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Open portrait of Mohammed Maaz"
+          className="relative rounded-[10px] bg-paper p-4 pt-9 shadow-[var(--shadow-paper)] transition-transform duration-300 will-change-transform hover:rotate-0"
+          style={{
+            transform: `translateY(${(1 - p) * 260}px) rotate(${-2 + p * 2}deg)`,
+            opacity: 0.25 + p * 0.75,
+          }}
+        >
+          <span
+            aria-hidden="true"
+            className="absolute left-1/2 top-3 h-4 w-4 -translate-x-1/2 rounded-full bg-primary shadow-[0_2px_6px_rgba(0,0,0,.45)]"
+          />
+          <img
+            src={maazPoster.url}
+            alt="Portrait of Mohammed Maaz with a hand-drawn mecha helmet doodle"
+            loading="lazy"
+            className="w-56 rounded-[4px] md:w-72"
+          />
+          <span className="mt-3 block text-center font-hand text-2xl text-ink/80">
+            pinned — that's me
+          </span>
+        </button>
+      </div>
+
+      {open && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-50 grid place-items-center bg-background/85 p-6 backdrop-blur-sm animate-fade-in"
+        >
+          <img
+            src={maazPoster.url}
+            alt="Portrait of Mohammed Maaz"
+            className="max-h-[85vh] rounded-[8px] bg-paper p-3 shadow-[var(--shadow-paper)]"
+          />
+        </div>
+      )}
+    </>
+  );
+}
+
+function Page() {
   const LOOKING_FOR = [
     "Impactful automation work",
     "Agentic AI in real workflows",
     "A sharp, curious team",
   ];
   const [checked, setChecked] = useState<string[]>([]);
+  const [resumeOnly, setResumeOnly] = useState(false);
 
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
@@ -353,7 +435,10 @@ function Index() {
         </section>
 
         {/* EDUCATION + CERTS */}
-        <section className="mt-16 grid gap-6 md:mt-24 md:grid-cols-2" data-reveal>
+        <section
+          className="relative z-10 mt-16 grid gap-6 bg-background md:mt-24 md:grid-cols-2"
+          data-reveal
+        >
           <div className="rounded-[26px] bg-paper p-8 shadow-[var(--shadow-paper)]">
             <h2 className="font-serif text-2xl text-primary">Education</h2>
             <div className="mt-5 space-y-5 font-monohand text-sm text-ink/80">
@@ -397,7 +482,9 @@ function Index() {
         </section>
 
         {/* CONNECT */}
-        <section id="connect" data-reveal className="relative mt-16 md:mt-24">
+        <PinnedPoster />
+
+        <section id="connect" data-reveal className="relative z-10 mt-16 md:mt-24">
           <img
             src={doodleMisc}
             alt=""
@@ -421,6 +508,7 @@ function Index() {
                         <button
                           type="button"
                           aria-pressed={isOn}
+                          disabled={resumeOnly}
                           onClick={() =>
                             setChecked((prev) =>
                               prev.includes(item)
@@ -428,7 +516,7 @@ function Index() {
                                 : [...prev, item],
                             )
                           }
-                          className="flex w-full items-center gap-4 text-left font-marker text-base text-primary transition-transform hover:translate-x-1"
+                          className="flex w-full items-center gap-4 text-left font-marker text-base text-primary transition-transform hover:translate-x-1 disabled:pointer-events-none disabled:opacity-40"
                         >
                           <span className="relative grid h-6 w-6 shrink-0 place-items-center rounded-[5px] border-2 border-primary">
                             <svg
@@ -455,13 +543,53 @@ function Index() {
                       </li>
                     );
                   })}
+                  <li className="border-b border-dashed border-primary/40 pb-4">
+                    <button
+                      type="button"
+                      aria-pressed={resumeOnly}
+                      onClick={() => setResumeOnly((v) => !v)}
+                      className="flex w-full items-center gap-4 text-left font-marker text-base text-primary transition-transform hover:translate-x-1"
+                    >
+                      <span className="relative grid h-6 w-6 shrink-0 place-items-center rounded-[5px] border-2 border-primary">
+                        <svg
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                          className={`h-5 w-5 transition-all duration-300 ${
+                            resumeOnly ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                          }`}
+                        >
+                          <path
+                            d="M4 13.5 L9.5 19 L20 5"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span className={resumeOnly ? "line-through decoration-2 opacity-70" : ""}>
+                        Download my resume
+                      </span>
+                    </button>
+                  </li>
                 </ul>
-                <a
-                  href="mailto:maazmohammed112@gmail.com"
-                  className="mt-8 inline-block rounded-[14px] border-[3px] border-primary px-8 py-3 font-marker text-base text-primary transition-transform hover:-rotate-2"
-                >
-                  let's chat!
-                </a>
+                {resumeOnly ? (
+                  <a
+                    href="/Mohammed-Maaz-Resume.pdf"
+                    download
+                    className="mt-8 inline-block rounded-[14px] border-[3px] border-primary px-8 py-3 font-marker text-base text-primary transition-transform hover:-rotate-2"
+                  >
+                    download resume
+                  </a>
+                ) : (
+                  <a
+                    href="mailto:maazmohammed112@gmail.com"
+                    className="mt-8 inline-block rounded-[14px] border-[3px] border-primary px-8 py-3 font-marker text-base text-primary transition-transform hover:-rotate-2"
+                  >
+                    let's chat!
+                  </a>
+                )}
               </div>
               <div className="min-h-[240px] rounded-[10px] border-[10px] border-primary p-6">
                 <ul className="space-y-5">
