@@ -10,6 +10,7 @@ const maazPoster = { url: "/maaz-poster.png" };
 const portfolioFilm = { url: "/maaz-portfolio-15s.mp4" };
 import ResumeReveal from "@/components/ResumeReveal";
 import CrtProjects from "@/components/CrtProjects";
+import WorkBoxes from "@/components/WorkBoxes";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -206,7 +207,6 @@ const NAV: {
       { label: "experience", href: "#experience", note: "where I've worked" },
       { label: "selected work", href: "#work", note: "achievements" },
       { label: "certifications", href: "#certifications", note: "badges earned" },
-      { label: "new project", href: "https://github.com/maazmohammed112", note: "start one with me" },
     ],
   },
   {
@@ -930,38 +930,12 @@ function PageBody() {
         <section id="work" data-reveal className="mt-16 md:mt-24">
           <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-serif text-3xl text-chalk md:text-4xl">Selected work</h2>
-            <a
-              href="https://github.com/maazmohammed112"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="rounded-full border border-primary/50 bg-paper px-4 py-2 font-monohand text-xs uppercase tracking-widest text-ink shadow-[0_4px_0_rgba(0,0,0,.25)] transition-transform hover:-translate-y-0.5"
-            >
-              + new project ↗
-            </a>
           </div>
           <div className="paper-grid relative rounded-[34px] border border-border bg-muted/40 p-8 md:p-12">
             <div className="mb-10">
               <CrtProjects />
             </div>
-            <div className="grid gap-6 md:grid-cols-3">
-              {[
-                { t: "PrimKart", d: "Full e-commerce platform with payment workflow and admin dashboard." },
-                { t: "BunkBuddy", d: "1st place, Education Track — CODE4HOPE / ImpactX Hackathon." },
-                { t: "DukaanSetu", d: "Top 30% of 2,989 at the OpenAI × NamasteDev Codex Hackathon." },
-                { t: "Neuro SAN", d: "Multi-agent AI workflows for the Cognizant Neuro SAN challenge." },
-                { t: "Discuss", d: "Social platform on Google Play — founder and solo developer." },
-                { t: "SAP BPA workflows", d: "Enterprise approval automation on SAP BTP." },
-              ].map((p, i) => (
-                <article
-                  key={p.t}
-                  className="rounded-xl bg-paper p-6 shadow-[var(--shadow-paper)] transition-transform hover:-translate-y-1"
-                  style={{ rotate: `${(i % 3) - 1}deg` }}
-                >
-                  <h3 className="font-marker text-base text-ink">{p.t}</h3>
-                  <p className="mt-2 font-hand text-xl leading-snug text-ink/70">{p.d}</p>
-                </article>
-              ))}
-            </div>
+            <WorkBoxes />
             <p className="mt-10 text-right font-hand text-2xl text-chalk/80">
               Ship it, measure it, then make it smaller.
             </p>
