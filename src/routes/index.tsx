@@ -146,6 +146,7 @@ function Index() {
     "A sharp, curious team",
   ];
   const [checked, setChecked] = useState<string[]>([]);
+  const [resumeOnly, setResumeOnly] = useState(false);
 
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
