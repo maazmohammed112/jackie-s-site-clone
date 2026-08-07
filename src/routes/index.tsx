@@ -143,6 +143,33 @@ function Index() {
   return <Page />;
 }
 
+function ClickBurst() {
+  useEffect(() => {
+    const spawn = (x: number, y: number) => {
+      const wrap = document.createElement("span");
+      wrap.className = "click-burst";
+      wrap.style.left = `${x}px`;
+      wrap.style.top = `${y}px`;
+      const n = 7;
+      for (let i = 0; i < n; i++) {
+        const line = document.createElement("i");
+        const angle = (360 / n) * i + (Math.random() * 18 - 9);
+        line.style.setProperty("--a", `${angle}deg`);
+        line.style.setProperty("--d", `${18 + Math.random() * 16}px`);
+        line.style.animationDelay = `${Math.random() * 60}ms`;
+        wrap.appendChild(line);
+      }
+      document.body.appendChild(wrap);
+      window.setTimeout(() => wrap.remove(), 800);
+    };
+    const onDown = (e: PointerEvent) => spawn(e.clientX, e.clientY);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    window.addEventListener("pointerdown", onDown);
+    return () => window.removeEventListener("pointerdown", onDown);
+  }, []);
+  return null;
+}
+
 function PinnedPoster() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [p, setP] = useState(0);
@@ -157,8 +184,11 @@ function PinnedPoster() {
       raf = requestAnimationFrame(() => {
         const r = el.getBoundingClientRect();
         const vh = window.innerHeight;
-        // 0 = fully hidden behind the certifications card, 1 = fully out
-        const t = (vh - r.top) / (vh * 0.75);
+        // 1 when the poster is centred in the viewport, 0 when far above/below
+        const center = r.top + r.height / 2;
+        const dist = Math.abs(center - vh / 2);
+        const range = vh / 2 + r.height / 2;
+        const t = 1 - dist / (range * 0.72);
         setP(Math.min(1, Math.max(0, t)));
       });
     };
@@ -220,6 +250,78 @@ function PinnedPoster() {
 }
 
 function Page() {
+  return <PageBody />;
+}
+
+const CONTACTS = [
+  {
+    icon: Mail,
+    label: "maazmohammed112@gmail.com",
+    href: "mailto:maazmohammed112@gmail.com",
+  },
+  {
+    icon: Linkedin,
+    label: "mohammed-maaz-a",
+    href: "https://www.linkedin.com/in/mohammed-maaz-a-0aa730217",
+  },
+  {
+    icon: Github,
+    label: "maazmohammed112",
+    href: "https://github.com/maazmohammed112",
+  },
+  {
+    icon: MapPin,
+    label: "Bengaluru, Karnataka, India",
+    href: "https://maps.google.com/?q=Bengaluru,Karnataka,India",
+  },
+];
+
+function ContactScraps() {
+  return (
+    <div className="relative pt-24 sm:pt-20">
+      {/* torn scrap notes */}
+      <div className="pointer-events-none absolute left-0 top-0 z-10 w-[52%] max-w-[220px] -rotate-6">
+        <div className="torn-paper bg-secondary px-5 py-4 shadow-[var(--shadow-paper)]">
+          <p className="font-marker text-base leading-snug text-ink">
+            Let's connect.
+            <br />
+            Let's create.
+          </p>
+        </div>
+      </div>
+      <div className="pointer-events-none absolute right-0 top-0 z-10 w-[46%] max-w-[190px] rotate-6">
+        <div className="torn-paper paper-grid bg-paper-deep px-5 py-4 shadow-[var(--shadow-paper)]">
+          <p className="font-marker text-base leading-snug text-ink">
+            Software
+            <br />
+            should empower.
+          </p>
+        </div>
+      </div>
+
+      {/* main torn contact sheet */}
+      <div className="torn-paper relative bg-paper-deep px-6 py-8 shadow-[var(--shadow-paper)] sm:px-8">
+        <ul className="space-y-1">
+          {CONTACTS.map(({ icon: Icon, label, href }) => (
+            <li key={label}>
+              <a
+                href={href}
+                target={href.startsWith("http") ? "_blank" : undefined}
+                rel="noreferrer"
+                className="flex items-center gap-4 border-b border-primary/60 py-3 font-monohand text-[13px] leading-snug text-ink transition-transform hover:translate-x-1 hover:text-primary sm:text-sm"
+              >
+                <Icon className="h-5 w-5 shrink-0 text-primary" />
+                <span className="break-all">{label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function PageBody() {
   const LOOKING_FOR = [
     "Impactful automation work",
     "Agentic AI in real workflows",
@@ -253,6 +355,7 @@ function Page() {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-background">
+      <ClickBurst />
       <StampRail side="left" />
       <StampRail side="right" />
 
@@ -591,45 +694,7 @@ function Page() {
                   </a>
                 )}
               </div>
-              <div className="min-h-[240px] rounded-[10px] border-[10px] border-primary p-6">
-                <ul className="space-y-5">
-                  <li>
-                    <a
-                      href="mailto:maazmohammed112@gmail.com"
-                      className="flex items-center gap-3 font-monohand text-sm text-ink transition-colors hover:text-primary"
-                    >
-                      <Mail className="h-5 w-5 text-primary" />
-                      maazmohammed112@gmail.com
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://www.linkedin.com/in/mohammed-maaz-a-0aa730217"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-3 font-monohand text-sm text-ink transition-colors hover:text-primary"
-                    >
-                      <Linkedin className="h-5 w-5 text-primary" />
-                      mohammed-maaz-a
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://github.com/maazmohammed112"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-3 font-monohand text-sm text-ink transition-colors hover:text-primary"
-                    >
-                      <Github className="h-5 w-5 text-primary" />
-                      maazmohammed112
-                    </a>
-                  </li>
-                  <li className="flex items-center gap-3 font-monohand text-sm text-ink/70">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    Bengaluru, Karnataka, India
-                  </li>
-                </ul>
-              </div>
+              <ContactScraps />
             </div>
           </div>
         </section>
