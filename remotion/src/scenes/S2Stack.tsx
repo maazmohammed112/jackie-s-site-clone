@@ -4,12 +4,36 @@ import { Paper, Pin } from "../components/Paper";
 import { C, hand, mono } from "../theme";
 
 const ITEMS = [
-  { label: "Python", d: "M14 46 L34 26 L54 46", sub: "scripts" },
-  { label: "SQL", d: "M10 30 h58 M10 44 h58 M10 58 h58", sub: "data" },
-  { label: "UiPath", d: "M14 56 C30 10, 50 10, 64 56", sub: "rpa" },
-  { label: "Power Automate", d: "M20 60 L38 18 L34 40 L54 34 L28 66", sub: "flows" },
-  { label: "SAP Build", d: "M14 22 h50 v34 h-50 z M14 38 h50", sub: "enterprise" },
-  { label: "AWS", d: "M12 48 q10 -22 28 -14 q18 -10 26 14 z", sub: "cloud" },
+  {
+    label: "Python",
+    sub: "scripts",
+    d: "M26 22 L14 39 L26 56 M52 22 L64 39 L52 56 M44 16 L34 62",
+  },
+  {
+    label: "SQL",
+    sub: "data",
+    d: "M14 22 q25 -9 50 0 q-25 9 -50 0 M14 22 v17 q25 9 50 0 v-17 M14 39 v17 q25 9 50 0 v-17",
+  },
+  {
+    label: "UiPath",
+    sub: "rpa",
+    d: "M20 26 h38 v26 h-38 z M28 36 h6 M44 36 h6 M32 46 h14 M39 26 v-8 M20 39 h-8 M58 39 h8",
+  },
+  {
+    label: "Power Automate",
+    sub: "flows",
+    d: "M16 24 h20 v14 h-20 z M42 42 h20 v14 h-20 z M36 31 h16 v11 M20 38 v18 h22",
+  },
+  {
+    label: "SAP Build",
+    sub: "enterprise",
+    d: "M16 58 v-26 l23 -14 l23 14 v26 z M30 58 v-16 h18 v16 M22 34 h10",
+  },
+  {
+    label: "AWS",
+    sub: "cloud",
+    d: "M24 50 a13 13 0 0 1 2 -25 a17 17 0 0 1 31 6 a10 10 0 0 1 -2 19 z M22 60 q18 8 36 0",
+  },
 ];
 
 export const S2Stack: React.FC = () => {

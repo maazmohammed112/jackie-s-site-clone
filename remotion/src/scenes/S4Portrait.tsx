@@ -19,7 +19,13 @@ export const S4Portrait: React.FC = () => {
             <div style={{ overflow: "hidden", height: 470, background: "#0C3B37" }}>
               <Img
                 src={staticFile("images/portrait.png")}
-                style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${interpolate(f, [0, 105], [1.08, 1.16])})` }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center 18%",
+                  transform: `scale(${interpolate(f, [0, 105], [1.06, 1.14])})`,
+                }}
               />
             </div>
             <div style={{ fontFamily: hand, fontWeight: 700, fontSize: 34, color: C.ink, textAlign: "center", marginTop: 12 }}>

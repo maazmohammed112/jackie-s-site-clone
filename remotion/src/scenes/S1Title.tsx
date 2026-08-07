@@ -47,8 +47,8 @@ export const S1Title: React.FC = () => {
         >
           <Stitch style={{ left: 40, right: 40, top: 26, height: 3 }} />
           <Stitch style={{ left: 40, right: 40, bottom: 26, height: 3 }} />
-          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-            <Sequence from={22}>
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", paddingBottom: 40 }}>
+            <Sequence from={22} layout="none">
               <Title />
             </Sequence>
           </div>
@@ -110,7 +110,7 @@ const SubTitle: React.FC<{ idx: number; sub: number }> = ({ idx, sub }) => {
     <div
       style={{
         position: "absolute",
-        top: "62%",
+        top: "66%",
         display: "flex",
         justifyContent: "center",
         width: "100%",

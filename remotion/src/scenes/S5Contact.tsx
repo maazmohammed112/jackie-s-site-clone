@@ -32,7 +32,7 @@ export const S5Contact: React.FC = () => {
         </div>
         <div style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 14, alignItems: "center" }}>
           {LINES.map((l, i) => {
-            const ls = spring({ frame: f - 8 - i * 5, fps, config: { damping: 22 } });
+            const ls = spring({ frame: f - 6 - i * 4, fps, config: { damping: 20, stiffness: 160 } });
             return (
               <div
                 key={l}
