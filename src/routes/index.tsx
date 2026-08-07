@@ -603,7 +603,7 @@ function PageBody() {
         </section>
 
         {/* EXPERIENCE */}
-        <section className="mt-16 md:mt-24" data-reveal>
+        <section id="experience" className="mt-16 md:mt-24" data-reveal>
           <h2 className="font-serif text-3xl text-chalk md:text-4xl">Where I've worked</h2>
           <div className="mt-8 space-y-6">
             {[
@@ -708,7 +708,10 @@ function PageBody() {
               </p>
             </div>
           </div>
-          <div className="paper-grid rounded-[26px] bg-paper-deep p-8 shadow-[var(--shadow-paper)]">
+          <div
+            id="certifications"
+            className="paper-grid scroll-mt-24 rounded-[26px] bg-paper-deep p-8 shadow-[var(--shadow-paper)]"
+          >
             <h2 className="font-serif text-2xl text-primary">Certifications</h2>
             <div className="mt-5 flex flex-wrap gap-2">
               {[
