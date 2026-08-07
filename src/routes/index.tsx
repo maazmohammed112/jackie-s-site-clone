@@ -414,17 +414,47 @@ function Index() {
                   What I look for
                 </h2>
                 <ul className="mt-6 space-y-4">
-                  {["Impactful automation work", "Agentic AI in real workflows", "A sharp, curious team"].map(
-                    (item) => (
-                      <li
-                        key={item}
-                        className="flex items-center gap-4 border-b border-dashed border-primary/40 pb-4 font-marker text-base text-primary"
-                      >
-                        <span className="h-5 w-5 shrink-0 rounded-[4px] border-2 border-primary" />
-                        {item}
+                  {LOOKING_FOR.map((item) => {
+                    const isOn = checked.includes(item);
+                    return (
+                      <li key={item} className="border-b border-dashed border-primary/40 pb-4">
+                        <button
+                          type="button"
+                          aria-pressed={isOn}
+                          onClick={() =>
+                            setChecked((prev) =>
+                              prev.includes(item)
+                                ? prev.filter((v) => v !== item)
+                                : [...prev, item],
+                            )
+                          }
+                          className="flex w-full items-center gap-4 text-left font-marker text-base text-primary transition-transform hover:translate-x-1"
+                        >
+                          <span className="relative grid h-6 w-6 shrink-0 place-items-center rounded-[5px] border-2 border-primary">
+                            <svg
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                              className={`h-5 w-5 transition-all duration-300 ${
+                                isOn ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                              }`}
+                            >
+                              <path
+                                d="M4 13.5 L9.5 19 L20 5"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </span>
+                          <span className={isOn ? "line-through decoration-2 opacity-70" : ""}>
+                            {item}
+                          </span>
+                        </button>
                       </li>
-                    ),
-                  )}
+                    );
+                  })}
                 </ul>
                 <a
                   href="mailto:maazmohammed112@gmail.com"
