@@ -139,6 +139,36 @@ function PaperCard({
 }
 
 function Index() {
+  const LOOKING_FOR = [
+    "Impactful automation work",
+    "Agentic AI in real workflows",
+    "A sharp, curious team",
+  ];
+  const [checked, setChecked] = useState<string[]>([]);
+
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    if (!nodes.length) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      nodes.forEach((n) => n.classList.add("is-revealed"));
+      return;
+    }
+    nodes.forEach((n) => n.classList.add("reveal-init"));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-revealed");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.12 },
+    );
+    nodes.forEach((n) => io.observe(n));
+    return () => io.disconnect();
+  }, []);
+
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-background">
       <StampRail side="left" />
@@ -148,7 +178,7 @@ function Index() {
         <Nav />
 
         {/* HERO */}
-        <section id="about" className="pt-8 md:pt-12">
+        <section id="about" data-reveal className="pt-8 md:pt-12">
           <PaperCard>
             <div className="grid items-center gap-6 p-8 md:grid-cols-[1.05fr_1fr] md:p-14">
               <div>
@@ -183,7 +213,7 @@ function Index() {
         </section>
 
         {/* BADGES */}
-        <section className="mt-10">
+        <section className="mt-10" data-reveal>
           <div className="flex flex-wrap justify-center gap-3">
             {[
               "UiPath",
@@ -208,7 +238,7 @@ function Index() {
         </section>
 
         {/* BELIEFS */}
-        <section className="mt-16 md:mt-24">
+        <section className="mt-16 md:mt-24" data-reveal>
           <PaperCard>
             <div className="p-8 md:p-14">
               <p className="font-serif text-xl text-primary md:text-2xl">
@@ -237,7 +267,7 @@ function Index() {
         </section>
 
         {/* EXPERIENCE */}
-        <section className="mt-16 md:mt-24">
+        <section className="mt-16 md:mt-24" data-reveal>
           <h2 className="font-serif text-3xl text-chalk md:text-4xl">Where I've worked</h2>
           <div className="mt-8 space-y-6">
             {[
@@ -294,7 +324,7 @@ function Index() {
         </section>
 
         {/* WORK */}
-        <section id="work" className="mt-16 md:mt-24">
+        <section id="work" data-reveal className="mt-16 md:mt-24">
           <h2 className="mb-8 font-serif text-3xl text-chalk md:text-4xl">Selected work</h2>
           <div className="paper-grid relative rounded-[34px] border border-border bg-muted/40 p-8 md:p-12">
             <div className="grid gap-6 md:grid-cols-3">
@@ -323,7 +353,7 @@ function Index() {
         </section>
 
         {/* EDUCATION + CERTS */}
-        <section className="mt-16 grid gap-6 md:mt-24 md:grid-cols-2">
+        <section className="mt-16 grid gap-6 md:mt-24 md:grid-cols-2" data-reveal>
           <div className="rounded-[26px] bg-paper p-8 shadow-[var(--shadow-paper)]">
             <h2 className="font-serif text-2xl text-primary">Education</h2>
             <div className="mt-5 space-y-5 font-monohand text-sm text-ink/80">
@@ -367,7 +397,7 @@ function Index() {
         </section>
 
         {/* CONNECT */}
-        <section id="connect" className="relative mt-16 md:mt-24">
+        <section id="connect" data-reveal className="relative mt-16 md:mt-24">
           <img
             src={doodleMisc}
             alt=""
@@ -384,17 +414,47 @@ function Index() {
                   What I look for
                 </h2>
                 <ul className="mt-6 space-y-4">
-                  {["Impactful automation work", "Agentic AI in real workflows", "A sharp, curious team"].map(
-                    (item) => (
-                      <li
-                        key={item}
-                        className="flex items-center gap-4 border-b border-dashed border-primary/40 pb-4 font-marker text-base text-primary"
-                      >
-                        <span className="h-5 w-5 shrink-0 rounded-[4px] border-2 border-primary" />
-                        {item}
+                  {LOOKING_FOR.map((item) => {
+                    const isOn = checked.includes(item);
+                    return (
+                      <li key={item} className="border-b border-dashed border-primary/40 pb-4">
+                        <button
+                          type="button"
+                          aria-pressed={isOn}
+                          onClick={() =>
+                            setChecked((prev) =>
+                              prev.includes(item)
+                                ? prev.filter((v) => v !== item)
+                                : [...prev, item],
+                            )
+                          }
+                          className="flex w-full items-center gap-4 text-left font-marker text-base text-primary transition-transform hover:translate-x-1"
+                        >
+                          <span className="relative grid h-6 w-6 shrink-0 place-items-center rounded-[5px] border-2 border-primary">
+                            <svg
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                              className={`h-5 w-5 transition-all duration-300 ${
+                                isOn ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                              }`}
+                            >
+                              <path
+                                d="M4 13.5 L9.5 19 L20 5"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </span>
+                          <span className={isOn ? "line-through decoration-2 opacity-70" : ""}>
+                            {item}
+                          </span>
+                        </button>
                       </li>
-                    ),
-                  )}
+                    );
+                  })}
                 </ul>
                 <a
                   href="mailto:maazmohammed112@gmail.com"
@@ -447,7 +507,7 @@ function Index() {
         </section>
 
         {/* FOOTER */}
-        <footer className="mt-24 text-center">
+        <footer className="mt-24 text-center" data-reveal>
           <img
             src={doodleComputer}
             alt="Chalk drawing of a smiling retro computer"
