@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import { Github, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
 
 import heroDoodle from "@/assets/hero-doodle-teal.png";
@@ -121,19 +121,86 @@ type NavChild = {
   icon?: "mail" | "github" | "linkedin" | "spark";
 };
 
+/** Hand-drawn chalk doodles that pop above each nav item on hover. */
+function DoodleFace() {
+  return (
+    <svg viewBox="0 0 120 70" fill="none" className="h-full w-full">
+      <g
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M10 30 L26 24 M14 16 L22 34 M8 22 L28 28" />
+        <path d="M44 26c0-9 5-15 14-15s14 6 14 15" />
+        <path d="M44 22c3-4 5-7 8-5 2-4 5-5 7-2 2-4 6-4 8 0 3-2 6 1 7 6" />
+        <path d="M43 30c0 12 6 20 15 20s15-8 15-20" />
+        <path d="M51 33v4 M65 33v4" />
+        <path d="M52 42c3 4 9 4 12 0" />
+        <path d="M96 20c6-4 9 2 5 6s-8 8-6 14" />
+      </g>
+    </svg>
+  );
+}
+
+function DoodleBadge() {
+  return (
+    <svg viewBox="0 0 120 80" fill="none" className="h-full w-full">
+      <g
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M54 22c4-8 8-14 12-18 1 7 0 13-2 18" />
+        <path d="M64 22c6-6 11-9 16-11-2 5-6 9-10 12" />
+        <path d="M34 24h44v40H34z" />
+        <path d="M48 46c0-7 4-11 10-11s10 4 10 11" />
+        <path d="M48 42c2-3 4-5 6-4 2-3 4-3 6 0 2-3 5-2 6 3" />
+        <path d="M52 47v3 M62 47v3 M53 54c3 3 7 3 9 0" />
+        <path d="M26 18l4 6 M22 30h7 M28 10l2 7" />
+        <path d="M86 40l10 6-5 1 3 6-3 1-3-6-3 3z" />
+      </g>
+    </svg>
+  );
+}
+
+function DoodleConnect() {
+  return (
+    <svg viewBox="0 0 120 70" fill="none" className="h-full w-full">
+      <g
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M12 24h30v22H12z M12 24l15 12 15-12" />
+        <path d="M60 46c-6 2-8-2-11-4 6 3 9 1 11-2-6-1-10-4-10-11 0-3 1-5 2-6-1-3 0-5 0-5 3 0 5 2 6 3a15 15 0 017 0c1-1 3-3 6-3 0 0 1 2 0 5 1 1 2 3 2 6 0 7-4 10-10 11 1 1 2 3 2 6v6" />
+        <path d="M92 30v18 M92 22v2 M102 48V38c0-5-8-6-8 0" />
+        <path d="M110 16c3 2 4 6 3 9" />
+      </g>
+    </svg>
+  );
+}
+
+const NAV_DOODLES: Record<string, () => ReactElement> = {
+  about: DoodleFace,
+  work: DoodleBadge,
+  connect: DoodleConnect,
+};
+
 const NAV: {
   id: string;
   label: string;
   hint: string;
-  doodle: string;
+
   children?: NavChild[];
 }[] = [
-  { id: "about", label: "about", hint: "who I am", doodle: "✺ ☺ ✎" },
+  { id: "about", label: "about", hint: "in-progress" },
   {
     id: "work",
     label: "work",
     hint: "what I ship",
-    doodle: "▣ ☺ ➤",
     children: [
       { label: "experience", href: "#experience", note: "where I've worked" },
       { label: "selected work", href: "#work", note: "achievements" },
@@ -144,7 +211,6 @@ const NAV: {
     id: "connect",
     label: "connect",
     hint: "say hello",
-    doodle: "in ✕ ☺",
     children: [
       {
         label: "email",
@@ -193,8 +259,10 @@ function Nav() {
   }, []);
 
   return (
-    <nav className="relative z-40 flex items-end justify-center gap-10 pt-16 pb-2 md:gap-16">
-      {NAV.map((item) => (
+    <nav className="relative z-40 flex items-end justify-center gap-6 px-4 pt-28 pb-4 sm:gap-10 md:gap-16">
+      {NAV.map((item, idx) => {
+        const Doodle = NAV_DOODLES[item.id];
+        return (
         <div key={item.id} data-nav-item className="relative">
         <a
           href={`#${item.id}`}
@@ -207,14 +275,16 @@ function Nav() {
             }
           }}
           aria-expanded={item.children ? open === item.id : undefined}
-          className="group relative block font-marker text-base text-chalk/85 transition-colors hover:text-chalk md:text-lg"
+          className="group relative block font-marker text-sm text-chalk/85 transition-colors hover:text-chalk sm:text-base md:text-lg"
         >
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap font-hand text-3xl text-chalk opacity-0 transition-all duration-300 group-hover:-top-14 group-hover:opacity-100"
-          >
-            {item.doodle}
-          </span>
+          {Doodle && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-full left-1/2 mb-2 h-14 w-24 -translate-x-1/2 translate-y-3 scale-90 text-chalk opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 sm:h-16 sm:w-28 md:h-20 md:w-36"
+            >
+              <Doodle />
+            </span>
+          )}
           <span className="relative inline-block px-4 py-1">
             <span
               aria-hidden="true"
@@ -224,17 +294,21 @@ function Nav() {
           </span>
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap font-marker text-xs text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            className="pointer-events-none absolute -bottom-5 left-1/2 -translate-x-1/2 translate-y-1 whitespace-nowrap font-marker text-[10px] text-primary opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 sm:text-xs"
           >
             {item.hint}
           </span>
         </a>
 
         {item.children && open === item.id && (
-          <div className="absolute left-1/2 top-[calc(100%+1.5rem)] z-50 w-60 -translate-x-1/2 rounded-[18px] border border-border bg-paper p-2 shadow-[var(--shadow-paper)]">
+          <div
+            className={`absolute top-[calc(100%+1.5rem)] z-50 w-[min(15rem,calc(100vw-2rem))] rounded-[18px] border border-border bg-paper p-2 shadow-[var(--shadow-paper)] sm:left-1/2 sm:right-auto sm:-translate-x-1/2 ${
+              idx === NAV.length - 1 ? "right-0" : "left-0"
+            }`}
+          >
             <span
               aria-hidden="true"
-              className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-border bg-paper"
+              className="absolute -top-2 left-1/2 hidden h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-border bg-paper sm:block"
             />
             {item.children.map((child) => (
               <a
@@ -259,7 +333,8 @@ function Nav() {
           </div>
         )}
         </div>
-      ))}
+        );
+      })}
     </nav>
   );
 }
