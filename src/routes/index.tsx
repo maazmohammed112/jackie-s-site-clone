@@ -143,6 +143,33 @@ function Index() {
   return <Page />;
 }
 
+function ClickBurst() {
+  useEffect(() => {
+    const spawn = (x: number, y: number) => {
+      const wrap = document.createElement("span");
+      wrap.className = "click-burst";
+      wrap.style.left = `${x}px`;
+      wrap.style.top = `${y}px`;
+      const n = 7;
+      for (let i = 0; i < n; i++) {
+        const line = document.createElement("i");
+        const angle = (360 / n) * i + (Math.random() * 18 - 9);
+        line.style.setProperty("--a", `${angle}deg`);
+        line.style.setProperty("--d", `${18 + Math.random() * 16}px`);
+        line.style.animationDelay = `${Math.random() * 60}ms`;
+        wrap.appendChild(line);
+      }
+      document.body.appendChild(wrap);
+      window.setTimeout(() => wrap.remove(), 800);
+    };
+    const onDown = (e: PointerEvent) => spawn(e.clientX, e.clientY);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    window.addEventListener("pointerdown", onDown);
+    return () => window.removeEventListener("pointerdown", onDown);
+  }, []);
+  return null;
+}
+
 function PinnedPoster() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [p, setP] = useState(0);
@@ -157,8 +184,11 @@ function PinnedPoster() {
       raf = requestAnimationFrame(() => {
         const r = el.getBoundingClientRect();
         const vh = window.innerHeight;
-        // 0 = fully hidden behind the certifications card, 1 = fully out
-        const t = (vh - r.top) / (vh * 0.75);
+        // 1 when the poster is centred in the viewport, 0 when far above/below
+        const center = r.top + r.height / 2;
+        const dist = Math.abs(center - vh / 2);
+        const range = vh / 2 + r.height / 2;
+        const t = 1 - dist / (range * 0.72);
         setP(Math.min(1, Math.max(0, t)));
       });
     };
