@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Github, Linkedin, Mail, MapPin } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
 
 import heroDoodle from "@/assets/hero-doodle-teal.png";
 import stampStrip from "@/assets/stamp-strip-teal.png";
