@@ -84,6 +84,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Automation Analyst in Bengaluru working with UiPath, SAP, Python, data analytics and Agentic AI.",
       },
       { name: "author", content: "Mohammed Maaz" },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { name: "theme-color", content: "#0b1f1f" },
+      { property: "og:site_name", content: "Mohammed Maaz" },
+      { property: "og:locale", content: "en_IN" },
       { property: "og:title", content: "Mohammed Maaz — Automation Analyst" },
       {
         property: "og:description",
@@ -105,6 +109,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Mohammed Maaz",
+          url: "https://project--91d6d64e-f900-417c-a466-6e4c8cd0e07c.lovable.app/",
+          inLanguage: "en",
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,
