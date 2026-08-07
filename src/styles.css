@@ -303,3 +303,34 @@ html {
   from { transform: translateY(26%) rotate(3deg); opacity: 0; }
   to { transform: translateY(0) rotate(0deg); opacity: 1; }
 }
+
+/* Shredder page loader */
+@keyframes loader-feed {
+  0% { transform: translateY(-108%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes loader-strip-fall {
+  0% { height: 0; opacity: 0; }
+  25% { opacity: 1; }
+  100% { height: 62px; opacity: 0.9; }
+}
+
+@keyframes loader-spin {
+  to { transform: rotate(360deg); }
+}
+
+.loader-sheet {
+  animation: loader-feed 2.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.loader-strip {
+  height: 0;
+  transform-origin: top center;
+  animation: loader-strip-fall 1.1s ease-in infinite;
+  box-shadow: 1px 0 0 color-mix(in oklab, var(--ink) 18%, transparent);
+}
+
+.loader-spin {
+  animation: loader-spin 0.9s linear infinite;
+}
