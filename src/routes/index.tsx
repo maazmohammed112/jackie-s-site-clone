@@ -139,6 +139,36 @@ function PaperCard({
 }
 
 function Index() {
+  const LOOKING_FOR = [
+    "Impactful automation work",
+    "Agentic AI in real workflows",
+    "A sharp, curious team",
+  ];
+  const [checked, setChecked] = useState<string[]>([]);
+
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    if (!nodes.length) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      nodes.forEach((n) => n.classList.add("is-revealed"));
+      return;
+    }
+    nodes.forEach((n) => n.classList.add("reveal-init"));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-revealed");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.12 },
+    );
+    nodes.forEach((n) => io.observe(n));
+    return () => io.disconnect();
+  }, []);
+
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-background">
       <StampRail side="left" />
