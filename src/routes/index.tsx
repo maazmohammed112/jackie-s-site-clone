@@ -193,15 +193,14 @@ const NAV: {
   id: string;
   label: string;
   hint: string;
-  doodle: string;
+
   children?: NavChild[];
 }[] = [
-  { id: "about", label: "about", hint: "in-progress", doodle: "✺ ☺ ✎" },
+  { id: "about", label: "about", hint: "in-progress" },
   {
     id: "work",
     label: "work",
     hint: "what I ship",
-    doodle: "▣ ☺ ➤",
     children: [
       { label: "experience", href: "#experience", note: "where I've worked" },
       { label: "selected work", href: "#work", note: "achievements" },
@@ -212,7 +211,6 @@ const NAV: {
     id: "connect",
     label: "connect",
     hint: "say hello",
-    doodle: "in ✕ ☺",
     children: [
       {
         label: "email",
