@@ -13,7 +13,7 @@ const SHARDS = [
   "polygon(30% 100%, 62% 100%, 56% 74%, 36% 70%)",
 ];
 
-const SHARD_MOVE = [
+const SHARD_MOVE: { x: number; y: number; r: number }[] = [
   { x: -34, y: -30, r: -16 },
   { x: 32, y: -34, r: 14 },
   { x: 38, y: 26, r: 18 },
@@ -30,9 +30,9 @@ export default function ResumeReveal({ open, onClose }: { open: boolean; onClose
     downloaded.current = false;
     setPhase("tearing");
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const t = reduce ? [0, 10, 20] : [420, 1900, 3000];
-    const a = window.setTimeout(() => setPhase("preparing"), t[0]);
-    const b = window.setTimeout(() => setPhase("opening"), t[1]);
+    const t: number[] = reduce ? [0, 10, 20] : [420, 1900, 3000];
+    const a = window.setTimeout(() => setPhase("preparing"), t[0] ?? 0);
+    const b = window.setTimeout(() => setPhase("opening"), t[1] ?? 0);
     const c = window.setTimeout(() => {
       setPhase("done");
       if (!downloaded.current) {
@@ -44,7 +44,7 @@ export default function ResumeReveal({ open, onClose }: { open: boolean; onClose
         link.click();
         link.remove();
       }
-    }, t[2]);
+    }, t[2] ?? 0);
     return () => [a, b, c].forEach(clearTimeout);
   }, [open]);
 
@@ -88,7 +88,7 @@ export default function ResumeReveal({ open, onClose }: { open: boolean; onClose
               clipPath: clip,
               filter: "drop-shadow(0 10px 18px rgba(0,0,0,0.45))",
               transform: torn
-                ? `translate(${SHARD_MOVE[i].x}px, ${SHARD_MOVE[i].y}px) rotate(${SHARD_MOVE[i].r}deg)`
+                ? `translate(${SHARD_MOVE[i]?.x ?? 0}px, ${SHARD_MOVE[i]?.y ?? 0}px) rotate(${SHARD_MOVE[i]?.r ?? 0}deg)`
                 : "none",
             }}
           />
