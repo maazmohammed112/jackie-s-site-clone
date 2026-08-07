@@ -148,7 +148,7 @@ function Index() {
         <Nav />
 
         {/* HERO */}
-        <section id="about" className="pt-8 md:pt-12">
+        <section id="about" data-reveal className="pt-8 md:pt-12">
           <PaperCard>
             <div className="grid items-center gap-6 p-8 md:grid-cols-[1.05fr_1fr] md:p-14">
               <div>
@@ -183,7 +183,7 @@ function Index() {
         </section>
 
         {/* BADGES */}
-        <section className="mt-10">
+        <section className="mt-10" data-reveal>
           <div className="flex flex-wrap justify-center gap-3">
             {[
               "UiPath",
@@ -208,7 +208,7 @@ function Index() {
         </section>
 
         {/* BELIEFS */}
-        <section className="mt-16 md:mt-24">
+        <section className="mt-16 md:mt-24" data-reveal>
           <PaperCard>
             <div className="p-8 md:p-14">
               <p className="font-serif text-xl text-primary md:text-2xl">
@@ -237,7 +237,7 @@ function Index() {
         </section>
 
         {/* EXPERIENCE */}
-        <section className="mt-16 md:mt-24">
+        <section className="mt-16 md:mt-24" data-reveal>
           <h2 className="font-serif text-3xl text-chalk md:text-4xl">Where I've worked</h2>
           <div className="mt-8 space-y-6">
             {[
@@ -294,7 +294,7 @@ function Index() {
         </section>
 
         {/* WORK */}
-        <section id="work" className="mt-16 md:mt-24">
+        <section id="work" data-reveal className="mt-16 md:mt-24">
           <h2 className="mb-8 font-serif text-3xl text-chalk md:text-4xl">Selected work</h2>
           <div className="paper-grid relative rounded-[34px] border border-border bg-muted/40 p-8 md:p-12">
             <div className="grid gap-6 md:grid-cols-3">
@@ -323,7 +323,7 @@ function Index() {
         </section>
 
         {/* EDUCATION + CERTS */}
-        <section className="mt-16 grid gap-6 md:mt-24 md:grid-cols-2">
+        <section className="mt-16 grid gap-6 md:mt-24 md:grid-cols-2" data-reveal>
           <div className="rounded-[26px] bg-paper p-8 shadow-[var(--shadow-paper)]">
             <h2 className="font-serif text-2xl text-primary">Education</h2>
             <div className="mt-5 space-y-5 font-monohand text-sm text-ink/80">
@@ -367,7 +367,7 @@ function Index() {
         </section>
 
         {/* CONNECT */}
-        <section id="connect" className="relative mt-16 md:mt-24">
+        <section id="connect" data-reveal className="relative mt-16 md:mt-24">
           <img
             src={doodleMisc}
             alt=""
@@ -447,7 +447,7 @@ function Index() {
         </section>
 
         {/* FOOTER */}
-        <footer className="mt-24 text-center">
+        <footer className="mt-24 text-center" data-reveal>
           <img
             src={doodleComputer}
             alt="Chalk drawing of a smiling retro computer"
