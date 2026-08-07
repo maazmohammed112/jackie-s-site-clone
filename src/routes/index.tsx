@@ -9,6 +9,7 @@ import doodleMisc from "@/assets/doodle-misc.png";
 const maazPoster = { url: "/maaz-poster.png" };
 const portfolioFilm = { url: "/maaz-portfolio-15s.mp4" };
 import ResumeReveal from "@/components/ResumeReveal";
+import CrtProjects from "@/components/CrtProjects";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -205,6 +206,7 @@ const NAV: {
       { label: "experience", href: "#experience", note: "where I've worked" },
       { label: "selected work", href: "#work", note: "achievements" },
       { label: "certifications", href: "#certifications", note: "badges earned" },
+      { label: "new project", href: "https://github.com/maazmohammed112", note: "start one with me" },
     ],
   },
   {
@@ -926,8 +928,21 @@ function PageBody() {
 
         {/* WORK */}
         <section id="work" data-reveal className="mt-16 md:mt-24">
-          <h2 className="mb-8 font-serif text-3xl text-chalk md:text-4xl">Selected work</h2>
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-serif text-3xl text-chalk md:text-4xl">Selected work</h2>
+            <a
+              href="https://github.com/maazmohammed112"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="rounded-full border border-primary/50 bg-paper px-4 py-2 font-monohand text-xs uppercase tracking-widest text-ink shadow-[0_4px_0_rgba(0,0,0,.25)] transition-transform hover:-translate-y-0.5"
+            >
+              + new project ↗
+            </a>
+          </div>
           <div className="paper-grid relative rounded-[34px] border border-border bg-muted/40 p-8 md:p-12">
+            <div className="mb-10">
+              <CrtProjects />
+            </div>
             <div className="grid gap-6 md:grid-cols-3">
               {[
                 { t: "PrimKart", d: "Full e-commerce platform with payment workflow and admin dashboard." },
