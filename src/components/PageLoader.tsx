@@ -23,7 +23,8 @@ export function PageLoader() {
 
   if (hidden) return null;
 
-  const strips = Array.from({ length: 11 });
+  const stripHeights = [14, 20, 10, 18, 12, 22, 9, 19, 13, 21, 11, 17, 15];
+  const dots = Array.from({ length: 8 });
 
   return (
     <div
@@ -33,24 +34,45 @@ export function PageLoader() {
         done ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
     >
-      <div className="relative flex w-[260px] flex-col items-center sm:w-[320px]">
-        <div className="relative h-[86px] w-[150px] overflow-hidden sm:h-[100px] sm:w-[180px]">
-          <div className="loader-sheet absolute inset-x-0 top-0 h-full rounded-[3px] bg-chalk shadow-[0_10px_24px_-14px_oklch(0_0_0/70%)]" />
+      <div className="flex scale-[0.85] flex-col items-center drop-shadow-[0_10px_14px_rgba(0,0,0,0.28)] sm:scale-100">
+        {/* paper feeding in */}
+        <div className="h-[78px] w-[140px] overflow-hidden rounded-t-[4px]">
+          <div className="loader-feed h-full w-full rounded-t-[4px] bg-chalk" />
         </div>
 
-        <div className="relative z-10 flex h-[58px] w-full items-center justify-center gap-3 rounded-xl bg-primary text-primary-foreground shadow-[0_16px_34px_-16px_oklch(0_0_0/80%)]">
-          <span className="loader-spin block h-[18px] w-[18px] rounded-full border-[3px] border-primary-foreground/35 border-t-primary-foreground" />
-          <span className="font-monohand text-[15px] font-bold tracking-[0.14em] lowercase">
-            loading
-          </span>
+        {/* housing */}
+        <div className="w-[150px] overflow-hidden rounded-xl">
+          <div className="h-[9px] bg-paper-deep" />
+          <div className="flex h-[52px] items-center justify-center gap-[10px] bg-primary">
+            <div className="loader-dots relative h-[22px] w-[22px] flex-none">
+              {dots.map((_, i) => (
+                <span
+                  key={i}
+                  className="absolute left-1/2 top-1/2 -m-[2px] block h-[4px] w-[4px] rounded-full bg-primary-foreground"
+                  style={{
+                    transformOrigin: "2px 2px",
+                    transform: `rotate(${i * 45}deg) translate(9px, 0)`,
+                    opacity: 1 - i * 0.12,
+                  }}
+                />
+              ))}
+            </div>
+            <span className="loader-pulse font-monohand text-[15px] font-bold lowercase tracking-[0.12em] text-primary-foreground">
+              loading
+            </span>
+          </div>
+          <div className="h-[7px] bg-primary/60" />
         </div>
 
-        <div className="relative z-0 flex h-[74px] w-[70%] justify-between px-2">
-          {strips.map((_, i) => (
+        {/* shredded strips */}
+        <div className="flex w-[118px] justify-between">
+          {stripHeights.map((h, i) => (
             <span
               key={i}
-              className="loader-strip block w-[5px] rounded-b-[2px] bg-chalk"
-              style={{ animationDelay: `${(i % 4) * 0.18 + i * 0.03}s` }}
+              className={`loader-flutter block w-[6px] origin-top rounded-b-[3px] ${
+                i % 2 ? "bg-paper-deep" : "bg-chalk"
+              }`}
+              style={{ height: `${h}px`, animationDelay: `${i * 0.06}s` }}
             />
           ))}
         </div>
