@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import { Github, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
 
 import heroDoodle from "@/assets/hero-doodle-teal.png";
@@ -183,7 +183,7 @@ function DoodleConnect() {
   );
 }
 
-const NAV_DOODLES: Record<string, () => React.ReactElement> = {
+const NAV_DOODLES: Record<string, () => ReactElement> = {
   about: DoodleFace,
   work: DoodleBadge,
   connect: DoodleConnect,
