@@ -71,31 +71,31 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.19 0.004 60);
+  --background: oklch(0.2 0.04 190);
   --foreground: oklch(0.93 0.021 78);
   --card: oklch(0.93 0.021 78);
-  --card-foreground: oklch(0.26 0.01 60);
+  --card-foreground: oklch(0.23 0.035 190);
   --popover: oklch(0.93 0.021 78);
-  --popover-foreground: oklch(0.26 0.01 60);
-  --primary: oklch(0.62 0.185 32);
-  --primary-foreground: oklch(0.96 0.018 80);
+  --popover-foreground: oklch(0.23 0.035 190);
+  --primary: oklch(0.72 0.14 184);
+  --primary-foreground: oklch(0.16 0.03 190);
   --secondary: oklch(0.87 0.024 78);
-  --secondary-foreground: oklch(0.26 0.01 60);
-  --muted: oklch(0.28 0.006 60);
-  --muted-foreground: oklch(0.72 0.018 75);
-  --accent: oklch(0.62 0.185 32);
-  --accent-foreground: oklch(0.96 0.018 80);
+  --secondary-foreground: oklch(0.23 0.035 190);
+  --muted: oklch(0.27 0.045 190);
+  --muted-foreground: oklch(0.74 0.035 180);
+  --accent: oklch(0.72 0.14 184);
+  --accent-foreground: oklch(0.16 0.03 190);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.62 0.185 32 / 35%);
-  --input: oklch(0.62 0.185 32 / 35%);
-  --ring: oklch(0.62 0.185 32);
+  --border: oklch(0.72 0.14 184 / 35%);
+  --input: oklch(0.72 0.14 184 / 35%);
+  --ring: oklch(0.72 0.14 184);
 
   --paper: oklch(0.93 0.021 78);
   --paper-deep: oklch(0.88 0.026 76);
-  --ink: oklch(0.26 0.01 60);
+  --ink: oklch(0.23 0.035 190);
   --chalk: oklch(0.94 0.012 80);
-  --grid-line: oklch(0.62 0.185 32 / 12%);
+  --grid-line: oklch(0.72 0.14 184 / 16%);
 
   --font-hand: "Caveat", cursive;
   --font-marker: "Gloria Hallelujah", cursive;
@@ -103,7 +103,7 @@
   --font-mono-hand: "Space Mono", monospace;
 
   --shadow-paper: 0 24px 60px -18px oklch(0 0 0 / 60%);
-  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-1: oklch(0.72 0.14 184);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
