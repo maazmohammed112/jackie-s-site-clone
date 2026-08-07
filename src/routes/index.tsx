@@ -479,7 +479,9 @@ function Page() {
         </section>
 
         {/* CONNECT */}
-        <section id="connect" data-reveal className="relative mt-16 md:mt-24">
+        <PinnedPoster />
+
+        <section id="connect" data-reveal className="relative z-10 mt-16 md:mt-24">
           <img
             src={doodleMisc}
             alt=""
