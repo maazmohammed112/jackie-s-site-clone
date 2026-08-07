@@ -249,6 +249,31 @@ function NavChildIcon({ icon }: { icon?: NavChild["icon"] }) {
 
 function Nav() {
   const [open, setOpen] = useState<string | null>(null);
+  const [pos, setPos] = useState<{ top: number; left: number; width: number } | null>(null);
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const place = (id: string) => {
+    const el = itemRefs.current[id];
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const width = Math.min(288, vw - 24);
+    let left = r.left + r.width / 2 - width / 2;
+    left = Math.max(12, Math.min(left, vw - width - 12));
+    setPos({ top: r.bottom + 22, left, width });
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const update = () => place(open);
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update, true);
+    };
+  }, [open]);
 
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
@@ -260,16 +285,27 @@ function Nav() {
 
   return (
     <nav className="relative z-40 flex items-end justify-center gap-6 px-4 pt-28 pb-4 sm:gap-10 md:gap-16">
-      {NAV.map((item, idx) => {
+      {NAV.map((item) => {
         const Doodle = NAV_DOODLES[item.id];
         return (
-        <div key={item.id} data-nav-item className="relative">
+        <div
+          key={item.id}
+          data-nav-item
+          ref={(el) => {
+            itemRefs.current[item.id] = el;
+          }}
+          className="relative"
+        >
         <a
           href={`#${item.id}`}
           onClick={(e) => {
             if (item.children) {
               e.preventDefault();
-              setOpen((cur) => (cur === item.id ? null : item.id));
+              setOpen((cur) => {
+                const next = cur === item.id ? null : item.id;
+                if (next) place(item.id);
+                return next;
+              });
             } else {
               setOpen(null);
             }
@@ -300,36 +336,47 @@ function Nav() {
           </span>
         </a>
 
-        {item.children && open === item.id && (
+        {item.children && open === item.id && pos && (
           <div
-            className={`absolute top-[calc(100%+1.5rem)] z-50 w-[min(15rem,calc(100vw-2rem))] rounded-[18px] border border-border bg-paper p-2 shadow-[var(--shadow-paper)] sm:left-1/2 sm:right-auto sm:-translate-x-1/2 ${
-              idx === NAV.length - 1 ? "right-0" : "left-0"
-            }`}
+            className="fixed z-50 animate-scale-in"
+            style={{ top: pos.top, left: pos.left, width: pos.width }}
           >
-            <span
-              aria-hidden="true"
-              className="absolute -top-2 left-1/2 hidden h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-border bg-paper sm:block"
-            />
-            {item.children.map((child) => (
-              <a
-                key={child.label}
-                href={child.href}
-                target={child.external ? "_blank" : undefined}
-                rel={child.external ? "noreferrer" : undefined}
-                onClick={() => setOpen(null)}
-                className="flex items-start gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-paper-deep"
-              >
-                <span className="mt-1">
-                  <NavChildIcon icon={child.icon} />
-                </span>
-                <span className="min-w-0">
-                  <span className="block font-marker text-sm text-ink">{child.label}</span>
-                  <span className="block truncate font-monohand text-[11px] text-ink/60">
-                    {child.note}
-                  </span>
-                </span>
-              </a>
-            ))}
+            {/* torn paper scrap */}
+            <div className="relative -rotate-[0.8deg] paper-grid torn-paper bg-paper p-3 pt-5 shadow-[var(--shadow-paper)]">
+              {/* washi tape */}
+              <span
+                aria-hidden="true"
+                className="absolute -top-3 left-1/2 h-6 w-16 -translate-x-1/2 rotate-[-3deg] bg-primary/35 shadow-[0_2px_6px_rgba(0,0,0,.25)]"
+              />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-2 rounded-[10px] border border-dashed border-ink/15"
+              />
+              <div className="relative">
+                {item.children.map((child, i) => (
+                  <a
+                    key={child.label}
+                    href={child.href}
+                    target={child.external ? "_blank" : undefined}
+                    rel={child.external ? "noreferrer" : undefined}
+                    onClick={() => setOpen(null)}
+                    className={`flex items-start gap-3 px-2 py-2 transition-transform hover:translate-x-1 ${
+                      i > 0 ? "border-t border-dashed border-ink/20" : ""
+                    }`}
+                  >
+                    <span className="mt-1">
+                      <NavChildIcon icon={child.icon} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block font-marker text-sm text-ink">{child.label}</span>
+                      <span className="block truncate font-monohand text-[11px] text-ink/60">
+                        {child.note}
+                      </span>
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         )}
         </div>
