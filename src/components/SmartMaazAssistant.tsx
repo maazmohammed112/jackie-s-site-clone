@@ -25,6 +25,14 @@ export default function SmartMaazAssistant() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Auto-close speech bubble when user scrolls
+  useEffect(() => {
+    if (!open) return;
+    const onScroll = () => setOpen(false);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [open]);
+
   const handleDismiss = () => {
     setOpen(false);
     if (isMobile) {
@@ -34,8 +42,8 @@ export default function SmartMaazAssistant() {
 
   return (
     <>
-      {/* Fixed Top Right Header Maaz Helmet Icon - Perfectly aligned in header across all screens */}
-      <div className="fixed top-3 right-3 sm:top-4 sm:right-6 z-50">
+      {/* Fixed Top Header Maaz Avatar Icon (Clear of 70px right stamp rail on desktop md:right-20, top-right on mobile right-4) */}
+      <div className="fixed top-3 right-4 sm:top-4 sm:right-6 md:right-20 lg:right-24 z-50">
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
@@ -64,9 +72,9 @@ export default function SmartMaazAssistant() {
         </button>
       </div>
 
-      {/* Maaz Speech Bubble Popup */}
+      {/* Maaz Speech Bubble Popup (Clear of 70px right stamp rail on desktop md:right-20) */}
       {open && (
-        <div className="fixed top-14 right-3 sm:top-18 sm:right-6 w-[285px] xs:w-[315px] sm:w-[345px] max-w-[85vw] z-50 animate-scale-in">
+        <div className="fixed top-14 right-4 sm:top-16 sm:right-6 md:right-20 lg:right-24 w-[280px] xs:w-[310px] sm:w-[340px] max-w-[85vw] z-50 animate-scale-in">
           <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 shadow-[0_20px_40px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rounded-[18px]">
             
             {/* Washi Tape Accent */}
@@ -94,39 +102,35 @@ export default function SmartMaazAssistant() {
               </span>
             </div>
 
-            {/* Speech Message in Handwritten Font */}
+            {/* Professional Speech Messages in Handwritten Font (No Emojis) */}
             {isMobile ? (
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p>
-                  Ohhhhh! You're using mobile or a small screen? 📱
-                  <br />
-                  It looks so cozy and small here! Try opening this on a desktop or laptop to see my big paper studio for the best view! 🚀
+                  You are currently viewing this portfolio on a mobile device or small screen. For the complete interactive paper studio experience, feel free to switch to a desktop or laptop display.
                 </p>
                 <p className="font-bold text-primary">
-                  Psst... did you know one more thing? Don't tell anyone, but I'm a total tea-holic! ☕️🫖
+                  Note: I am also a dedicated tea enthusiast.
                 </p>
               </div>
             ) : (
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p>
-                  Hey there! 👋 Looking for me? I'm Maaz's mecha co-pilot! 🤖
-                  <br />
-                  Welcome to the big paper studio! Feel free to flip the work tags, inspect the education tickets, or play the 15s cinema film! 🎬✨
+                  Welcome to the interactive studio. You can flip through the work experience tags, inspect the education tickets, or view the portfolio film.
                 </p>
                 <p className="font-bold text-primary">
-                  Psst... did you know one more thing? Don't tell anyone, but I'm a total tea-holic! ☕️🫖
+                  Note: I am also a dedicated tea enthusiast.
                 </p>
               </div>
             )}
 
-            {/* Dismiss Button */}
+            {/* Dismiss Button (No Emojis) */}
             <div className="flex justify-end">
               <button
                 type="button"
                 onClick={handleDismiss}
                 className="font-['Caveat',cursive] text-base sm:text-lg font-bold bg-primary text-primary-foreground px-4 py-1 sm:px-5 sm:py-1.5 rounded-[12px] border-2 border-primary-foreground/20 shadow-md transition-transform hover:-rotate-2 active:scale-95 cursor-pointer"
               >
-                {isMobile ? "I know! 👍" : "Got it! 🚀"}
+                {isMobile ? "I understand" : "Got it"}
               </button>
             </div>
 
