@@ -34,15 +34,15 @@ export default function SmartMaazAssistant() {
 
   return (
     <>
-      {/* Fixed Top Header Maaz Avatar Icon (Placed inward clear of the 70px right stamp rail, NO cream circle background) */}
-      <div className="fixed top-3 right-20 sm:top-5 sm:right-24 md:right-28 lg:right-32 z-50">
+      {/* Fixed Top Right Header Maaz Helmet Icon - Perfectly aligned in header across all screens */}
+      <div className="fixed top-3 right-3 sm:top-4 sm:right-6 z-50">
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
           aria-label="Toggle Maaz AI assistant message"
           className="group relative flex items-center justify-center p-1 transition-transform duration-300 hover:scale-110 active:scale-95 cursor-pointer bg-transparent border-0 outline-none"
         >
-          {/* Pure Helmet Image - No Cream Circle */}
+          {/* Pure Helmet Image - No Cream Background Circle */}
           <img
             src="/maaz-helmet.png"
             alt="Maaz Mecha Helmet Avatar"
@@ -58,16 +58,16 @@ export default function SmartMaazAssistant() {
           )}
 
           {/* Floating Tooltip Label */}
-          <span className="pointer-events-none absolute -bottom-7 right-1/2 translate-x-1/2 hidden group-hover:block whitespace-nowrap font-['Caveat',cursive] text-sm text-chalk bg-[#181616] px-2 py-0.5 rounded-[4px] border border-white/20 shadow-md">
+          <span className="pointer-events-none absolute -bottom-7 right-0 hidden group-hover:block whitespace-nowrap font-['Caveat',cursive] text-sm text-chalk bg-[#181616] px-2 py-0.5 rounded-[4px] border border-white/20 shadow-md">
             Talk to Maaz
           </span>
         </button>
       </div>
 
-      {/* Maaz Speech Bubble Popup (Placed inward clear of right stamp rail) */}
+      {/* Maaz Speech Bubble Popup */}
       {open && (
-        <div className="fixed top-16 right-16 sm:top-20 sm:right-24 md:right-28 lg:right-32 w-[280px] xs:w-[310px] sm:w-[340px] max-w-[85vw] z-50 animate-scale-in">
-          <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 shadow-[0_20px_40px_rgba(0,0,0,0.65)] border-2 border-[#201c16]/20 rounded-[18px]">
+        <div className="fixed top-14 right-3 sm:top-18 sm:right-6 w-[285px] xs:w-[315px] sm:w-[345px] max-w-[85vw] z-50 animate-scale-in">
+          <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 shadow-[0_20px_40px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rounded-[18px]">
             
             {/* Washi Tape Accent */}
             <span
@@ -80,7 +80,7 @@ export default function SmartMaazAssistant() {
             />
 
             {/* Speech Pointer Tail */}
-            <div className="absolute -top-2.5 right-6 w-4 h-4 bg-[#f4ead6] border-t-2 border-l-2 border-[#201c16]/20 rotate-45" />
+            <div className="absolute -top-2.5 right-5 w-4 h-4 bg-[#f4ead6] border-t-2 border-l-2 border-[#201c16]/20 rotate-45" />
 
             {/* Avatar Header Row */}
             <div className="flex items-center gap-2.5 mb-2">
@@ -94,19 +94,29 @@ export default function SmartMaazAssistant() {
               </span>
             </div>
 
-            {/* Speech Message in Handwritten Font - Differentiated for Mobile vs Desktop */}
+            {/* Speech Message in Handwritten Font */}
             {isMobile ? (
-              <p className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] mb-3">
-                Ohhhhh! You're using mobile or a small screen? 📱
-                <br />
-                It looks so cozy and small here! You can try opening this on a desktop or laptop to see my big paper studio for the best view! 🚀
-              </p>
+              <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
+                <p>
+                  Ohhhhh! You're using mobile or a small screen? 📱
+                  <br />
+                  It looks so cozy and small here! Try opening this on a desktop or laptop to see my big paper studio for the best view! 🚀
+                </p>
+                <p className="font-bold text-primary">
+                  Psst... did you know one more thing? Don't tell anyone, but I'm a total tea-holic! ☕️🫖
+                </p>
+              </div>
             ) : (
-              <p className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] mb-3">
-                Hey there! 👋 Looking for me? I'm Maaz's mecha co-pilot! 🤖
-                <br />
-                Welcome to the big paper studio! Feel free to flip the work tags, inspect the education tickets, or play the 15s cinema film! 🎬✨
-              </p>
+              <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
+                <p>
+                  Hey there! 👋 Looking for me? I'm Maaz's mecha co-pilot! 🤖
+                  <br />
+                  Welcome to the big paper studio! Feel free to flip the work tags, inspect the education tickets, or play the 15s cinema film! 🎬✨
+                </p>
+                <p className="font-bold text-primary">
+                  Psst... did you know one more thing? Don't tell anyone, but I'm a total tea-holic! ☕️🫖
+                </p>
+              </div>
             )}
 
             {/* Dismiss Button */}

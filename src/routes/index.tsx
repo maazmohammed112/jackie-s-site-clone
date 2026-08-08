@@ -16,6 +16,7 @@ import EducationTicket from "@/components/EducationTicket";
 import MarginDoodles from "@/components/MarginDoodles";
 import CertificationsIndexBox from "@/components/CertificationsIndexBox";
 import SmartMaazAssistant from "@/components/SmartMaazAssistant";
+import InkSpillDoodle from "@/components/InkSpillDoodle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -1028,8 +1029,11 @@ function PageBody() {
           </div>
         </section>
 
+        {/* INK SPILL ARTWORK */}
+        <InkSpillDoodle />
+
         {/* FOOTER */}
-        <footer className="mt-24 text-center" data-reveal>
+        <footer className="mt-12 text-center" data-reveal>
           <img
             src={doodleComputer}
             alt="Chalk drawing of a smiling retro computer"
