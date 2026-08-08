@@ -15,6 +15,7 @@ import WorkExperienceTag from "@/components/WorkExperienceTag";
 import EducationTicket from "@/components/EducationTicket";
 import MarginDoodles from "@/components/MarginDoodles";
 import CertificationsIndexBox from "@/components/CertificationsIndexBox";
+import SmartMaazAssistant from "@/components/SmartMaazAssistant";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -778,6 +779,7 @@ function PageBody() {
     <main className="relative min-h-screen overflow-x-hidden bg-background">
       <ClickBurst />
       <ResumeReveal open={revealOpen} onClose={() => setRevealOpen(false)} />
+      <SmartMaazAssistant />
       <MarginDoodles />
       <StampRail side="left" />
       <StampRail side="right" />
