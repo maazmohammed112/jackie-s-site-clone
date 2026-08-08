@@ -16,7 +16,6 @@ import EducationTicket from "@/components/EducationTicket";
 import MarginDoodles from "@/components/MarginDoodles";
 import CertificationsIndexBox from "@/components/CertificationsIndexBox";
 import SmartMaazAssistant from "@/components/SmartMaazAssistant";
-import InkSpillDoodle from "@/components/InkSpillDoodle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -564,7 +563,7 @@ function PinnedPoster() {
 
   return (
     <>
-      <div ref={wrapRef} className="relative z-0 -mt-24 flex justify-center md:-mt-32">
+      <div ref={wrapRef} className="hidden sm:flex relative z-0 -mt-24 justify-center md:-mt-32">
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -1029,11 +1028,8 @@ function PageBody() {
           </div>
         </section>
 
-        {/* INK SPILL ARTWORK */}
-        <InkSpillDoodle />
-
         {/* FOOTER */}
-        <footer className="mt-12 text-center" data-reveal>
+        <footer className="mt-16 text-center" data-reveal>
           <img
             src={doodleComputer}
             alt="Chalk drawing of a smiling retro computer"
