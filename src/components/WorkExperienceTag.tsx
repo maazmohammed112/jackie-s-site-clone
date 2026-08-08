@@ -76,7 +76,7 @@ export default function WorkExperienceTag() {
   const { bars: barcodeBars, width: barcodeWidth } = makeBarcodeBars(exp.code);
 
   return (
-    <div className="flex flex-col items-center py-4 px-2">
+    <div className="flex flex-col items-center pt-8 sm:pt-12 pb-4 px-2">
       {/* Global SVG Filters for sketchy noise effect */}
       <svg width="0" height="0" className="absolute pointer-events-none">
         <defs>
@@ -92,7 +92,7 @@ export default function WorkExperienceTag() {
       </svg>
 
       {/* Stage Container */}
-      <div className="stage-container relative w-[320px] xs:w-[340px] sm:w-[360px] max-w-[92vw] my-6 [perspective:1600px]">
+      <div className="stage-container relative w-[320px] xs:w-[340px] sm:w-[360px] max-w-[92vw] mt-14 sm:mt-16 mb-6 [perspective:1600px]">
         <div
           onClick={() => setFlipped((prev) => !prev)}
           className="tag-wrap relative w-full pb-[144%] cursor-pointer select-none [tap-highlight-color:transparent]"
