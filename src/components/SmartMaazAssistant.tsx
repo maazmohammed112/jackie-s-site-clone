@@ -13,7 +13,7 @@ export default function SmartMaazAssistant() {
     checkMobile();
     window.addEventListener("resize", checkMobile);
 
-    // Auto-pop speech bubble on mobile devices after 1.5 seconds if not dismissed this session
+    // Auto-pop speech bubble ONLY on mobile devices after 1.5s if not dismissed this session
     const hasSeen = sessionStorage.getItem("maaz_mobile_prompt_seen");
     if (window.innerWidth < 768 && !hasSeen) {
       const timer = setTimeout(() => {
@@ -27,45 +27,47 @@ export default function SmartMaazAssistant() {
 
   const handleDismiss = () => {
     setOpen(false);
-    sessionStorage.setItem("maaz_mobile_prompt_seen", "true");
+    if (isMobile) {
+      sessionStorage.setItem("maaz_mobile_prompt_seen", "true");
+    }
   };
 
   return (
     <>
-      {/* Fixed Top Header Maaz Avatar Icon */}
-      <div className="fixed top-3 right-4 sm:top-5 sm:right-8 z-50">
+      {/* Fixed Top Header Maaz Avatar Icon (Placed inward clear of the 70px right stamp rail, NO cream circle background) */}
+      <div className="fixed top-3 right-20 sm:top-5 sm:right-24 md:right-28 lg:right-32 z-50">
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
           aria-label="Toggle Maaz AI assistant message"
-          className="group relative flex items-center justify-center w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-[#f4ead6] border-2 border-primary shadow-[0_4px_12px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:scale-110 active:scale-95 cursor-pointer"
+          className="group relative flex items-center justify-center p-1 transition-transform duration-300 hover:scale-110 active:scale-95 cursor-pointer bg-transparent border-0 outline-none"
         >
-          {/* Avatar Image */}
+          {/* Pure Helmet Image - No Cream Circle */}
           <img
             src="/maaz-helmet.png"
             alt="Maaz Mecha Helmet Avatar"
-            className="w-8 h-8 sm:w-10 sm:h-10 object-contain filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] transition-transform group-hover:rotate-6"
+            className="w-10 h-10 sm:w-12 sm:h-12 object-contain filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)] transition-transform group-hover:rotate-6"
           />
 
-          {/* Pulse notification dot if closed on mobile */}
+          {/* Pulse notification dot on mobile if unread */}
           {!open && isMobile && (
-            <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+            <span className="absolute top-0 right-0 flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-primary" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-primary" />
             </span>
           )}
 
           {/* Floating Tooltip Label */}
-          <span className="pointer-events-none absolute -bottom-7 right-0 hidden group-hover:block whitespace-nowrap font-['Caveat',cursive] text-sm text-chalk bg-[#181616] px-2 py-0.5 rounded-[4px] border border-white/20 shadow-md">
+          <span className="pointer-events-none absolute -bottom-7 right-1/2 translate-x-1/2 hidden group-hover:block whitespace-nowrap font-['Caveat',cursive] text-sm text-chalk bg-[#181616] px-2 py-0.5 rounded-[4px] border border-white/20 shadow-md">
             Talk to Maaz
           </span>
         </button>
       </div>
 
-      {/* Maaz Speech Bubble Popup */}
+      {/* Maaz Speech Bubble Popup (Placed inward clear of right stamp rail) */}
       {open && (
-        <div className="fixed top-16 right-4 sm:top-20 sm:right-8 w-[290px] xs:w-[320px] sm:w-[360px] max-w-[90vw] z-50 animate-scale-in">
-          <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] p-5 sm:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.6)] border-2 border-[#201c16]/20 rounded-[18px]">
+        <div className="fixed top-16 right-16 sm:top-20 sm:right-24 md:right-28 lg:right-32 w-[280px] xs:w-[310px] sm:w-[340px] max-w-[85vw] z-50 animate-scale-in">
+          <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 shadow-[0_20px_40px_rgba(0,0,0,0.65)] border-2 border-[#201c16]/20 rounded-[18px]">
             
             {/* Washi Tape Accent */}
             <span
@@ -78,35 +80,43 @@ export default function SmartMaazAssistant() {
             />
 
             {/* Speech Pointer Tail */}
-            <div className="absolute -top-2.5 right-6 w-5 h-5 bg-[#f4ead6] border-t-2 border-l-2 border-[#201c16]/20 rotate-45" />
+            <div className="absolute -top-2.5 right-6 w-4 h-4 bg-[#f4ead6] border-t-2 border-l-2 border-[#201c16]/20 rotate-45" />
 
             {/* Avatar Header Row */}
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-2.5 mb-2">
               <img
                 src="/maaz-helmet.png"
                 alt=""
-                className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0"
+                className="w-6 h-6 sm:w-7 sm:h-7 object-contain shrink-0 filter drop-shadow-sm"
               />
-              <span className="font-['Gloria_Hallelujah',cursive] text-base font-bold text-primary">
+              <span className="font-['Gloria_Hallelujah',cursive] text-sm sm:text-base font-bold text-primary">
                 Maaz says:
               </span>
             </div>
 
-            {/* Speech Message in Handwritten Font */}
-            <p className="font-['Caveat',cursive] text-lg sm:text-xl leading-snug text-[#201c16] mb-4">
-              Ohhhhh! You're using mobile or a small screen? 📱
-              <br />
-              It looks so cozy and small here! You can try opening this on a desktop or laptop to see my big paper studio for the best view! 🚀
-            </p>
+            {/* Speech Message in Handwritten Font - Differentiated for Mobile vs Desktop */}
+            {isMobile ? (
+              <p className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] mb-3">
+                Ohhhhh! You're using mobile or a small screen? 📱
+                <br />
+                It looks so cozy and small here! You can try opening this on a desktop or laptop to see my big paper studio for the best view! 🚀
+              </p>
+            ) : (
+              <p className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] mb-3">
+                Hey there! 👋 Looking for me? I'm Maaz's mecha co-pilot! 🤖
+                <br />
+                Welcome to the big paper studio! Feel free to flip the work tags, inspect the education tickets, or play the 15s cinema film! 🎬✨
+              </p>
+            )}
 
             {/* Dismiss Button */}
             <div className="flex justify-end">
               <button
                 type="button"
                 onClick={handleDismiss}
-                className="font-['Caveat',cursive] text-lg font-bold bg-primary text-primary-foreground px-5 py-1.5 rounded-[12px] border-2 border-primary-foreground/20 shadow-md transition-transform hover:-rotate-2 active:scale-95 cursor-pointer"
+                className="font-['Caveat',cursive] text-base sm:text-lg font-bold bg-primary text-primary-foreground px-4 py-1 sm:px-5 sm:py-1.5 rounded-[12px] border-2 border-primary-foreground/20 shadow-md transition-transform hover:-rotate-2 active:scale-95 cursor-pointer"
               >
-                I know! 👍
+                {isMobile ? "I know! 👍" : "Got it! 🚀"}
               </button>
             </div>
 
