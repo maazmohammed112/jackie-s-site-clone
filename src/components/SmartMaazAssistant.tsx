@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export default function SmartMaazAssistant() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | "like" | "copy" | "crt" | null>(null);
+  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | "like" | "copy" | "crt" | "crackedPhone" | null>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -26,7 +26,7 @@ export default function SmartMaazAssistant() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Listen for custom screen click, lever pull twice, liked twice, copy attempt, and CRT monitor click events
+  // Listen for custom screen click, lever pull twice, liked twice, copy attempt, CRT monitor click, and cracked phone click events
   useEffect(() => {
     const handleScreenClick = () => {
       setCustomMsgType("screen");
@@ -53,11 +53,20 @@ export default function SmartMaazAssistant() {
       setOpen(true);
     };
 
+    const handleCrackedPhoneClick = () => {
+      setCustomMsgType("crackedPhone");
+      setOpen(false);
+      setTimeout(() => {
+        setOpen(true);
+      }, 15);
+    };
+
     window.addEventListener("maaz_screen_clicked", handleScreenClick);
     window.addEventListener("maaz_lever_pulled_twice", handleLeverPulledTwice);
     window.addEventListener("maaz_liked_twice", handleLikedTwice);
     window.addEventListener("maaz_copy_attempt", handleCopyAttempt);
     window.addEventListener("maaz_crt_clicked", handleCrtClick);
+    window.addEventListener("maaz_cracked_phone_clicked", handleCrackedPhoneClick);
 
     return () => {
       window.removeEventListener("maaz_screen_clicked", handleScreenClick);
@@ -65,6 +74,7 @@ export default function SmartMaazAssistant() {
       window.removeEventListener("maaz_liked_twice", handleLikedTwice);
       window.removeEventListener("maaz_copy_attempt", handleCopyAttempt);
       window.removeEventListener("maaz_crt_clicked", handleCrtClick);
+      window.removeEventListener("maaz_cracked_phone_clicked", handleCrackedPhoneClick);
     };
   }, []);
 
@@ -91,7 +101,7 @@ export default function SmartMaazAssistant() {
   return (
     <>
       {/* Fixed Top Header Maaz Avatar Icon */}
-      <div className="fixed top-3 right-4 sm:top-4 sm:right-6 md:right-20 lg:right-24 z-50">
+      <div className="fixed top-3 right-4 sm:top-4 sm:right-6 md:right-20 lg:right-24 z-[70]">
         <button
           type="button"
           onClick={() => {
@@ -127,7 +137,7 @@ export default function SmartMaazAssistant() {
 
       {/* Maaz Speech Bubble Popup */}
       {open && (
-        <div className="fixed top-14 right-4 sm:top-16 sm:right-6 md:right-20 lg:right-24 w-[280px] xs:w-[310px] sm:w-[340px] max-w-[85vw] z-50 animate-scale-in">
+        <div className="fixed top-14 right-4 sm:top-16 sm:right-6 md:right-20 lg:right-24 w-[280px] xs:w-[310px] sm:w-[340px] max-w-[85vw] z-[70] animate-scale-in">
           <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 shadow-[0_20px_40px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rounded-[18px]">
             
             {/* Washi Tape Accent */}
@@ -144,12 +154,7 @@ export default function SmartMaazAssistant() {
             <div className="absolute -top-2.5 right-5 w-4 h-4 bg-[#f4ead6] border-t-2 border-l-2 border-[#201c16]/20 rotate-45" />
 
             {/* Avatar Header Row */}
-            <div className="flex items-center gap-2.5 mb-2">
-              <img
-                src="/maaz-helmet.png"
-                alt=""
-                className="w-6 h-6 sm:w-7 sm:h-7 object-contain shrink-0 filter drop-shadow-sm"
-              />
+            <div className="flex items-center gap-2 mb-2">
               <span className="font-['Gloria_Hallelujah',cursive] text-sm sm:text-base font-bold text-primary">
                 Maaz says:
               </span>
@@ -160,7 +165,7 @@ export default function SmartMaazAssistant() {
               /* Custom Copy / Right-Click Attempt Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p className="font-bold text-red-700 text-lg">
-                  Nooooo! You cannot select, copy, or download my stuff! 🔒
+                  Nooooo! You cannot select, copy, or download my stuff!
                 </p>
                 <p>
                   Nice try though, hahhahha! All code and design assets are protected. Want to work together? Feel free to reach out via email!
@@ -170,7 +175,7 @@ export default function SmartMaazAssistant() {
               /* Custom Like Clicked Twice Funny Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p className="font-bold text-red-700 text-lg">
-                  Whyyyyyyy are you liking this note twice or more?! ❤️
+                  Whyyyyyyy are you liking this note twice or more?!
                 </p>
                 <p>
                   I know you really love that comment, hahhahha! Thanks for spreading the love!
@@ -180,7 +185,7 @@ export default function SmartMaazAssistant() {
               /* Custom Lever Pulled Twice Funny Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p className="font-bold text-amber-900 text-lg">
-                  Ohhhhooo! You're pulling that visitor counter handle twice?! 🎯
+                  Ohhhhooo! You're pulling that visitor counter handle twice?!
                 </p>
                 <p>
                   My bad, ignore me hahhahha! Pull it as much as you want, count yourself 100 times!
@@ -200,14 +205,26 @@ export default function SmartMaazAssistant() {
               /* Custom CRT Monitor Clicked Funny Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p className="font-bold text-emerald-800 text-lg">
-                  Hey! I know it's glitching! 📺
+                  Hey! I know it's glitching!
                 </p>
                 <p>
                   Don't worry, Techwazzy technician is already on the way with a bigger hammer to fix it! Hahahha!
                 </p>
               </div>
+            ) : customMsgType === "crackedPhone" ? (
+              /* Custom Cracked Phone Clicked Funny Message */
+              <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
+                <p className="font-bold text-red-700 text-lg">
+                  Nooooo! Not again!
+                </p>
+                <p>
+                  I'm currently out of budget... I know I'll fix this cracked screen too somehow, hahhahha!
+                </p>
+                <p>
+                  Anyhow you can book tickets and fly! Otherwise give your fingers some exercise by manually scrolling! Just joking, hahahha!
+                </p>
+              </div>
             ) : isMobile ? (
-              /* Mobile Default Message */
               /* Mobile Default Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p>
@@ -236,7 +253,7 @@ export default function SmartMaazAssistant() {
                 onClick={handleDismiss}
                 className="font-['Caveat',cursive] text-base sm:text-lg font-bold bg-primary text-primary-foreground px-4 py-1 sm:px-5 sm:py-1.5 rounded-[12px] border-2 border-primary-foreground/20 shadow-md transition-transform hover:-rotate-2 active:scale-95 cursor-pointer"
               >
-                {customMsgType === "copy" ? "My Bad! 😅" : customMsgType === "like" ? "Haha! Guilty" : customMsgType === "lever" ? "Haha! Okay" : customMsgType === "screen" ? "Ohh!" : customMsgType === "crt" ? "Hahahha! 😂" : isMobile ? "I understand" : "Got it"}
+                {customMsgType === "copy" ? "My Bad!" : customMsgType === "like" ? "Haha! Guilty" : customMsgType === "lever" ? "Haha! Okay" : customMsgType === "screen" ? "Ohh!" : customMsgType === "crt" ? "Hahahha!" : customMsgType === "crackedPhone" ? "Hahahha!" : isMobile ? "I understand" : "Got it"}
               </button>
             </div>
 
