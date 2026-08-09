@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 
 export default function GlitchCrtBuddy() {
   const [isBurst, setIsBurst] = useState(false);
-  const [showSpeechBubble, setShowSpeechBubble] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,7 +29,6 @@ export default function GlitchCrtBuddy() {
 
   const handleManualBurst = () => {
     setIsBurst(true);
-    setShowSpeechBubble(true);
     window.dispatchEvent(new CustomEvent("maaz_crt_clicked"));
     setTimeout(() => setIsBurst(false), 350);
   };
@@ -44,38 +42,6 @@ export default function GlitchCrtBuddy() {
         isBurst ? "burst" : ""
       }`}
     >
-      {/* Inline Maaz Assistant Speech Bubble Directly Above CRT Monitor */}
-      {showSpeechBubble && (
-        <div className="absolute -top-24 sm:-top-28 left-1/2 -translate-x-1/2 z-50 w-[270px] xs:w-[310px] sm:w-[360px] pointer-events-auto animate-bounce">
-          <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] p-3 sm:p-4 shadow-[0_20px_50px_rgba(0,0,0,0.9)] border-2 border-[#201c16]/30 rounded-[14px] text-center rotate-[-1deg]">
-            
-            {/* Speech Pointer Tail pointing down to monitor */}
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#f4ead6] border-b-2 border-r-2 border-[#201c16]/30 rotate-45" />
-
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <img src="/maaz-helmet.png" alt="" className="w-5 h-5 object-contain" />
-              <span className="font-['Gloria_Hallelujah',cursive] text-xs font-bold text-primary">
-                Maaz says:
-              </span>
-            </div>
-
-            <p className="font-['Caveat',cursive] text-base sm:text-lg font-bold leading-snug text-[#201c16]">
-              Hey! I know it's glitching! 📺 Techwazzy technician is already on the way with a bigger hammer to fix it! Hahahha!
-            </p>
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowSpeechBubble(false);
-              }}
-              className="mt-2 font-['Caveat',cursive] text-xs font-extrabold text-white bg-primary px-3 py-0.5 rounded-[6px] hover:bg-primary/80 transition-colors shadow-sm cursor-pointer"
-            >
-              Hahahha! 😂 Dismiss
-            </button>
-          </div>
-        </div>
-      )}
       {/* Scoped Glitch & Jitter Styles (Strictly Confined to Screen) */}
       <style>{`
         /* chromatic-aberration clones of the screen content, hidden until a burst */
