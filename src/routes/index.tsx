@@ -16,6 +16,7 @@ import EducationTicket from "@/components/EducationTicket";
 import MarginDoodles from "@/components/MarginDoodles";
 import CertificationsIndexBox from "@/components/CertificationsIndexBox";
 import SmartMaazAssistant from "@/components/SmartMaazAssistant";
+import TechWorldMemoriesConsole from "@/components/TechWorldMemoriesConsole";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -563,7 +564,7 @@ function PinnedPoster() {
 
   return (
     <>
-      <div ref={wrapRef} className="hidden sm:flex relative z-0 -mt-24 justify-center md:-mt-32">
+      <div ref={wrapRef} className="flex relative z-0 -mt-16 sm:-mt-24 md:-mt-32 justify-center scale-90 sm:scale-100 transition-transform">
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -911,6 +912,11 @@ function PageBody() {
           <div id="certifications" className="scroll-mt-24">
             <CertificationsIndexBox />
           </div>
+        </section>
+
+        {/* TECHWAZZY MEMORIES CONSOLE */}
+        <section id="memories" className="mt-16 md:mt-24" data-reveal>
+          <TechWorldMemoriesConsole />
         </section>
 
         {/* CONNECT */}
