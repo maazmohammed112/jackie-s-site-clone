@@ -418,7 +418,7 @@ export default function TechWorldMemoriesConsole() {
           {/* Static Hint Sticky Note Banner (Non-Clickable) */}
           <div className="relative mt-6 bg-[#f4ead6] text-[#201c16] px-5 py-2.5 rounded-[6px] shadow-md border border-[#201c16]/20 rotate-[-1deg]">
             <p className="font-['Caveat',cursive] text-lg sm:text-xl font-bold text-center">
-              Press START to begin ➔
+              Press START in console to begin ➔
             </p>
           </div>
 
