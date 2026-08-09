@@ -107,11 +107,24 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const STAMP_ITEMS = [
+  { id: "owl", word: "AI-BRAIN" },
+  { id: "leaf", word: "CLEAN" },
+  { id: "flower", word: "UI-CRAFT" },
+  { id: "teapot", word: "CHAI" },
+  { id: "bird", word: "DISPATCH" },
+  { id: "cursor", word: "INTERACT" },
+  { id: "computer", word: "AUTOMATE" },
+];
+
 function StampRail({ side }: { side: "left" | "right" }) {
+  const [activeItemKey, setActiveItemKey] = useState<string | null>(null);
+  const repeats = Array.from({ length: 15 });
+
   return (
     <div
-      aria-hidden="true"
-      className={`pointer-events-none fixed top-0 z-20 hidden h-screen w-[70px] opacity-90 md:block ${
+      aria-hidden="false"
+      className={`fixed top-0 z-20 hidden h-screen w-[70px] opacity-90 md:block pointer-events-auto select-none overflow-hidden ${
         side === "left" ? "left-0" : "right-0"
       }`}
       style={{
@@ -119,7 +132,44 @@ function StampRail({ side }: { side: "left" | "right" }) {
         backgroundRepeat: "repeat-y",
         backgroundSize: "100% auto",
       }}
-    />
+    >
+      <div className="relative w-full h-full flex flex-col">
+        {repeats.map((_, rIdx) => (
+          <div key={rIdx} className="flex flex-col shrink-0">
+            {STAMP_ITEMS.map((item, iIdx) => {
+              const itemKey = `${side}-${rIdx}-${iIdx}`;
+              const isOpen = activeItemKey === itemKey;
+
+              return (
+                <div key={itemKey} className="relative w-[70px] h-[68px] shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setActiveItemKey(isOpen ? null : itemKey)}
+                    onMouseEnter={() => setActiveItemKey(itemKey)}
+                    onMouseLeave={() => setActiveItemKey(null)}
+                    aria-label={`View ${item.word} label`}
+                    className="w-full h-full cursor-pointer bg-transparent border-0 outline-none hover:bg-white/10 transition-colors"
+                  />
+
+                  {/* Pure Handwritten Font Text (NO background container required) */}
+                  {isOpen && (
+                    <div
+                      className={`absolute top-1/2 -translate-y-1/2 whitespace-nowrap z-50 animate-fade-in pointer-events-none ${
+                        side === "right" ? "right-full mr-3 text-right" : "left-full ml-3 text-left"
+                      }`}
+                    >
+                      <span className="font-['Caveat',cursive] text-xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] tracking-wider uppercase">
+                        {side === "right" ? `${item.word} ~` : `~ ${item.word}`}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
