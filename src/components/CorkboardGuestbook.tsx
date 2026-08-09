@@ -175,17 +175,20 @@ export default function CorkboardGuestbook() {
     );
   };
 
+  const hasMoreThanSix = notes.length > 6;
+  const olderNotesCount = notes.length - 6;
+
   return (
     <section id="guestbook" className="relative my-20 px-3 sm:px-6 max-w-7xl mx-auto select-none">
       
       {/* Wooden Framed Outer Container */}
       <div className="relative bg-[#1c1815] p-3 sm:p-6 lg:p-7 rounded-[18px] border-[6px] sm:border-[8px] border-[#382a1d] shadow-[0_30px_70px_rgba(0,0,0,0.9)]">
         
-        {/* Main 2-Column Grid: Corkboard Wall (Left 7 cols) + Forms & Stamps (Right 5 cols) */}
+        {/* Main 2-Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           
-          {/* LEFT COLUMN: Wooden Corkboard Wall */}
-          <div className="lg:col-span-7 relative min-h-[580px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between">
+          {/* LEFT COLUMN: Wooden Corkboard Wall (Scrollable if >6 notes) */}
+          <div className="lg:col-span-7 relative max-h-[640px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto scrollbar-thin scrollbar-thumb-amber-800 scrollbar-track-amber-950">
             
             {/* Real Corkboard Surface Grain Texture */}
             <div
@@ -200,10 +203,10 @@ export default function CorkboardGuestbook() {
               }}
             />
 
-            {/* Top Area Container: Shakable Helmet Polaroid (Non-overlapping) + Header Banner */}
-            <div className="relative z-10 mb-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {/* Top Area Container: Shakable Helmet Polaroid + Header Banner */}
+            <div className="relative z-10 mb-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               
-              {/* SHAKABLE Polaroid Mecha Helmet Photo (Clicks or touches trigger physical shake animation on mobile & desktop) */}
+              {/* SHAKABLE Polaroid Mecha Helmet Photo */}
               <div
                 onClick={handleHelmetClick}
                 title="Click me to shake!"
@@ -244,7 +247,7 @@ export default function CorkboardGuestbook() {
 
             </div>
 
-            {/* Sticky Notes Grid (Clean 2 or 3 Column Layout) */}
+            {/* Sticky Notes Grid */}
             <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1">
               {notes.map((note) => {
                 const stampObj = STAMPS.find((s) => s.label === note.stamp) ?? STAMPS[0]!;
@@ -295,7 +298,20 @@ export default function CorkboardGuestbook() {
               })}
             </div>
 
-            {/* Bottom Right Torn Note Paper Scrap (Positioned cleanly below grid - NO OVERLAPPING TEXT) */}
+            {/* Pinned Paper Note Indicator for Older Notes — Displayed ONLY if notes.length > 6 */}
+            {hasMoreThanSix && (
+              <div className="relative z-10 mt-6 bg-[#f4ead6] text-[#201c16] p-3 rounded-[4px] shadow-lg border border-[#201c16]/30 rotate-[-1deg] flex items-center justify-between">
+                <span className="absolute -top-2 left-4 w-3.5 h-3.5 bg-red-600 rounded-full shadow-md border border-white" />
+                <p className="font-['Caveat',cursive] text-base sm:text-lg font-bold text-[#201c16]">
+                  📌 There are {olderNotesCount} older notes below — scroll board down to view ↴
+                </p>
+                <span className="font-['Silkscreen',monospace] text-[10px] bg-amber-800 text-white px-2 py-0.5 rounded-[3px]">
+                  +{olderNotesCount} OLDER
+                </span>
+              </div>
+            )}
+
+            {/* Bottom Right Torn Note Paper Scrap */}
             <div className="relative z-10 mt-6 self-end max-w-[240px] bg-[#f4ead6] text-[#201c16] px-4 py-2.5 rounded-[4px] shadow-lg border border-[#201c16]/20 rotate-[2deg]">
               <span className="absolute -top-2.5 left-4 w-3.5 h-3.5 bg-red-600 rounded-full shadow-sm border border-white" />
               <p className="font-['Caveat',cursive] text-sm leading-tight text-center font-bold">
@@ -305,7 +321,7 @@ export default function CorkboardGuestbook() {
 
           </div>
 
-          {/* RIGHT COLUMN: Leave Note Form & Pick Reaction Stamp Panel (Fills dark empty space on the right side) */}
+          {/* RIGHT COLUMN: Leave Note Form & Pick Reaction Stamp Panel */}
           <div className="lg:col-span-5 space-y-5">
             
             {/* Top Tape Vibe Scrap */}
@@ -372,7 +388,7 @@ export default function CorkboardGuestbook() {
 
             </div>
 
-            {/* PICK A REACTION STAMP Card (8 Custom Rubber Stamps) */}
+            {/* PICK A REACTION STAMP Card */}
             <div className="relative bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 rounded-[8px] shadow-[0_16px_36px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rotate-[-1deg]">
               
               <h4 className="font-['Silkscreen',monospace] text-xs font-bold text-[#201c16] mb-3 uppercase flex items-center justify-between">
