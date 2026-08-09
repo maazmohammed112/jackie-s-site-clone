@@ -175,8 +175,10 @@ export default function CorkboardGuestbook() {
     );
   };
 
-  const hasMoreThanSix = notes.length > 6;
-  const olderNotesCount = notes.length - 6;
+  const latestSixNotes = notes.slice(0, 6);
+  const olderNotes = notes.slice(6);
+  const hasMoreThanSix = olderNotes.length > 0;
+  const olderNotesCount = olderNotes.length;
 
   return (
     <section id="guestbook" className="relative my-20 px-3 sm:px-6 max-w-7xl mx-auto select-none">
@@ -187,8 +189,8 @@ export default function CorkboardGuestbook() {
         {/* Main 2-Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           
-          {/* LEFT COLUMN: Wooden Corkboard Wall (Scrollable if >6 notes) */}
-          <div className="lg:col-span-7 relative max-h-[640px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto scrollbar-thin scrollbar-thumb-amber-800 scrollbar-track-amber-950">
+          {/* LEFT COLUMN: Wooden Corkboard Wall (Hidden scrollbar) */}
+          <div className="lg:col-span-7 relative max-h-[640px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             
             {/* Real Corkboard Surface Grain Texture */}
             <div
@@ -247,9 +249,9 @@ export default function CorkboardGuestbook() {
 
             </div>
 
-            {/* Sticky Notes Grid */}
+            {/* Top 6 Latest Sticky Notes Grid */}
             <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1">
-              {notes.map((note) => {
+              {latestSixNotes.map((note) => {
                 const stampObj = STAMPS.find((s) => s.label === note.stamp) ?? STAMPS[0]!;
 
                 return (
@@ -298,21 +300,74 @@ export default function CorkboardGuestbook() {
               })}
             </div>
 
-            {/* Pinned Paper Note Indicator for Older Notes — Displayed ONLY if notes.length > 6 */}
+            {/* Pinned Paper Note Indicator — Rendered BELOW the top 6 notes and ABOVE older notes */}
             {hasMoreThanSix && (
-              <div className="relative z-10 mt-6 bg-[#f4ead6] text-[#201c16] p-3 rounded-[4px] shadow-lg border border-[#201c16]/30 rotate-[-1deg] flex items-center justify-between">
+              <div className="relative z-10 my-6 bg-[#f4ead6] text-[#201c16] p-3.5 rounded-[4px] shadow-lg border border-[#201c16]/30 rotate-[-1deg] flex items-center justify-between">
                 <span className="absolute -top-2 left-4 w-3.5 h-3.5 bg-red-600 rounded-full shadow-md border border-white" />
                 <p className="font-['Caveat',cursive] text-base sm:text-lg font-bold text-[#201c16]">
                   📌 There are {olderNotesCount} older notes below — scroll board down to view ↴
                 </p>
-                <span className="font-['Silkscreen',monospace] text-[10px] bg-amber-800 text-white px-2 py-0.5 rounded-[3px]">
+                <span className="font-['Silkscreen',monospace] text-[10px] bg-amber-800 text-white px-2 py-1 rounded-[3px]">
                   +{olderNotesCount} OLDER
                 </span>
               </div>
             )}
 
+            {/* Older Notes Grid (Rendered BELOW the Pinned Paper Note Indicator) */}
+            {hasMoreThanSix && (
+              <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1 mb-6">
+                {olderNotes.map((note) => {
+                  const stampObj = STAMPS.find((s) => s.label === note.stamp) ?? STAMPS[0]!;
+
+                  return (
+                    <div
+                      key={note.id}
+                      style={{ transform: `rotate(${note.rotation}deg)` }}
+                      className={`relative p-3.5 rounded-[4px] shadow-[0_12px_24px_rgba(0,0,0,0.5)] border ${note.bgClass} transition-transform duration-300 hover:rotate-0 hover:z-30 hover:scale-[1.03] flex flex-col justify-between min-h-[175px]`}
+                    >
+                      {/* Pushpin Header */}
+                      <span className={`absolute -top-2.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full ${note.pinColor} shadow-[0_2px_5px_rgba(0,0,0,0.6)] border border-white`} />
+
+                      {/* Author Name */}
+                      <div className="font-['Caveat',cursive] text-xs text-[#201c16]/70 font-bold text-right">
+                        {note.name}
+                      </div>
+
+                      {/* Note Body Message */}
+                      <p className="font-['Caveat',cursive] text-base sm:text-lg leading-snug font-bold my-1.5">
+                        "{note.message}"
+                      </p>
+
+                      {/* Rubber Stamp Ink Badge & Date */}
+                      <div>
+                        <div className={`inline-block font-['Silkscreen',monospace] text-[9px] font-bold px-2 py-0.5 rounded-[3px] border-2 uppercase ${stampObj.color} ${stampObj.borderClass} bg-white/40 shadow-sm rotate-[-3deg]`}>
+                          {note.stamp}
+                        </div>
+
+                        <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#201c16]/10">
+                          <span className="font-['Space_Mono',monospace] text-[8px] text-[#201c16]/60">
+                            {note.date}
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={() => handleLike(note.id)}
+                            className="flex items-center gap-1 font-['Silkscreen',monospace] text-[9px] px-1.5 py-0.5 rounded-[3px] bg-white/60 border border-[#201c16]/20 hover:bg-white active:scale-90 transition-transform cursor-pointer"
+                          >
+                            <span>❤️</span>
+                            <span>{note.likes}</span>
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
             {/* Bottom Right Torn Note Paper Scrap */}
-            <div className="relative z-10 mt-6 self-end max-w-[240px] bg-[#f4ead6] text-[#201c16] px-4 py-2.5 rounded-[4px] shadow-lg border border-[#201c16]/20 rotate-[2deg]">
+            <div className="relative z-10 mt-4 self-end max-w-[240px] bg-[#f4ead6] text-[#201c16] px-4 py-2.5 rounded-[4px] shadow-lg border border-[#201c16]/20 rotate-[2deg]">
               <span className="absolute -top-2.5 left-4 w-3.5 h-3.5 bg-red-600 rounded-full shadow-sm border border-white" />
               <p className="font-['Caveat',cursive] text-sm leading-tight text-center font-bold">
                 Every stamp tells a story. Thanks for being a part of mine! ♡
