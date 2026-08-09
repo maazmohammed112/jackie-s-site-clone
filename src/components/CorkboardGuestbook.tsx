@@ -97,7 +97,7 @@ export default function CorkboardGuestbook() {
     return () => unsubscribe();
   }, []);
 
-  // 2. Real-time sync for Visitor Counter from Firebase Realtime Database (starts at 0)
+  // 2. Real-time sync for Visitor Counter from Firebase Realtime Database
   useEffect(() => {
     const visitorRef = ref(db, "visitor_count");
 
@@ -333,7 +333,7 @@ export default function CorkboardGuestbook() {
               </div>
 
               {/* Header Title Banner */}
-              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3.5 sm:p-4 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3.5 sm:p-4 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <div>
                   <h2 className="font-['Gloria_Hallelujah',cursive] text-xl sm:text-2xl font-bold text-[#201c16] leading-tight">
                     Techwazzy Life World
@@ -343,73 +343,48 @@ export default function CorkboardGuestbook() {
                   </p>
                 </div>
 
-                {/* Counter Container with Pure White Handwritten Hint & Curved Drawn Arrow */}
-                <div className="relative shrink-0 flex items-center gap-2">
+                {/* 3D MECHANICAL TALLY COUNTER WITH PULL LEVER & HANDWRITTEN WHITE HINT */}
+                <div className="relative shrink-0 pt-5">
                   
-                  {/* Pure White Handwritten Hint Text + Drawn Arrow (No Background Box) */}
-                  <div className="hidden xs:flex flex-col items-end pointer-events-none select-none mr-1 rotate-[-3deg]">
-                    <span className="font-['Caveat',cursive] text-sm sm:text-base font-bold text-[#201c16] leading-none drop-shadow-sm">
-                      Pull down to count yourself!
-                    </span>
-                    <svg viewBox="0 0 40 20" className="w-10 h-5 text-[#201c16] fill-none stroke-current stroke-[2.5] stroke-linecap-round stroke-linejoin-round self-end mt-0.5">
-                      <path d="M 5 3 Q 25 2, 35 15" />
-                      <path d="M 28 12 L 35 15 L 34 7" />
+                  {/* Pure White Handwritten Hint with Drawn Arrow (No Background Container) */}
+                  <div className="absolute -top-1.5 right-0 pointer-events-none flex items-center gap-1 font-['Caveat',cursive] text-white text-xs sm:text-sm font-bold whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] animate-bounce">
+                    <span>pull down to add your count!</span>
+                    <svg className="w-4 h-4 text-white rotate-[90deg] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
 
-                  {/* ULTRA-REALISTIC 3D STAINLESS STEEL TALLY COUNTER */}
-                  <div className="relative bg-gradient-to-b from-zinc-100 via-zinc-300 to-zinc-500 p-2.5 rounded-[10px] border-2 border-zinc-600 shadow-[inset_0_2px_4px_rgba(255,255,255,0.8),0_10px_25px_rgba(0,0,0,0.7)] flex items-center gap-3">
+                  <div className="relative bg-gradient-to-b from-[#d1d5db] via-[#9ca3af] to-[#4b5563] p-2 rounded-[8px] border-2 border-zinc-600 shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center gap-2">
                     
-                    {/* Metallic Corner Rivets */}
-                    <span className="absolute top-1 left-1 w-1.5 h-1.5 rounded-full bg-zinc-300 border border-zinc-600 shadow-inner" />
-                    <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-zinc-300 border border-zinc-600 shadow-inner" />
-                    <span className="absolute bottom-1 left-1 w-1.5 h-1.5 rounded-full bg-zinc-300 border border-zinc-600 shadow-inner" />
-                    <span className="absolute bottom-1 right-1 w-1.5 h-1.5 rounded-full bg-zinc-300 border border-zinc-600 shadow-inner" />
-
                     <div>
-                      <div className="font-['Silkscreen',monospace] text-[8px] text-zinc-900 uppercase font-bold tracking-widest mb-1 text-center drop-shadow-sm">
+                      <div className="font-['Silkscreen',monospace] text-[8px] text-zinc-900 uppercase font-bold tracking-wider mb-0.5 text-center">
                         VISITORS
                       </div>
-                      {/* Mechanical Digit Reels with Split Lines */}
-                      <div className="flex items-center gap-1 bg-black p-1.5 rounded-[5px] border-2 border-zinc-700 shadow-[inset_0_3px_8px_rgba(0,0,0,0.9)]">
+                      {/* Metallic Flip Reels */}
+                      <div className="flex items-center gap-1 bg-black p-1 rounded-[4px] border border-zinc-700 shadow-inner">
                         {countDigits.map((digit, i) => (
-                          <div
+                          <span
                             key={i}
-                            className="relative bg-gradient-to-b from-zinc-800 via-zinc-900 to-black text-white font-['Space_Mono',monospace] text-xs sm:text-base px-1.5 py-0.5 rounded-[3px] font-bold border border-zinc-700 shadow-md flex items-center justify-center overflow-hidden"
+                            className="bg-gradient-to-b from-zinc-800 to-zinc-950 text-white font-['Space_Mono',monospace] text-xs sm:text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/20 shadow-md"
                           >
-                            {/* Horizontal split line across mechanical digit reel */}
-                            <span className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[1px] bg-black/80 z-10" />
-                            <span className="relative z-0">{digit}</span>
-                          </div>
+                            {digit}
+                          </span>
                         ))}
                       </div>
                     </div>
 
-                    {/* Spring-Loaded Metallic T-Bar Pull Lever */}
+                    {/* Pull Lever Handle (T-Bar) */}
                     <div
                       onClick={handlePullLever}
-                      title="Click to pull lever down & increment count!"
-                      className="group relative cursor-pointer pt-2 select-none"
+                      title="Pull lever to increment visitor count!"
+                      className={`group relative cursor-pointer transition-transform duration-200 ${
+                        isLeverPulled ? "translate-y-2 rotate-12 scale-95" : "hover:translate-y-0.5"
+                      }`}
                     >
-                      {/* Metallic Side Pivot Socket */}
-                      <div className="absolute top-4 -left-2.5 w-3 h-5 bg-gradient-to-r from-zinc-500 to-zinc-700 rounded-sm border border-zinc-800 shadow-md" />
-
-                      {/* Spring Coils */}
-                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-2 h-3 border-y border-zinc-600 bg-zinc-400/50" />
-
-                      {/* Lever Arm */}
-                      <div
-                        className={`relative transition-all duration-200 origin-top ${
-                          isLeverPulled ? "translate-y-3 rotate-[18deg] scale-95" : "group-hover:translate-y-1"
-                        }`}
-                      >
-                        {/* Stainless Shaft */}
-                        <div className="w-3 h-11 bg-gradient-to-r from-zinc-200 via-zinc-400 to-zinc-600 rounded-full border border-zinc-700 shadow-lg flex items-start justify-center pt-0.5">
-                          {/* Red Grip T-Handle Cap */}
-                          <div className="w-6 h-4 bg-gradient-to-b from-red-500 via-red-600 to-red-800 rounded-sm border border-red-900 shadow-[0_4px_8px_rgba(0,0,0,0.6)] group-hover:brightness-110 flex items-center justify-center">
-                            <span className="w-4 h-1 bg-red-400/40 rounded-full" />
-                          </div>
-                        </div>
+                      {/* Metallic Rod */}
+                      <div className="w-2.5 h-10 bg-gradient-to-b from-zinc-300 via-zinc-400 to-zinc-600 rounded-full border border-zinc-700 shadow-md flex flex-col items-center justify-start pt-1">
+                        {/* Red Rubber T-Grip Handle Top */}
+                        <span className="w-5 h-3.5 bg-red-600 rounded-sm border border-red-800 shadow-md group-hover:brightness-125" />
                       </div>
                     </div>
 
