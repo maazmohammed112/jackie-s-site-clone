@@ -66,7 +66,6 @@ const MEMORIES: MemoryCartridge[] = [
 
 export default function TechWorldMemoriesConsole() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [showTitleOverlay, setShowTitleOverlay] = useState(true);
   const [pressedBtn, setPressedBtn] = useState<string | null>(null);
 
@@ -80,17 +79,6 @@ export default function TechWorldMemoriesConsole() {
     }, 3000);
     return () => clearTimeout(timer);
   }, [activeIndex]);
-
-  // 2. Auto-play slideshow cycles smoothly through all 5 memory cartridges every 2.5s
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % MEMORIES.length);
-    }, 2500);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying]);
 
   const handleNext = () => {
     triggerBtnPress("A");
@@ -107,9 +95,17 @@ export default function TechWorldMemoriesConsole() {
     setTimeout(() => setPressedBtn(null), 150);
   };
 
-  const handleStartToggle = () => {
+  // Pressing START shows title overlay, fades out, and shifts to next memory
+  const handleStartClick = () => {
     triggerBtnPress("START");
-    setIsAutoPlaying((p) => !p);
+    setShowTitleOverlay(true);
+
+    setTimeout(() => {
+      setShowTitleOverlay(false);
+      setTimeout(() => {
+        setActiveIndex((prev) => (prev + 1) % MEMORIES.length);
+      }, 250);
+    }, 1200);
   };
 
   return (
@@ -204,15 +200,10 @@ export default function TechWorldMemoriesConsole() {
                       }}
                     />
 
-                    {/* LCD Pixel Status Overlay */}
-                    <div className="absolute bottom-2.5 inset-x-0 text-center z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] transition-all duration-300 px-2">
-                      {isAutoPlaying && (
-                        <div className="inline-block bg-[#0a2016]/90 border border-[#4DFF9A] text-[#4DFF9A] font-['Silkscreen',monospace] text-[9px] sm:text-[10px] px-2.5 py-1 rounded-[4px] font-bold mb-1.5 tracking-wider animate-pulse shadow-[0_0_12px_rgba(77,255,154,0.4)]">
-                          ● AUTO-SLIDESHOW : ACTIVE
-                        </div>
-                      )}
-                      {(showTitleOverlay || !isAutoPlaying) && (
-                        <div className="animate-fade-in bg-black/60 backdrop-blur-xs py-1.5 px-3 rounded-[6px] max-w-[90%] mx-auto border border-white/10">
+                    {/* LCD Pixel Title & Subtitle Overlay */}
+                    {showTitleOverlay && (
+                      <div className="absolute bottom-2.5 inset-x-0 text-center z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] transition-all duration-300 px-2 animate-fade-in">
+                        <div className="bg-black/60 backdrop-blur-xs py-1.5 px-3 rounded-[6px] max-w-[90%] mx-auto border border-white/10">
                           <div className="font-['Silkscreen',monospace] text-xs sm:text-sm text-yellow-300 font-bold tracking-wider truncate">
                             {activeMem.title}
                           </div>
@@ -220,8 +211,8 @@ export default function TechWorldMemoriesConsole() {
                             {activeMem.tagline}
                           </div>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -328,12 +319,12 @@ export default function TechWorldMemoriesConsole() {
                 <div className="flex flex-col items-center">
                   <button
                     type="button"
-                    onClick={handleStartToggle}
-                    aria-label="Toggle Auto-Play Slideshow (START Button)"
-                    title="Press START to toggle auto slideshow"
-                    className={`w-9 h-3.5 rounded-full border border-white/20 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] transition-all cursor-pointer ${
-                      isAutoPlaying ? "bg-[#4DFF9A] shadow-[0_0_12px_#4DFF9A]" : "bg-gradient-to-b from-[#3a3d46] to-[#1c1e24] hover:brightness-125"
-                    } ${pressedBtn === "START" ? "scale-95" : ""}`}
+                    onClick={handleStartClick}
+                    aria-label="Play Next Memory (START Button)"
+                    title="Press START to play next memory"
+                    className={`w-9 h-3.5 rounded-full border border-white/20 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] transition-all cursor-pointer bg-gradient-to-b from-[#3a3d46] to-[#1c1e24] hover:brightness-125 ${
+                      pressedBtn === "START" ? "scale-95 bg-zinc-800" : ""
+                    }`}
                   />
                   <span className="font-['Silkscreen',monospace] text-[8px] text-chalk/70 font-bold mt-1">
                     START
@@ -431,20 +422,11 @@ export default function TechWorldMemoriesConsole() {
           {/* Interactive START Button Sticky Note Banner */}
           <button
             type="button"
-            onClick={handleStartToggle}
+            onClick={handleStartClick}
             className="relative mt-6 bg-[#f4ead6] hover:bg-white text-[#201c16] px-5 py-2.5 rounded-[6px] shadow-md border-2 border-[#201c16]/30 hover:border-primary rotate-[-1deg] transition-all cursor-pointer active:scale-95 group"
           >
             <p className="font-['Caveat',cursive] text-lg sm:text-xl font-bold text-center flex items-center justify-center gap-2">
-              {isAutoPlaying ? (
-                <>
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping" />
-                  <span className="text-emerald-900 font-extrabold">Auto Slideshow Playing! Press START to Pause ❚❚</span>
-                </>
-              ) : (
-                <>
-                  <span className="group-hover:translate-x-1 transition-transform">Press START to begin auto slideshow ➔</span>
-                </>
-              )}
+              <span className="group-hover:translate-x-1 transition-transform">Press START to play next memory ➔</span>
             </p>
           </button>
 
