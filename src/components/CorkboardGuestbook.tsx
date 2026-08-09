@@ -127,6 +127,10 @@ export default function CorkboardGuestbook() {
     return INITIAL_NOTES;
   });
 
+  const [visitorCount, setVisitorCount] = useState(247);
+  const [leverPullCount, setLeverPullCount] = useState(0);
+  const [isLeverPulled, setIsLeverPulled] = useState(false);
+
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [selectedStampKey, setSelectedStampKey] = useState("chaiApproved");
@@ -147,6 +151,20 @@ export default function CorkboardGuestbook() {
   const handleHelmetClick = () => {
     setIsHelmetShaking(true);
     setTimeout(() => setIsHelmetShaking(false), 800);
+  };
+
+  const handlePullLever = () => {
+    setIsLeverPulled(true);
+    setVisitorCount((prev) => prev + 1);
+
+    const nextCount = leverPullCount + 1;
+    setLeverPullCount(nextCount);
+
+    if (nextCount === 2) {
+      window.dispatchEvent(new CustomEvent("maaz_lever_pulled_twice"));
+    }
+
+    setTimeout(() => setIsLeverPulled(false), 300);
   };
 
   const handleScrollToOlderNotes = () => {
@@ -203,13 +221,16 @@ export default function CorkboardGuestbook() {
   const allStampList = Object.values(STAMP_PRESETS);
   const visibleStamps = showAllStamps ? allStampList : allStampList.slice(0, 6);
 
+  // Format visitor counter to 5 digits (e.g. 0 0 2 4 7)
+  const countDigits = String(visitorCount).padStart(5, "0").split("");
+
   return (
     <section id="guestbook" className="relative my-20 px-3 sm:px-6 max-w-7xl mx-auto select-none">
       
       {/* Wooden Framed Outer Container */}
       <div className="relative bg-[#1c1815] p-3 sm:p-6 lg:p-7 rounded-[18px] border-[6px] sm:border-[8px] border-[#382a1d] shadow-[0_30px_70px_rgba(0,0,0,0.9)]">
         
-        {/* Pinned Paper Note Indicator for Older Notes — Attached to Bottom Outer Cardboard Frame (Non-overlapping) */}
+        {/* Pinned Paper Note Indicator for Older Notes — Attached to Bottom Outer Cardboard Frame */}
         {hasMoreThanSix && (
           <div
             onClick={handleScrollToOlderNotes}
@@ -228,7 +249,7 @@ export default function CorkboardGuestbook() {
           </div>
         )}
 
-        {/* Main 2-Column Grid (Left & Right Boxes Match Heights Perfectly) */}
+        {/* Main 2-Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           
           {/* LEFT COLUMN: Wooden Corkboard Wall */}
@@ -250,7 +271,7 @@ export default function CorkboardGuestbook() {
               }}
             />
 
-            {/* Top Area Container: Shakable Helmet Polaroid + Header Banner */}
+            {/* Top Area Container: Shakable Helmet Polaroid + Header Banner + Mechanical Counter with Pull Lever */}
             <div className="relative z-10 mb-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               
               {/* SHAKABLE Polaroid Mecha Helmet Photo */}
@@ -267,7 +288,7 @@ export default function CorkboardGuestbook() {
               </div>
 
               {/* Header Title Banner */}
-              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3.5 sm:p-4 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex items-center justify-between">
+              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3.5 sm:p-4 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <div>
                   <h2 className="font-['Gloria_Hallelujah',cursive] text-xl sm:text-2xl font-bold text-[#201c16] leading-tight">
                     Techwazzy Life World
@@ -277,19 +298,43 @@ export default function CorkboardGuestbook() {
                   </p>
                 </div>
 
-                {/* Odometer Visitor Counter */}
-                <div className="hidden xs:flex flex-col items-end shrink-0">
-                  <div className="flex items-center gap-1 bg-[#181616] p-1.5 rounded-[4px] border border-white/20 shadow-inner">
-                    <span className="font-['Silkscreen',monospace] text-[8px] text-chalk/70 mr-1 uppercase">Visitors</span>
-                    <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-xs sm:text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">0</span>
-                    <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-xs sm:text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">2</span>
-                    <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-xs sm:text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">4</span>
-                    <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-xs sm:text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">7</span>
+                {/* 3D MECHANICAL TALLY COUNTER WITH PULL LEVER (Matching 2nd Reference Image 1:1) */}
+                <div className="relative shrink-0 bg-gradient-to-b from-[#d1d5db] via-[#9ca3af] to-[#4b5563] p-2 rounded-[8px] border-2 border-zinc-600 shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center gap-2">
+                  
+                  <div>
+                    <div className="font-['Silkscreen',monospace] text-[8px] text-zinc-900 uppercase font-bold tracking-wider mb-0.5 text-center">
+                      VISITORS
+                    </div>
+                    {/* Metallic Flip Reels */}
+                    <div className="flex items-center gap-1 bg-black p-1 rounded-[4px] border border-zinc-700 shadow-inner">
+                      {countDigits.map((digit, i) => (
+                        <span
+                          key={i}
+                          className="bg-gradient-to-b from-zinc-800 to-zinc-950 text-white font-['Space_Mono',monospace] text-xs sm:text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/20 shadow-md"
+                        >
+                          {digit}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <span className="font-['Caveat',cursive] text-[11px] text-[#201c16]/80 mt-0.5 italic">
-                    amazing people so far! ↴
-                  </span>
+
+                  {/* Pull Lever Handle (T-Bar) */}
+                  <div
+                    onClick={handlePullLever}
+                    title="Pull lever to increment visitor count!"
+                    className={`group relative cursor-pointer transition-transform duration-200 ${
+                      isLeverPulled ? "translate-y-2 rotate-12 scale-95" : "hover:translate-y-0.5"
+                    }`}
+                  >
+                    {/* Metallic Rod */}
+                    <div className="w-2.5 h-10 bg-gradient-to-b from-zinc-300 via-zinc-400 to-zinc-600 rounded-full border border-zinc-700 shadow-md flex flex-col items-center justify-start pt-1">
+                      {/* Red Rubber T-Grip Handle Top */}
+                      <span className="w-5 h-3.5 bg-red-600 rounded-sm border border-red-800 shadow-md group-hover:brightness-125" />
+                    </div>
+                  </div>
+
                 </div>
+
               </div>
 
             </div>
@@ -321,7 +366,7 @@ export default function CorkboardGuestbook() {
                       "{note.message}"
                     </p>
 
-                    {/* SVG Distressed Rubber Stamp (Contained inside note boundaries) */}
+                    {/* SVG Distressed Rubber Stamp */}
                     <div className="mt-1 flex items-center justify-start overflow-hidden max-w-full">
                       <DistressedStamp
                         text={stampObj.text}
@@ -489,7 +534,7 @@ export default function CorkboardGuestbook() {
 
             </div>
 
-            {/* PICK A REACTION STAMP Card (With View More / Show Less Stamp Arrow Toggle) */}
+            {/* PICK A REACTION STAMP Card */}
             <div className="relative bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 rounded-[8px] shadow-[0_16px_36px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rotate-[-1deg]">
               
               <h4 className="font-['Silkscreen',monospace] text-xs font-bold text-[#201c16] mb-3 uppercase flex items-center justify-between">

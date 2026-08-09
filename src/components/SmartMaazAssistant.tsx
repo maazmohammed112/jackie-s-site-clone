@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export default function SmartMaazAssistant() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [isScreenClickMessage, setIsScreenClickMessage] = useState(false);
+  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | null>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -26,15 +26,25 @@ export default function SmartMaazAssistant() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Listen for custom screen click event from TechWorldMemoriesConsole
+  // Listen for custom screen click event & lever pulled twice event
   useEffect(() => {
     const handleScreenClick = () => {
-      setIsScreenClickMessage(true);
+      setCustomMsgType("screen");
+      setOpen(true);
+    };
+
+    const handleLeverPulledTwice = () => {
+      setCustomMsgType("lever");
       setOpen(true);
     };
 
     window.addEventListener("maaz_screen_clicked", handleScreenClick);
-    return () => window.removeEventListener("maaz_screen_clicked", handleScreenClick);
+    window.addEventListener("maaz_lever_pulled_twice", handleLeverPulledTwice);
+
+    return () => {
+      window.removeEventListener("maaz_screen_clicked", handleScreenClick);
+      window.removeEventListener("maaz_lever_pulled_twice", handleLeverPulledTwice);
+    };
   }, []);
 
   // Auto-close speech bubble when user scrolls
@@ -42,7 +52,7 @@ export default function SmartMaazAssistant() {
     if (!open) return;
     const onScroll = () => {
       setOpen(false);
-      setIsScreenClickMessage(false);
+      setCustomMsgType(null);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -50,8 +60,8 @@ export default function SmartMaazAssistant() {
 
   const handleDismiss = () => {
     setOpen(false);
-    if (isScreenClickMessage) {
-      setIsScreenClickMessage(false);
+    if (customMsgType) {
+      setCustomMsgType(null);
     } else if (isMobile) {
       sessionStorage.setItem("maaz_mobile_prompt_seen", "true");
     }
@@ -64,8 +74,8 @@ export default function SmartMaazAssistant() {
         <button
           type="button"
           onClick={() => {
-            if (open && isScreenClickMessage) {
-              setIsScreenClickMessage(false);
+            if (open && customMsgType) {
+              setCustomMsgType(null);
             }
             setOpen((prev) => !prev);
           }}
@@ -125,8 +135,18 @@ export default function SmartMaazAssistant() {
             </div>
 
             {/* Message Body */}
-            {isScreenClickMessage ? (
-              /* Custom Screen Click Funny Message */
+            {customMsgType === "lever" ? (
+              /* Custom Lever Pulled Twice Funny Message */
+              <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
+                <p className="font-bold text-amber-900 text-lg">
+                  Ohhhhooo! You're pulling that visitor counter handle twice?! 🎯
+                </p>
+                <p>
+                  My bad, ignore me hahhahha! Pull it as much as you want, count yourself 100 times!
+                </p>
+              </div>
+            ) : customMsgType === "screen" ? (
+              /* Custom Screen Click Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p className="font-bold text-red-700">
                   Yoooo! That's just the console LCD screen, don't click on that!
@@ -164,7 +184,7 @@ export default function SmartMaazAssistant() {
                 onClick={handleDismiss}
                 className="font-['Caveat',cursive] text-base sm:text-lg font-bold bg-primary text-primary-foreground px-4 py-1 sm:px-5 sm:py-1.5 rounded-[12px] border-2 border-primary-foreground/20 shadow-md transition-transform hover:-rotate-2 active:scale-95 cursor-pointer"
               >
-                {isScreenClickMessage ? "Ohh!" : isMobile ? "I understand" : "Got it"}
+                {customMsgType === "lever" ? "Haha! Okay" : customMsgType === "screen" ? "Ohh!" : isMobile ? "I understand" : "Got it"}
               </button>
             </div>
 

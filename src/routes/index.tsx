@@ -927,16 +927,6 @@ function PageBody() {
           </div>
         </section>
 
-        {/* TECHWAZZY MEMORIES CONSOLE */}
-        <section id="memories" className="mt-16 md:mt-24" data-reveal>
-          <TechWorldMemoriesConsole />
-        </section>
-
-        {/* TORN PAPER GUESTBOOK & REVIEWS */}
-        <section id="guestbook" className="mt-16 md:mt-24" data-reveal>
-          <CorkboardGuestbook />
-        </section>
-
         {/* CONNECT */}
         <PinnedPoster />
 
@@ -1050,6 +1040,16 @@ function PageBody() {
               <ContactScraps />
             </div>
           </div>
+        </section>
+
+        {/* TORN PAPER GUESTBOOK & REVIEWS */}
+        <section id="guestbook" className="mt-16 md:mt-24" data-reveal>
+          <CorkboardGuestbook />
+        </section>
+
+        {/* TECHWAZZY MEMORIES CONSOLE */}
+        <section id="memories" className="mt-16 md:mt-24" data-reveal>
+          <TechWorldMemoriesConsole />
         </section>
 
         {/* FOOTER */}
