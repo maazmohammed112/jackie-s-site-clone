@@ -586,14 +586,19 @@ export default function CorkboardGuestbook() {
                 </div>
 
                 {/* Name Input */}
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
-                  maxLength={30}
-                  className="w-full bg-[#e8dec8] text-[#201c16] px-3 py-2 rounded-[4px] border border-[#201c16]/30 font-['Space_Mono',monospace] text-xs focus:outline-none focus:border-primary shadow-inner"
-                />
+                <div>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your name (optional — enter anything you like!)"
+                    maxLength={35}
+                    className="w-full bg-[#e8dec8] text-[#201c16] px-3 py-2 rounded-[4px] border border-[#201c16]/30 font-['Space_Mono',monospace] text-xs focus:outline-none focus:border-primary focus:bg-white/90 focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-[#201c16]/50 placeholder:italic placeholder:font-['Caveat',cursive] placeholder:text-sm shadow-inner"
+                  />
+                  <div className="text-right font-['Caveat',cursive] text-xs text-[#201c16]/70 mt-0.5 italic">
+                    Name is optional — real name, nickname, or anything!
+                  </div>
+                </div>
 
                 {/* Pin Note Button */}
                 <button
