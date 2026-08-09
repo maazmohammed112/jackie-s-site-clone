@@ -19,6 +19,7 @@ import SmartMaazAssistant from "@/components/SmartMaazAssistant";
 import TechWorldMemoriesConsole from "@/components/TechWorldMemoriesConsole";
 import CorkboardGuestbook from "@/components/CorkboardGuestbook";
 import LaunchToTopWidgets from "@/components/LaunchToTopWidgets";
+import GlitchCrtBuddy from "@/components/GlitchCrtBuddy";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -1193,14 +1194,7 @@ function PageBody() {
 
         {/* FOOTER */}
         <footer className="mt-16 text-center" data-reveal>
-          <img
-            src={doodleComputer}
-            alt="Chalk drawing of a smiling retro computer"
-            loading="lazy"
-            width={768}
-            height={640}
-            className="mx-auto w-48 opacity-90"
-          />
+          <GlitchCrtBuddy />
           <p className="mx-auto mt-6 max-w-xl font-hand text-3xl leading-snug text-chalk/90">
             “If a task repeats, it belongs to a bot — not to your afternoon.”
           </p>
