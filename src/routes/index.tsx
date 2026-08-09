@@ -18,6 +18,7 @@ import CertificationsIndexBox from "@/components/CertificationsIndexBox";
 import SmartMaazAssistant from "@/components/SmartMaazAssistant";
 import TechWorldMemoriesConsole from "@/components/TechWorldMemoriesConsole";
 import CorkboardGuestbook from "@/components/CorkboardGuestbook";
+import LaunchToTopWidgets from "@/components/LaunchToTopWidgets";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -1090,6 +1091,7 @@ function PageBody() {
           <p className="mt-10 font-hand text-5xl text-primary">Maaz</p>
         </footer>
       </div>
+      <LaunchToTopWidgets />
     </main>
   );
 }
