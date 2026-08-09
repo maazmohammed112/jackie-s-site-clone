@@ -63,13 +63,13 @@ export function PageLoader() {
       {/* Main Container */}
       <div className="relative z-10 flex flex-col items-center justify-center max-w-lg px-6 text-center">
         
-        {/* Animated Flying Origami Paper Airplane */}
-        <div className="relative w-48 h-36 sm:w-60 sm:h-44 flex items-center justify-center">
+        {/* Animated Flying Origami Paper Airplane Container */}
+        <div className="relative w-52 h-40 sm:w-64 sm:h-48 flex items-center justify-center">
           
-          {/* Animated Dashed Flight Path Curve */}
+          {/* Dashed Flight Path Curve */}
           <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" viewBox="0 0 240 180">
             <path
-              d="M 20 140 Q 70 20, 140 90 T 220 40"
+              d="M 15 135 Q 65 25, 135 95 T 225 35"
               fill="none"
               stroke="var(--color-primary)"
               strokeWidth="2.5"
@@ -78,21 +78,25 @@ export function PageLoader() {
             />
           </svg>
 
-          {/* 3D Flying White Paper Plane with Blue/Teal Theme Outline */}
+          {/* 3D Flying White Dart Paper Plane matching 2nd reference image 1:1 */}
           <div className="relative animate-bounce duration-1000 transform hover:scale-110 transition-transform">
             <svg
-              viewBox="0 0 160 120"
-              className="w-32 h-24 sm:w-40 sm:h-30 filter drop-shadow-[0_12px_24px_rgba(114,242,217,0.35)]"
+              viewBox="0 0 200 140"
+              className="w-36 h-28 sm:w-48 sm:h-36 filter drop-shadow-[0_16px_28px_rgba(114,242,217,0.4)]"
             >
               <g stroke="var(--color-primary)" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
-                {/* Main Upper Wing (White Fill + Blue Outline) */}
-                <polygon points="10,60 150,15 90,85" fill="#ffffff" />
-                {/* Lower Folding Body Flap */}
-                <polygon points="10,60 90,85 70,110" fill="#f1f5f9" />
-                {/* Right Side Shading Wing */}
-                <polygon points="150,15 90,85 130,95" fill="#e2e8f0" />
-                {/* Center Crease Fold Line */}
-                <line x1="10" y1="60" x2="150" y2="15" stroke="var(--color-primary)" strokeWidth="2" opacity="0.6" />
+                {/* Underwing Keel Fold */}
+                <polygon points="55,75 55,108 102,72" fill="#cbd5e1" />
+                {/* Main Left Wing */}
+                <polygon points="18,52 182,22 102,72" fill="#ffffff" />
+                {/* Center Top Crease/Spine Surface */}
+                <polygon points="18,52 182,22 55,75" fill="#f8fafc" opacity="0.95" />
+                {/* Main Right Wing */}
+                <polygon points="55,75 182,22 102,72" fill="#ffffff" />
+                {/* Right Wing Fold Flap */}
+                <polygon points="102,72 182,22 142,82" fill="#e2e8f0" />
+                {/* Center Crease Line */}
+                <line x1="18" y1="52" x2="182" y2="22" stroke="var(--color-primary)" strokeWidth="2" opacity="0.75" />
               </g>
             </svg>
           </div>
@@ -101,14 +105,9 @@ export function PageLoader() {
 
         {/* Pure White Handwritten Text Message — NO Background Box */}
         <div className="mt-6 h-16 flex items-center justify-center">
-          <p className="font-['Caveat',cursive] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] animate-fade-in">
+          <p className="font-['Caveat',cursive] text-2xl sm:text-3xl font-bold text-white tracking-wide drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)] animate-fade-in">
             {FUNNY_MESSAGES[msgIdx]}
           </p>
-        </div>
-
-        {/* Minimal Theme Progress Line */}
-        <div className="mt-4 w-48 sm:w-64 h-1.5 bg-white/10 rounded-full overflow-hidden border border-white/15">
-          <div className="h-full bg-primary shadow-[0_0_12px_#72f2d9] animate-pulse transition-all duration-1000 w-full" />
         </div>
 
       </div>
