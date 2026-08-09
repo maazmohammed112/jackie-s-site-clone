@@ -53,7 +53,8 @@ export default function CorkboardGuestbook() {
 
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
-  const [selectedStampKey, setSelectedStampKey] = useState("chaiApproved");
+  const [selectedStampKey, setSelectedStampKey] = useState<string | null>(null);
+  const [stampError, setStampError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isHelmetShaking, setIsHelmetShaking] = useState(false);
   const [showAllStamps, setShowAllStamps] = useState(false);
@@ -149,12 +150,21 @@ export default function CorkboardGuestbook() {
   const handleOpenConfirmModal = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
+    if (!selectedStampKey) {
+      setStampError(true);
+      return;
+    }
+    setStampError(false);
     setShowConfirmModal(true);
   };
 
   // Step 2: Final Confirmed Post to Firebase Realtime Database
   const handleConfirmPostNote = () => {
     if (!message.trim()) return;
+    if (!selectedStampKey) {
+      setStampError(true);
+      return;
+    }
 
     setIsSubmitting(true);
     setShowConfirmModal(false);
@@ -182,6 +192,8 @@ export default function CorkboardGuestbook() {
       .then(() => {
         setName("");
         setMessage("");
+        setSelectedStampKey(null);
+        setStampError(false);
         setIsSubmitting(false);
       })
       .catch((err) => {
@@ -214,7 +226,7 @@ export default function CorkboardGuestbook() {
   // Format visitor counter to 5 digits (e.g. 0 0 0 0 0)
   const countDigits = String(visitorCount).padStart(5, "0").split("");
 
-  const currentPreviewStamp = STAMP_PRESETS[selectedStampKey] ?? STAMP_PRESETS["chaiApproved"]!;
+  const currentPreviewStamp = selectedStampKey ? (STAMP_PRESETS[selectedStampKey] ?? STAMP_PRESETS["chaiApproved"]!) : null;
 
   return (
     <section id="guestbook" className="relative my-20 px-3 sm:px-6 max-w-7xl mx-auto select-none">
@@ -244,9 +256,11 @@ export default function CorkboardGuestbook() {
               <p className="font-['Caveat',cursive] text-lg font-bold my-1">
                 "{message.trim()}"
               </p>
-              <div className="mt-2 flex items-center justify-start">
-                <DistressedStamp text={currentPreviewStamp.text} color={currentPreviewStamp.color} width={120} height={46} />
-              </div>
+              {currentPreviewStamp && (
+                <div className="mt-2 flex items-center justify-start">
+                  <DistressedStamp text={currentPreviewStamp.text} color={currentPreviewStamp.color} width={120} height={46} />
+                </div>
+              )}
             </div>
 
             {/* Action Buttons */}
@@ -609,16 +623,27 @@ export default function CorkboardGuestbook() {
                   {isSubmitting ? "PINNING TO FIREBASE..." : "PIN NOTE TO BOARD"}
                 </button>
 
+                {/* Handwritten Stamp Required Warning */}
+                {stampError && (
+                  <p className="font-['Caveat',cursive] text-base sm:text-lg font-bold text-red-700 text-center animate-bounce pt-1">
+                    ⚠️ Please pick a reaction stamp below as well! 🎨
+                  </p>
+                )}
+
               </form>
 
             </div>
 
             {/* PICK A REACTION STAMP Card */}
-            <div className="relative bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 rounded-[8px] shadow-[0_16px_36px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rotate-[-1deg]">
+            <div className={`relative bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 rounded-[8px] shadow-[0_16px_36px_rgba(0,0,0,0.7)] border-2 transition-colors rotate-[-1deg] ${
+              stampError ? "border-red-600 bg-[#fff5f5]" : "border-[#201c16]/20"
+            }`}>
               
               <h4 className="font-['Silkscreen',monospace] text-xs font-bold text-[#201c16] mb-3 uppercase flex items-center justify-between">
                 <span>PICK A REACTION STAMP</span>
-                <span> stamp</span>
+                <span className={selectedStampKey ? "text-emerald-700 font-extrabold" : stampError ? "text-red-700 font-extrabold animate-pulse" : "text-[#201c16]/60"}>
+                  {selectedStampKey ? "STAMPED ✓" : "* SELECT ONE"}
+                </span>
               </h4>
 
               {/* Grid of Rubber Stamps */}
@@ -627,10 +652,13 @@ export default function CorkboardGuestbook() {
                   <button
                     key={s.id}
                     type="button"
-                    onClick={() => setSelectedStampKey(s.id)}
+                    onClick={() => {
+                      setSelectedStampKey(s.id);
+                      setStampError(false);
+                    }}
                     className={`p-1.5 rounded-[4px] border-2 transition-all duration-200 cursor-pointer flex items-center justify-center ${
                       selectedStampKey === s.id
-                        ? "border-[#201c16] bg-white scale-105 shadow-md"
+                        ? "border-[#201c16] bg-white scale-105 shadow-md ring-2 ring-emerald-600/50"
                         : "border-[#201c16]/20 bg-[#e8dec8] hover:border-[#201c16]/60 hover:bg-white/60"
                     }`}
                   >
