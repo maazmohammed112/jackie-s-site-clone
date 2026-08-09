@@ -51,11 +51,11 @@ export default function LaunchToTopWidgets() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex items-end gap-4 pointer-events-auto select-none animate-fade-in">
+    <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex items-end gap-5 pointer-events-auto select-none animate-fade-in">
       
-      {/* ------------------------------------------------------------- */}
-      {/* WIDGET 1: ORIGAMI 3D PAPER AIRPLANE THRUSTER (Matching Image 1) */}
-      {/* ------------------------------------------------------------- */}
+      {/* ------------------------------------------------------------------------- */}
+      {/* WIDGET 1: PURE ORIGAMI 3D PAPER AIRPLANE (No Background Container Around It) */}
+      {/* ------------------------------------------------------------------------- */}
       <div className="flex flex-col items-center group">
         
         {/* Floating Label Tooltip */}
@@ -69,43 +69,40 @@ export default function LaunchToTopWidgets() {
           onMouseEnter={() => airplaneState === "idle" && setAirplaneState("hover")}
           onMouseLeave={() => airplaneState === "hover" && setAirplaneState("idle")}
           aria-label="Launch paper plane to top of page"
-          className={`relative w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-[#f4ead6] p-2 border-2 border-dashed border-[#201c16]/50 shadow-[0_12px_28px_rgba(0,0,0,0.65)] flex items-center justify-center cursor-pointer transition-all duration-300 ${
+          className={`relative p-1 flex items-center justify-center cursor-pointer transition-all duration-300 bg-transparent border-0 outline-none ${
             airplaneState === "hover"
-              ? "scale-110 rotate-[-12deg] shadow-[0_18px_36px_rgba(0,0,0,0.8)] border-[#201c16]"
+              ? "scale-125 rotate-[-15deg] filter drop-shadow-[0_8px_20px_rgba(255,255,255,0.4)]"
               : airplaneState === "pressed"
-              ? "scale-90"
+              ? "scale-95"
               : airplaneState === "launch"
               ? "-translate-y-96 rotate-[-25deg] opacity-0 transition-all duration-700 ease-in-out"
-              : "hover:scale-105"
+              : "hover:scale-110"
           }`}
         >
-          {/* Circular Stitched Paper Inner Ring */}
-          <span className="absolute inset-1 rounded-full border border-dashed border-[#201c16]/30 pointer-events-none" />
-
-          {/* 3D Folded Origami Paper Plane SVG */}
+          {/* Pure 3D Folded Origami Paper Plane SVG (No Background Container) */}
           <svg
             viewBox="0 0 100 100"
-            className="w-10 h-10 sm:w-12 sm:h-12 filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)] transition-transform duration-300"
+            className="w-14 h-14 sm:w-16 sm:h-16 filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.8)]"
           >
             {/* Main Fold Left Wing */}
-            <polygon points="50,15 15,80 50,65" fill="#FFFFFF" stroke="#201c16" strokeWidth="2.5" strokeLinejoin="round" />
+            <polygon points="50,12 12,82 50,66" fill="#FFFFFF" stroke="#181616" strokeWidth="3" strokeLinejoin="round" />
             
             {/* Right Wing Shadow Facet */}
-            <polygon points="50,15 85,80 50,65" fill="#E5E7EB" stroke="#201c16" strokeWidth="2.5" strokeLinejoin="round" />
+            <polygon points="50,12 88,82 50,66" fill="#F3F4F6" stroke="#181616" strokeWidth="3" strokeLinejoin="round" />
             
             {/* Center Fold Line */}
-            <line x1="50" y1="15" x2="50" y2="85" stroke="#201c16" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="50" y1="12" x2="50" y2="88" stroke="#181616" strokeWidth="3" strokeLinecap="round" />
             
             {/* Bottom Left Keel Shadow */}
-            <polygon points="50,65 15,80 50,85" fill="#D1D5DB" stroke="#201c16" strokeWidth="1.5" />
+            <polygon points="50,66 12,82 50,88" fill="#E5E7EB" stroke="#181616" strokeWidth="2" />
           </svg>
 
           {/* Air Jet Thruster Lines on Hover/Launch */}
           {(airplaneState === "hover" || airplaneState === "launch") && (
-            <div className="absolute -bottom-2 flex gap-1 animate-pulse">
-              <span className="w-1 h-3 bg-[#201c16]/40 rounded-full rotate-[-10deg]" />
-              <span className="w-1 h-4 bg-[#201c16]/60 rounded-full" />
-              <span className="w-1 h-3 bg-[#201c16]/40 rounded-full rotate-[10deg]" />
+            <div className="absolute -bottom-3 flex gap-1 animate-pulse">
+              <span className="w-1 h-3.5 bg-white/70 rounded-full rotate-[-10deg]" />
+              <span className="w-1 h-4 bg-white/90 rounded-full" />
+              <span className="w-1 h-3.5 bg-white/70 rounded-full rotate-[10deg]" />
             </div>
           )}
 
@@ -114,7 +111,7 @@ export default function LaunchToTopWidgets() {
       </div>
 
       {/* ----------------------------------------------------------------- */}
-      {/* WIDGET 2: RETRO GAMEBOY CARTRIDGE SPRING EJECTOR (Matching Image 2) */}
+      {/* WIDGET 2: RETRO GAMEBOY CARTRIDGE SPRING EJECTOR */}
       {/* ----------------------------------------------------------------- */}
       <div className="flex flex-col items-center group">
         
