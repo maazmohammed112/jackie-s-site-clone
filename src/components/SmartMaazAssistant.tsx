@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 export default function SmartMaazAssistant() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isScreenClickMessage, setIsScreenClickMessage] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -25,32 +26,53 @@ export default function SmartMaazAssistant() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Listen for custom screen click event from TechWorldMemoriesConsole
+  useEffect(() => {
+    const handleScreenClick = () => {
+      setIsScreenClickMessage(true);
+      setOpen(true);
+    };
+
+    window.addEventListener("maaz_screen_clicked", handleScreenClick);
+    return () => window.removeEventListener("maaz_screen_clicked", handleScreenClick);
+  }, []);
+
   // Auto-close speech bubble when user scrolls
   useEffect(() => {
     if (!open) return;
-    const onScroll = () => setOpen(false);
+    const onScroll = () => {
+      setOpen(false);
+      setIsScreenClickMessage(false);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [open]);
 
   const handleDismiss = () => {
     setOpen(false);
-    if (isMobile) {
+    if (isScreenClickMessage) {
+      setIsScreenClickMessage(false);
+    } else if (isMobile) {
       sessionStorage.setItem("maaz_mobile_prompt_seen", "true");
     }
   };
 
   return (
     <>
-      {/* Fixed Top Header Maaz Avatar Icon (Clear of 70px right stamp rail on desktop md:right-20, top-right on mobile right-4) */}
+      {/* Fixed Top Header Maaz Avatar Icon */}
       <div className="fixed top-3 right-4 sm:top-4 sm:right-6 md:right-20 lg:right-24 z-50">
         <button
           type="button"
-          onClick={() => setOpen((prev) => !prev)}
+          onClick={() => {
+            if (open && isScreenClickMessage) {
+              setIsScreenClickMessage(false);
+            }
+            setOpen((prev) => !prev);
+          }}
           aria-label="Toggle Maaz AI assistant message"
           className="group relative flex items-center justify-center p-1 transition-transform duration-300 hover:scale-110 active:scale-95 cursor-pointer bg-transparent border-0 outline-none"
         >
-          {/* Pure Helmet Image - No Cream Background Circle */}
+          {/* Pure Helmet Image */}
           <img
             src="/maaz-helmet.png"
             alt="Maaz Mecha Helmet Avatar"
@@ -72,7 +94,7 @@ export default function SmartMaazAssistant() {
         </button>
       </div>
 
-      {/* Maaz Speech Bubble Popup (Clear of 70px right stamp rail on desktop md:right-20) */}
+      {/* Maaz Speech Bubble Popup */}
       {open && (
         <div className="fixed top-14 right-4 sm:top-16 sm:right-6 md:right-20 lg:right-24 w-[280px] xs:w-[310px] sm:w-[340px] max-w-[85vw] z-50 animate-scale-in">
           <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 shadow-[0_20px_40px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rounded-[18px]">
@@ -102,8 +124,19 @@ export default function SmartMaazAssistant() {
               </span>
             </div>
 
-            {/* Professional Speech Messages in Handwritten Font (No Emojis) */}
-            {isMobile ? (
+            {/* Message Body */}
+            {isScreenClickMessage ? (
+              /* Custom Screen Click Funny Message */
+              <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
+                <p className="font-bold text-red-700">
+                  Yoooo! That's just the console LCD screen, don't click on that!
+                </p>
+                <p>
+                  Use the memory cartridges on the right rack or the A / B & D-pad buttons to play memories!
+                </p>
+              </div>
+            ) : isMobile ? (
+              /* Mobile Default Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p>
                   You are currently viewing this portfolio on a mobile device or small screen. For the complete interactive paper studio experience, feel free to switch to a desktop or laptop display.
@@ -113,6 +146,7 @@ export default function SmartMaazAssistant() {
                 </p>
               </div>
             ) : (
+              /* Desktop Default Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p>
                   Welcome to the interactive studio. You can flip through the work experience tags, inspect the education tickets, or view the portfolio film.
@@ -123,14 +157,14 @@ export default function SmartMaazAssistant() {
               </div>
             )}
 
-            {/* Dismiss Button (No Emojis) */}
+            {/* Dismiss Button */}
             <div className="flex justify-end">
               <button
                 type="button"
                 onClick={handleDismiss}
                 className="font-['Caveat',cursive] text-base sm:text-lg font-bold bg-primary text-primary-foreground px-4 py-1 sm:px-5 sm:py-1.5 rounded-[12px] border-2 border-primary-foreground/20 shadow-md transition-transform hover:-rotate-2 active:scale-95 cursor-pointer"
               >
-                {isMobile ? "I understand" : "Got it"}
+                {isScreenClickMessage ? "Ohh!" : isMobile ? "I understand" : "Got it"}
               </button>
             </div>
 

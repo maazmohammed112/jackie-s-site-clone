@@ -188,8 +188,11 @@ export default function TechWorldMemoriesConsole() {
                 </span>
               </div>
 
-              {/* Viewfinder Screen Box */}
-              <div className="relative w-full h-[210px] xs:h-[235px] sm:h-[255px] rounded-[14px] overflow-hidden bg-black border-2 border-white/20 shadow-2xl">
+              {/* Viewfinder Screen Box (Clicking triggers Maaz assistant screen warning message) */}
+              <div
+                onClick={() => window.dispatchEvent(new CustomEvent("maaz_screen_clicked"))}
+                className="relative w-full h-[210px] xs:h-[235px] sm:h-[255px] rounded-[14px] overflow-hidden bg-black border-2 border-white/20 shadow-2xl cursor-pointer"
+              >
                 
                 {/* Condition A: Photo Image Available */}
                 {activeMem.image ? (
