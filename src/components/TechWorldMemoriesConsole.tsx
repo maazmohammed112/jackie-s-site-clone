@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 export interface MemoryCartridge {
   id: string;
   code: string;
+  sublabel: string;
   title: string;
   date: string;
   location: string;
@@ -14,6 +15,7 @@ const MEMORIES: MemoryCartridge[] = [
   {
     id: "office-bakes",
     code: "CODE. COFFEE. REPEAT.ROM",
+    sublabel: "OFFICE BAKES",
     title: "OFFICE BAKES",
     date: "2025",
     location: "CAFETERIA",
@@ -23,6 +25,7 @@ const MEMORIES: MemoryCartridge[] = [
   {
     id: "cognizant-codex",
     code: "OPENAI CODEX HACKATHON.ROM",
+    sublabel: "FEATURED HACKATHON",
     title: "OPENAI CODEX HACKATHON",
     date: "2025",
     location: "COGNIZANT x OPENAI",
@@ -31,7 +34,8 @@ const MEMORIES: MemoryCartridge[] = [
   },
   {
     id: "slot-3",
-    code: "SLOT 03",
+    code: "TEAM DEVS ASSEMBLE.ROM",
+    sublabel: "NO IMAGE ADDED",
     title: "SLOT 03",
     date: "2025",
     location: "STUDIO",
@@ -40,7 +44,8 @@ const MEMORIES: MemoryCartridge[] = [
   },
   {
     id: "slot-4",
-    code: "SLOT 04",
+    code: "AGENTIC AI SUMMIT.ROM",
+    sublabel: "NO IMAGE ADDED",
     title: "SLOT 04",
     date: "2025",
     location: "LAB",
@@ -49,7 +54,8 @@ const MEMORIES: MemoryCartridge[] = [
   },
   {
     id: "slot-5",
-    code: "SLOT 05",
+    code: "BUGS SLAYED NIGHTS.ROM",
+    sublabel: "NO IMAGE ADDED",
     title: "SLOT 05",
     date: "2025",
     location: "PROD",
@@ -62,6 +68,7 @@ export default function TechWorldMemoriesConsole() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [showTitleOverlay, setShowTitleOverlay] = useState(true);
+  const [pressedBtn, setPressedBtn] = useState<string | null>(null);
 
   const activeMem = MEMORIES[activeIndex] ?? MEMORIES[0]!;
 
@@ -90,14 +97,22 @@ export default function TechWorldMemoriesConsole() {
   }, [isAutoPlaying, activeIndex]);
 
   const handleNext = () => {
+    triggerBtnPress("A");
     setActiveIndex((prev) => (prev + 1) % MEMORIES.length);
   };
 
   const handlePrev = () => {
+    triggerBtnPress("B");
     setActiveIndex((prev) => (prev - 1 + MEMORIES.length) % MEMORIES.length);
   };
 
+  const triggerBtnPress = (btnName: string) => {
+    setPressedBtn(btnName);
+    setTimeout(() => setPressedBtn(null), 150);
+  };
+
   const handleStartToggle = () => {
+    triggerBtnPress("START");
     if (!isAutoPlaying && !MEMORIES[activeIndex]?.image) {
       setActiveIndex(0);
     }
@@ -107,12 +122,12 @@ export default function TechWorldMemoriesConsole() {
   return (
     <section className="relative my-20 px-4 sm:px-6 max-w-5xl mx-auto select-none">
       
-      {/* 1. RETRO HANDHELD GAME CONSOLE Header Banner */}
+      {/* RETRO HANDHELD GAME CONSOLE Header Banner */}
       <div className="relative mb-12 text-center">
         <div className="inline-block relative">
           <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] px-8 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.6)] border-2 border-[#201c16]/20 rounded-[4px] rotate-[-1deg]">
             <h2 className="font-['Silkscreen',monospace] text-xl sm:text-3xl font-bold tracking-wider uppercase text-[#201c16]">
-              1. RETRO HANDHELD GAME CONSOLE
+              RETRO HANDHELD GAME CONSOLE
             </h2>
             <p className="font-['Caveat',cursive] text-xl sm:text-2xl font-bold text-primary italic mt-0.5">
               Insert Cartridge. Play Memories.
@@ -124,16 +139,16 @@ export default function TechWorldMemoriesConsole() {
         </div>
       </div>
 
-      {/* Main Container: Console (Left) + Cartridge Rack (Right) */}
+      {/* Main Grid: Transparent Console (Left) + Cartridge Stack (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
         
         {/* LEFT COLUMN: Transparent Handheld Game Console */}
         <div className="lg:col-span-7 flex flex-col items-center">
           
-          {/* Transparent Acrylic Shell Container */}
-          <div className="relative w-[310px] xs:w-[345px] sm:w-[385px] bg-[#1e2029]/80 backdrop-blur-md rounded-[42px] p-5 sm:p-6 border-4 border-white/25 shadow-[0_30px_70px_rgba(0,0,0,0.8)] overflow-hidden">
+          {/* Transparent Acrylic Shell Container (Refined 1:1 Physics) */}
+          <div className="relative w-[310px] xs:w-[345px] sm:w-[385px] bg-[#1e2029]/85 backdrop-blur-md rounded-[42px] p-5 sm:p-6 border-4 border-white/25 shadow-[0_30px_70px_rgba(0,0,0,0.85)] overflow-hidden">
             
-            {/* Inner Circuit Board Details */}
+            {/* Inner Circuit Board Lines & Screw Mount Details */}
             <div
               className="absolute inset-0 opacity-25 pointer-events-none"
               style={{
@@ -148,7 +163,7 @@ export default function TechWorldMemoriesConsole() {
               }}
             />
 
-            {/* Brass Screws */}
+            {/* Screws */}
             <span className="absolute top-4 left-5 w-3.5 h-3.5 rounded-full border border-white/40 bg-zinc-800 shadow-inner flex items-center justify-center text-[8px] text-amber-200/80 font-bold">+</span>
             <span className="absolute top-4 right-5 w-3.5 h-3.5 rounded-full border border-white/40 bg-zinc-800 shadow-inner flex items-center justify-center text-[8px] text-amber-200/80 font-bold">+</span>
             <span className="absolute bottom-4 left-5 w-3.5 h-3.5 rounded-full border border-white/40 bg-zinc-800 shadow-inner flex items-center justify-center text-[8px] text-amber-200/80 font-bold">+</span>
@@ -257,104 +272,132 @@ export default function TechWorldMemoriesConsole() {
               </div>
             </div>
 
-            {/* Controls Section */}
+            {/* Controller Buttons Section */}
             <div className="relative pt-2 pb-1 px-1 flex items-center justify-between">
               
-              {/* D-Pad */}
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center">
-                <div className="absolute w-full h-7 sm:h-8 bg-zinc-800 rounded-sm shadow-md border border-white/20" />
-                <div className="absolute h-full w-7 sm:w-8 bg-zinc-800 rounded-sm shadow-md border border-white/20" />
+              {/* D-Pad (Large Molded Black Plastic Cross with Center Pivot) */}
+              <div className="relative w-22 h-22 sm:w-26 sm:h-26 flex items-center justify-center">
+                <div className="absolute w-full h-8 sm:h-9 bg-gradient-to-b from-[#2a2c34] via-[#1a1b22] to-[#121318] rounded-sm shadow-[0_6px_14px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.2)] border border-black/80" />
+                <div className="absolute h-full w-8 sm:w-9 bg-gradient-to-r from-[#2a2c34] via-[#1a1b22] to-[#121318] rounded-sm shadow-[0_6px_14px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.2)] border border-black/80" />
                 
-                {/* D-Pad Buttons */}
+                {/* D-Pad Arrow Markings */}
+                <span className="absolute left-2.5 text-[10px] text-zinc-500 font-bold pointer-events-none">◀</span>
+                <span className="absolute right-2.5 text-[10px] text-zinc-500 font-bold pointer-events-none">▶</span>
+                <span className="absolute top-2.5 text-[10px] text-zinc-500 font-bold pointer-events-none">▲</span>
+                <span className="absolute bottom-2.5 text-[10px] text-zinc-500 font-bold pointer-events-none">▼</span>
+
+                {/* Clickable Directional Buttons */}
                 <button
                   type="button"
-                  onClick={handlePrev}
+                  onClick={() => { triggerBtnPress("DPAD_LEFT"); handlePrev(); }}
                   title="Previous Memory"
-                  className="absolute left-0 w-6 h-6 hover:bg-white/20 active:bg-primary/50 rounded-l-sm transition-colors cursor-pointer"
+                  className="absolute left-0 w-7 h-7 hover:bg-white/10 active:scale-95 rounded-l-sm transition-transform cursor-pointer"
                 />
                 <button
                   type="button"
-                  onClick={handleNext}
+                  onClick={() => { triggerBtnPress("DPAD_RIGHT"); handleNext(); }}
                   title="Next Memory"
-                  className="absolute right-0 w-6 h-6 hover:bg-white/20 active:bg-primary/50 rounded-r-sm transition-colors cursor-pointer"
+                  className="absolute right-0 w-7 h-7 hover:bg-white/10 active:scale-95 rounded-r-sm transition-colors cursor-pointer"
                 />
                 <button
                   type="button"
-                  onClick={handleNext}
+                  onClick={() => { triggerBtnPress("DPAD_UP"); handleNext(); }}
                   title="Next Memory"
-                  className="absolute top-0 w-6 h-6 hover:bg-white/20 active:bg-primary/50 rounded-t-sm transition-colors cursor-pointer"
+                  className="absolute top-0 w-7 h-7 hover:bg-white/10 active:scale-95 rounded-t-sm transition-colors cursor-pointer"
                 />
                 <button
                   type="button"
-                  onClick={handlePrev}
+                  onClick={() => { triggerBtnPress("DPAD_DOWN"); handlePrev(); }}
                   title="Previous Memory"
-                  className="absolute bottom-0 w-6 h-6 hover:bg-white/20 active:bg-primary/50 rounded-b-sm transition-colors cursor-pointer"
+                  className="absolute bottom-0 w-7 h-7 hover:bg-white/10 active:scale-95 rounded-b-sm transition-colors cursor-pointer"
                 />
                 
-                <div className="relative w-3.5 h-3.5 rounded-full bg-zinc-900 border border-zinc-700" />
+                {/* Center Pivot Indent */}
+                <div className="relative w-4 h-4 rounded-full bg-[#121318] shadow-inner border border-zinc-800" />
               </div>
 
-              {/* Translucent Red Action Buttons A & B */}
+              {/* A & B Action Buttons (Glossy Deep Red with White Engraved Labels) */}
               <div className="flex items-center gap-3 sm:gap-4 rotate-[-15deg] pr-1">
-                <button
-                  type="button"
-                  onClick={handlePrev}
-                  aria-label="Previous Memory"
-                  className="group relative flex flex-col items-center cursor-pointer active:scale-90 transition-transform"
-                >
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-red-700/85 border-2 border-red-400/80 shadow-[0_4px_12px_rgba(220,38,38,0.6)] flex items-center justify-center text-white font-['Silkscreen',monospace] font-bold text-base group-hover:brightness-125">
+                {/* B Button */}
+                <div className="flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={handlePrev}
+                    aria-label="Previous Memory (B Button)"
+                    className={`group relative w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[#c81e1e] via-[#9b1313] to-[#680b0b] border-2 border-red-400/70 shadow-[0_6px_16px_rgba(180,20,20,0.6),inset_0_2px_4px_rgba(255,255,255,0.4)] flex items-center justify-center text-white font-['Silkscreen',monospace] font-bold text-base transition-all duration-150 cursor-pointer ${
+                      pressedBtn === "B" ? "translate-y-1 shadow-[0_2px_6px_rgba(180,20,20,0.6)]" : "hover:-translate-y-0.5"
+                    }`}
+                  >
+                    {/* Specular Highlight Gloss */}
+                    <span className="absolute top-1 left-2.5 w-4 h-2 rounded-full bg-white/40 blur-[1px] pointer-events-none" />
                     B
-                  </div>
-                </button>
+                  </button>
+                  <span className="font-['Silkscreen',monospace] text-[9px] text-chalk/80 font-bold mt-1">
+                    B
+                  </span>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  aria-label="Next Memory"
-                  className="group relative flex flex-col items-center cursor-pointer active:scale-90 transition-transform"
-                >
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-red-700/85 border-2 border-red-400/80 shadow-[0_4px_12px_rgba(220,38,38,0.6)] flex items-center justify-center text-white font-['Silkscreen',monospace] font-bold text-base group-hover:brightness-125">
+                {/* A Button */}
+                <div className="flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    aria-label="Next Memory (A Button)"
+                    className={`group relative w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[#c81e1e] via-[#9b1313] to-[#680b0b] border-2 border-red-400/70 shadow-[0_6px_16px_rgba(180,20,20,0.6),inset_0_2px_4px_rgba(255,255,255,0.4)] flex items-center justify-center text-white font-['Silkscreen',monospace] font-bold text-base transition-all duration-150 cursor-pointer ${
+                      pressedBtn === "A" ? "translate-y-1 shadow-[0_2px_6px_rgba(180,20,20,0.6)]" : "hover:-translate-y-0.5"
+                    }`}
+                  >
+                    {/* Specular Highlight Gloss */}
+                    <span className="absolute top-1 left-2.5 w-4 h-2 rounded-full bg-white/40 blur-[1px] pointer-events-none" />
                     A
-                  </div>
-                </button>
+                  </button>
+                  <span className="font-['Silkscreen',monospace] text-[9px] text-chalk/80 font-bold mt-1">
+                    A
+                  </span>
+                </div>
               </div>
 
             </div>
 
-            {/* Bottom Controls & Speaker Slits */}
+            {/* Bottom Section: SELECT / START Angled Rubber Pills & Diagonal Speaker Grill */}
             <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between px-2">
               
               {/* SELECT & START Pills */}
-              <div className="flex items-center gap-4">
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  className="flex flex-col items-center cursor-pointer active:scale-95"
-                >
-                  <div className="w-9 h-3.5 bg-zinc-700 rounded-full border border-white/20 shadow-inner hover:bg-zinc-600" />
-                  <span className="font-['Silkscreen',monospace] text-[8px] text-chalk/70 mt-1">
+              <div className="flex items-center gap-4 rotate-[-12deg]">
+                <div className="flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={() => { triggerBtnPress("SELECT"); handleNext(); }}
+                    className={`w-9 h-3.5 bg-gradient-to-b from-[#3a3d46] to-[#1c1e24] rounded-full border border-white/20 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] transition-all cursor-pointer ${
+                      pressedBtn === "SELECT" ? "scale-95 bg-zinc-800" : "hover:brightness-125"
+                    }`}
+                  />
+                  <span className="font-['Silkscreen',monospace] text-[8px] text-chalk/70 font-bold mt-1">
                     SELECT
                   </span>
-                </button>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={handleStartToggle}
-                  className="flex flex-col items-center cursor-pointer active:scale-95"
-                >
-                  <div className={`w-9 h-3.5 rounded-full border border-white/20 shadow-inner transition-colors ${isAutoPlaying ? "bg-primary shadow-[0_0_8px_#72f2d9]" : "bg-zinc-700 hover:bg-zinc-600"}`} />
-                  <span className="font-['Silkscreen',monospace] text-[8px] text-chalk/70 mt-1">
-                    {isAutoPlaying ? "STOP" : "START"}
+                <div className="flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={handleStartToggle}
+                    className={`w-9 h-3.5 rounded-full border border-white/20 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] transition-all cursor-pointer ${
+                      isAutoPlaying ? "bg-[#4DFF9A] shadow-[0_0_10px_#4DFF9A]" : "bg-gradient-to-b from-[#3a3d46] to-[#1c1e24] hover:brightness-125"
+                    } ${pressedBtn === "START" ? "scale-95" : ""}`}
+                  />
+                  <span className="font-['Silkscreen',monospace] text-[8px] text-chalk/70 font-bold mt-1">
+                    START
                   </span>
-                </button>
+                </div>
               </div>
 
-              {/* Speaker Slits */}
-              <div className="flex items-center gap-1.5 rotate-[-25deg] opacity-70">
-                <span className="w-1 h-7 bg-zinc-800 rounded-full border-r border-white/10" />
-                <span className="w-1 h-7 bg-zinc-800 rounded-full border-r border-white/10" />
-                <span className="w-1 h-7 bg-zinc-800 rounded-full border-r border-white/10" />
-                <span className="w-1 h-7 bg-zinc-800 rounded-full border-r border-white/10" />
+              {/* Diagonal Speaker Slits */}
+              <div className="flex items-center gap-1.5 rotate-[-25deg] opacity-80">
+                <span className="w-1.5 h-7 bg-zinc-900 rounded-full border-r border-white/20 shadow-inner" />
+                <span className="w-1.5 h-7 bg-zinc-900 rounded-full border-r border-white/20 shadow-inner" />
+                <span className="w-1.5 h-7 bg-zinc-900 rounded-full border-r border-white/20 shadow-inner" />
+                <span className="w-1.5 h-7 bg-zinc-800 rounded-full border-r border-white/20 shadow-inner" />
+                <span className="w-1.5 h-7 bg-zinc-800 rounded-full border-r border-white/20 shadow-inner" />
               </div>
 
             </div>
@@ -371,7 +414,7 @@ export default function TechWorldMemoriesConsole() {
 
         </div>
 
-        {/* RIGHT COLUMN: Interactive Cartridge Rack */}
+        {/* RIGHT COLUMN: GameBoy Cartridge Stack (Prompt Specification 1:1) */}
         <div className="lg:col-span-5 flex flex-col items-center lg:items-start">
           
           {/* Top Arrow Note */}
@@ -381,8 +424,8 @@ export default function TechWorldMemoriesConsole() {
             </p>
           </div>
 
-          {/* Stack of 5 3D Cartridges (NO EMOJIS OR ICONS) */}
-          <div className="w-full max-w-[340px] space-y-3.5">
+          {/* Vertical Stack of GameBoy Cartridge Cards (No icons, No emojis, Neon Green Side Glow on Active Cartridge) */}
+          <div className="w-full max-w-[340px] space-y-4">
             {MEMORIES.map((m, idx) => {
               const isActive = idx === activeIndex;
               const hasImage = Boolean(m.image);
@@ -392,35 +435,55 @@ export default function TechWorldMemoriesConsole() {
                   key={m.id}
                   type="button"
                   onClick={() => setActiveIndex(idx)}
-                  className={`group relative w-full flex items-center justify-between p-3.5 sm:p-4 rounded-[12px] transition-all duration-300 cursor-pointer text-left ${
+                  className={`group relative w-full h-[78px] sm:h-[84px] rounded-[10px] p-2 sm:p-2.5 transition-all duration-300 cursor-pointer text-left ${
                     isActive
-                      ? "bg-gradient-to-r from-[#444752] to-[#2c2f38] border-2 border-primary shadow-[0_0_20px_#72f2d9,inset_0_0_10px_#72f2d9] translate-x-2"
-                      : "bg-[#2d3038] border border-white/15 hover:border-white/40 hover:bg-[#363942]"
+                      ? "bg-gradient-to-b from-[#4a4d56] via-[#383b44] to-[#24262d] -translate-y-1.5 shadow-[0_16px_36px_rgba(0,0,0,0.85)] scale-[1.02]"
+                      : "bg-gradient-to-b from-[#3d4048] via-[#2f3138] to-[#1e2025] hover:-translate-y-1.5 hover:shadow-[0_14px_28px_rgba(0,0,0,0.75)] shadow-[0_8px_20px_rgba(0,0,0,0.6)]"
                   }`}
+                  style={{
+                    boxShadow: isActive
+                      ? "0 16px 36px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.6)"
+                      : "0 8px 20px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -2px 4px rgba(0,0,0,0.5)",
+                  }}
                 >
-                  {/* Cartridge Recessed Sticker Label */}
-                  <div className="bg-[#e8dec8] text-[#201c16] px-3.5 py-2 rounded-[6px] border border-[#201c16]/30 w-full shadow-inner">
-                    {hasImage ? (
-                      <>
-                        <div className="font-['Silkscreen',monospace] text-[11px] sm:text-xs font-bold tracking-wide text-[#201c16] truncate">
-                          {m.code}
-                        </div>
-                        <div className="font-['Space_Mono',monospace] text-[9px] font-bold text-emerald-700 mt-0.5">
-                          ● READY
-                        </div>
-                      </>
-                    ) : (
-                      /* Clean side card text for unadded images: ONLY "NO IMAGE ADDED" */
-                      <div className="font-['Silkscreen',monospace] text-[11px] sm:text-xs font-bold text-red-600 tracking-wider">
-                        NO IMAGE ADDED
-                      </div>
-                    )}
+                  {/* Left & Right Injection-Molded Grooves */}
+                  <div className="absolute left-1.5 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-70">
+                    <span className="w-1 h-3 bg-black/50 rounded-full" />
+                    <span className="w-1 h-3 bg-black/50 rounded-full" />
+                    <span className="w-1 h-3 bg-black/50 rounded-full" />
+                  </div>
+                  <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-70">
+                    <span className="w-1 h-3 bg-black/50 rounded-full" />
+                    <span className="w-1 h-3 bg-black/50 rounded-full" />
+                    <span className="w-1 h-3 bg-black/50 rounded-full" />
                   </div>
 
-                  {/* Active Neon Green Highlight Slot Dot */}
+                  {/* ACTIVE CARTRIDGE NEON GREEN SIDE GLOW (#4DFF9A) leaking from left & right slots */}
                   {isActive && (
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-primary shadow-[0_0_10px_#72f2d9] animate-pulse" />
+                    <>
+                      <div className="absolute -left-2 top-0 bottom-0 w-3 rounded-l-[8px] bg-[#4DFF9A] shadow-[0_0_25px_#4DFF9A,inset_0_0_10px_#4DFF9A] opacity-90 animate-pulse pointer-events-none" />
+                      <div className="absolute -right-2 top-0 bottom-0 w-3 rounded-r-[8px] bg-[#4DFF9A] shadow-[0_0_25px_#4DFF9A,inset_0_0_10px_#4DFF9A] opacity-90 animate-pulse pointer-events-none" />
+                    </>
                   )}
+
+                  {/* Recessed Sticker Label (#EAE2D0 Warm Off-White Paper Texture, Typography ONLY) */}
+                  <div className="mx-2.5 h-full bg-[#EAE2D0] text-[#1F1F1F] px-3.5 py-2 rounded-[5px] border border-[#1F1F1F]/40 flex flex-col justify-between shadow-[inset_0_1px_3px_rgba(0,0,0,0.3)]">
+                    
+                    {/* Top: Monospace Title Code */}
+                    <div className="font-['Silkscreen',monospace] text-[11px] sm:text-xs font-bold tracking-wide text-[#1F1F1F] truncate">
+                      {m.code}
+                    </div>
+
+                    {/* Bottom: Secondary Sublabel (Typography ONLY - No icons, no badges) */}
+                    <div className="font-['Space_Mono',monospace] text-[9px] font-bold tracking-wider">
+                      {hasImage ? (
+                        <span className="text-emerald-800">● READY</span>
+                      ) : (
+                        <span className="text-red-700">● NO IMAGE ADDED</span>
+                      )}
+                    </div>
+
+                  </div>
                 </button>
               );
             })}
