@@ -25,7 +25,7 @@ const MEMORIES: MemoryCartridge[] = [
   {
     id: "cognizant-codex",
     code: "OPENAI CODEX HACKATHON.ROM",
-    sublabel: "FEATURED HACKATHON",
+    sublabel: "OPENAI CODEX",
     title: "OPENAI CODEX HACKATHON",
     date: "2025",
     location: "COGNIZANT x OPENAI",
@@ -33,34 +33,34 @@ const MEMORIES: MemoryCartridge[] = [
     image: "/memories-cognizant-codex.jpg",
   },
   {
-    id: "slot-3",
-    code: "TEAM DEVS ASSEMBLE.ROM",
-    sublabel: "NO IMAGE ADDED",
-    title: "SLOT 03",
+    id: "sap-flower",
+    code: "SAP LEARNING ZEN.ROM",
+    sublabel: "BOTANICAL CODE",
+    title: "SAP LEARNING ZEN",
     date: "2025",
-    location: "STUDIO",
-    tagline: "Empty Memory Slot",
-    image: null,
+    location: "SAP SE",
+    tagline: "When SAP Certification Meets Flower Power",
+    image: "/memories-sap-flower.jpg",
   },
   {
-    id: "slot-4",
-    code: "AGENTIC AI SUMMIT.ROM",
-    sublabel: "NO IMAGE ADDED",
-    title: "SLOT 04",
+    id: "train-commute",
+    code: "EXPRESS COMMUTE DEVS.ROM",
+    sublabel: "EXPRESS COMMUTE",
+    title: "EXPRESS COMMUTE DEVS",
     date: "2025",
-    location: "LAB",
-    tagline: "Empty Memory Slot",
-    image: null,
+    location: "VANDE BHARAT",
+    tagline: "Debugging at 160 km/h on Indian Railways",
+    image: "/memories-train-commute.jpg",
   },
   {
-    id: "slot-5",
-    code: "BUGS SLAYED NIGHTS.ROM",
-    sublabel: "NO IMAGE ADDED",
-    title: "SLOT 05",
+    id: "mccafe-uno",
+    code: "MCCAFE UNO STRATEGY.ROM",
+    sublabel: "MCCAFE UNO",
+    title: "MCCAFE UNO STRATEGY",
     date: "2025",
-    location: "PROD",
-    tagline: "Empty Memory Slot",
-    image: null,
+    location: "MCCAFE",
+    tagline: "Draw +4 Cards & Fix Race Conditions",
+    image: "/memories-mccafe-uno.jpg",
   },
 ];
 
@@ -81,20 +81,16 @@ export default function TechWorldMemoriesConsole() {
     return () => clearTimeout(timer);
   }, [activeIndex]);
 
-  // 2. Auto-play slideshow cycles ONLY through cartridges that HAVE valid images
+  // 2. Auto-play slideshow cycles smoothly through all 5 memory cartridges
   useEffect(() => {
     if (!isAutoPlaying) return;
-    
-    if (!MEMORIES[activeIndex]?.image) {
-      setActiveIndex(0);
-    }
 
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev === 0 ? 1 : 0));
+      setActiveIndex((prev) => (prev + 1) % MEMORIES.length);
     }, 3500);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying, activeIndex]);
+  }, [isAutoPlaying]);
 
   const handleNext = () => {
     triggerBtnPress("A");
@@ -113,9 +109,6 @@ export default function TechWorldMemoriesConsole() {
 
   const handleStartToggle = () => {
     triggerBtnPress("START");
-    if (!isAutoPlaying && !MEMORIES[activeIndex]?.image) {
-      setActiveIndex(0);
-    }
     setIsAutoPlaying((p) => !p);
   };
 
@@ -145,10 +138,10 @@ export default function TechWorldMemoriesConsole() {
         {/* LEFT COLUMN: Transparent Handheld Game Console */}
         <div className="lg:col-span-7 flex flex-col items-center">
           
-          {/* Transparent Acrylic Shell Container (Refined 1:1 Physics) */}
+          {/* Transparent Acrylic Shell Container */}
           <div className="relative w-[310px] xs:w-[345px] sm:w-[385px] bg-[#1e2029]/85 backdrop-blur-md rounded-[42px] p-5 sm:p-6 border-4 border-white/25 shadow-[0_30px_70px_rgba(0,0,0,0.85)] overflow-hidden">
             
-            {/* Inner Circuit Board Lines & Screw Mount Details */}
+            {/* Inner Circuit Board Lines & Screw Details */}
             <div
               className="absolute inset-0 opacity-25 pointer-events-none"
               style={{
@@ -188,14 +181,13 @@ export default function TechWorldMemoriesConsole() {
                 </span>
               </div>
 
-              {/* Viewfinder Screen Box (Clicking triggers Maaz assistant screen warning message) */}
+              {/* Viewfinder Screen Box */}
               <div
                 onClick={() => window.dispatchEvent(new CustomEvent("maaz_screen_clicked"))}
                 className="relative w-full h-[210px] xs:h-[235px] sm:h-[255px] rounded-[14px] overflow-hidden bg-black border-2 border-white/20 shadow-2xl cursor-pointer"
               >
-                
-                {/* Condition A: Photo Image Available */}
-                {activeMem.image ? (
+                {/* Photo Image Display */}
+                {activeMem.image && (
                   <div className="relative w-full h-full">
                     <img
                       src={activeMem.image}
@@ -214,71 +206,24 @@ export default function TechWorldMemoriesConsole() {
 
                     {/* LCD Pixel Text Overlay — Shows for 3 seconds then disappears */}
                     {showTitleOverlay && (
-                      <div className="absolute bottom-3 inset-x-0 text-center z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] transition-opacity duration-700 animate-fade-in">
-                        <div className="font-['Silkscreen',monospace] text-sm sm:text-base text-yellow-300 font-bold tracking-wider">
+                      <div className="absolute bottom-3 inset-x-0 text-center z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] transition-opacity duration-700 animate-fade-in px-2">
+                        <div className="font-['Silkscreen',monospace] text-xs sm:text-sm text-yellow-300 font-bold tracking-wider truncate">
                           {activeMem.title}
                         </div>
-                        <div className="font-['Silkscreen',monospace] text-[11px] text-chalk/90 mt-1 animate-pulse">
-                          Loading Memory...
+                        <div className="font-['Space_Mono',monospace] text-[10px] text-chalk/90 mt-0.5 font-bold truncate">
+                          {activeMem.tagline}
                         </div>
                       </div>
                     )}
                   </div>
-                ) : (
-                  /* Condition B: NO IMAGE -> PURE CONTINUOUS SCREEN GLITCH ANIMATION WITH NO TITLE AND NO TEXT ON SCREEN AT ALL */
-                  <div className="relative w-full h-full bg-[#030406] overflow-hidden flex items-center justify-center">
-                    
-                    {/* Continuous Red / Cyan RGB Glitch Scanlines */}
-                    <div
-                      className="absolute inset-0 pointer-events-none opacity-80 animate-pulse"
-                      style={{
-                        backgroundImage: `
-                          repeating-linear-gradient(
-                            0deg,
-                            rgba(255, 0, 85, 0.35),
-                            rgba(255, 0, 85, 0.35) 2px,
-                            transparent 2px,
-                            transparent 5px
-                          ),
-                          repeating-linear-gradient(
-                            90deg,
-                            rgba(0, 240, 255, 0.3),
-                            rgba(0, 240, 255, 0.3) 3px,
-                            transparent 3px,
-                            transparent 7px
-                          )
-                        `,
-                        backgroundSize: "100% 10px, 10px 100%",
-                      }}
-                    />
-
-                    {/* Shifting Static Glitch Noise Strips */}
-                    <div className="absolute top-1/5 inset-x-0 h-5 bg-cyan-400/50 mix-blend-screen animate-bounce" />
-                    <div className="absolute top-1/2 inset-x-0 h-7 bg-red-500/50 mix-blend-screen animate-pulse" />
-                    <div className="absolute bottom-1/4 inset-x-0 h-4 bg-yellow-300/40 mix-blend-screen animate-ping" />
-
-                    {/* TV Static Noise Texture */}
-                    <div
-                      className="absolute inset-0 opacity-40 pointer-events-none"
-                      style={{
-                        backgroundImage: `
-                          radial-gradient(circle, #fff 1px, transparent 1px),
-                          radial-gradient(circle, #000 1px, transparent 1px)
-                        `,
-                        backgroundSize: "6px 6px, 4px 4px",
-                        backgroundPosition: "0 0, 2px 2px",
-                      }}
-                    />
-                  </div>
                 )}
-
               </div>
             </div>
 
             {/* Controller Buttons Section */}
             <div className="relative pt-2 pb-1 px-1 flex items-center justify-between">
               
-              {/* D-Pad (Large Molded Black Plastic Cross with Center Pivot) */}
+              {/* D-Pad */}
               <div className="relative w-22 h-22 sm:w-26 sm:h-26 flex items-center justify-center">
                 <div className="absolute w-full h-8 sm:h-9 bg-gradient-to-b from-[#2a2c34] via-[#1a1b22] to-[#121318] rounded-sm shadow-[0_6px_14px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.2)] border border-black/80" />
                 <div className="absolute h-full w-8 sm:w-9 bg-gradient-to-r from-[#2a2c34] via-[#1a1b22] to-[#121318] rounded-sm shadow-[0_6px_14px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.2)] border border-black/80" />
@@ -315,13 +260,11 @@ export default function TechWorldMemoriesConsole() {
                   className="absolute bottom-0 w-7 h-7 hover:bg-white/10 active:scale-95 rounded-b-sm transition-colors cursor-pointer"
                 />
                 
-                {/* Center Pivot Indent */}
-                <div className="relative w-4 h-4 rounded-full bg-[#121318] shadow-inner border border-zinc-800" />
+                <div className="relative w-3.5 h-3.5 rounded-full bg-[#121318] shadow-inner border border-zinc-800" />
               </div>
 
-              {/* A & B Action Buttons (Glossy Deep Red with White Engraved Labels) */}
+              {/* A & B Action Buttons */}
               <div className="flex items-center gap-3 sm:gap-4 rotate-[-15deg] pr-1">
-                {/* B Button */}
                 <div className="flex flex-col items-center">
                   <button
                     type="button"
@@ -331,7 +274,6 @@ export default function TechWorldMemoriesConsole() {
                       pressedBtn === "B" ? "translate-y-1 shadow-[0_2px_6px_rgba(180,20,20,0.6)]" : "hover:-translate-y-0.5"
                     }`}
                   >
-                    {/* Specular Highlight Gloss */}
                     <span className="absolute top-1 left-2.5 w-4 h-2 rounded-full bg-white/40 blur-[1px] pointer-events-none" />
                     B
                   </button>
@@ -340,7 +282,6 @@ export default function TechWorldMemoriesConsole() {
                   </span>
                 </div>
 
-                {/* A Button */}
                 <div className="flex flex-col items-center">
                   <button
                     type="button"
@@ -350,7 +291,6 @@ export default function TechWorldMemoriesConsole() {
                       pressedBtn === "A" ? "translate-y-1 shadow-[0_2px_6px_rgba(180,20,20,0.6)]" : "hover:-translate-y-0.5"
                     }`}
                   >
-                    {/* Specular Highlight Gloss */}
                     <span className="absolute top-1 left-2.5 w-4 h-2 rounded-full bg-white/40 blur-[1px] pointer-events-none" />
                     A
                   </button>
@@ -362,10 +302,8 @@ export default function TechWorldMemoriesConsole() {
 
             </div>
 
-            {/* Bottom Section: SELECT / START Angled Rubber Pills & Diagonal Speaker Grill */}
+            {/* Bottom Controls & Speaker Slits */}
             <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between px-2">
-              
-              {/* SELECT & START Pills */}
               <div className="flex items-center gap-4 rotate-[-12deg]">
                 <div className="flex flex-col items-center">
                   <button
@@ -394,7 +332,6 @@ export default function TechWorldMemoriesConsole() {
                 </div>
               </div>
 
-              {/* Diagonal Speaker Slits */}
               <div className="flex items-center gap-1.5 rotate-[-25deg] opacity-80">
                 <span className="w-1.5 h-7 bg-zinc-900 rounded-full border-r border-white/20 shadow-inner" />
                 <span className="w-1.5 h-7 bg-zinc-900 rounded-full border-r border-white/20 shadow-inner" />
@@ -417,7 +354,7 @@ export default function TechWorldMemoriesConsole() {
 
         </div>
 
-        {/* RIGHT COLUMN: GameBoy Cartridge Stack (Prompt Specification 1:1) */}
+        {/* RIGHT COLUMN: GameBoy Cartridge Stack */}
         <div className="lg:col-span-5 flex flex-col items-center lg:items-start">
           
           {/* Top Arrow Note */}
@@ -427,11 +364,10 @@ export default function TechWorldMemoriesConsole() {
             </p>
           </div>
 
-          {/* Vertical Stack of GameBoy Cartridge Cards (No icons, No emojis, Neon Green Side Glow on Active Cartridge) */}
-          <div className="w-full max-w-[340px] space-y-4">
+          {/* Stack of 5 3D Cartridges (ALL 5 CARTRIDGES UNLOCKED WITH REAL PHOTOS) */}
+          <div className="w-full max-w-[340px] space-y-3.5">
             {MEMORIES.map((m, idx) => {
               const isActive = idx === activeIndex;
-              const hasImage = Boolean(m.image);
 
               return (
                 <button
@@ -461,7 +397,7 @@ export default function TechWorldMemoriesConsole() {
                     <span className="w-1 h-3 bg-black/50 rounded-full" />
                   </div>
 
-                  {/* ACTIVE CARTRIDGE NEON GREEN SIDE GLOW (#4DFF9A) leaking from left & right slots */}
+                  {/* ACTIVE CARTRIDGE NEON GREEN SIDE GLOW (#4DFF9A) */}
                   {isActive && (
                     <>
                       <div className="absolute -left-2 top-0 bottom-0 w-3 rounded-l-[8px] bg-[#4DFF9A] shadow-[0_0_25px_#4DFF9A,inset_0_0_10px_#4DFF9A] opacity-90 animate-pulse pointer-events-none" />
@@ -469,23 +405,14 @@ export default function TechWorldMemoriesConsole() {
                     </>
                   )}
 
-                  {/* Recessed Sticker Label (#EAE2D0 Warm Off-White Paper Texture, Typography ONLY) */}
+                  {/* Recessed Sticker Label (#EAE2D0 Warm Off-White Paper Texture) */}
                   <div className="mx-2.5 h-full bg-[#EAE2D0] text-[#1F1F1F] px-3.5 py-2 rounded-[5px] border border-[#1F1F1F]/40 flex flex-col justify-between shadow-[inset_0_1px_3px_rgba(0,0,0,0.3)]">
-                    
-                    {/* Top: Monospace Title Code */}
                     <div className="font-['Silkscreen',monospace] text-[11px] sm:text-xs font-bold tracking-wide text-[#1F1F1F] truncate">
                       {m.code}
                     </div>
-
-                    {/* Bottom: Secondary Sublabel (Typography ONLY - No icons, no badges) */}
-                    <div className="font-['Space_Mono',monospace] text-[9px] font-bold tracking-wider">
-                      {hasImage ? (
-                        <span className="text-emerald-800">● READY</span>
-                      ) : (
-                        <span className="text-red-700">● NO IMAGE ADDED</span>
-                      )}
+                    <div className="font-['Space_Mono',monospace] text-[9px] font-bold tracking-wider text-emerald-800">
+                      ● {m.sublabel}
                     </div>
-
                   </div>
                 </button>
               );
