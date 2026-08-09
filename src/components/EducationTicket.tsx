@@ -11,6 +11,7 @@ interface EducationItem {
   description: string;
   seatInfo: string;
   year: string;
+  image: string;
 }
 
 const EDUCATION_DATA: EducationItem[] = [
@@ -26,6 +27,7 @@ const EDUCATION_DATA: EducationItem[] = [
       "Pursue higher knowledge and master advanced computer applications, cloud systems and modern software engineering from anywhere in the world!",
     seatInfo: "Row M0 Seat U1",
     year: "2025",
+    image: "/education-mangalayatan-university.jpg",
   },
   {
     degree: "BCA",
@@ -39,6 +41,7 @@ const EDUCATION_DATA: EducationItem[] = [
       "Build strong foundations in computer science, algorithm design, web development, and enterprise database systems.",
     seatInfo: "Row A2 Seat B5",
     year: "2022",
+    image: "/education-acharya-institute.jpg",
   },
 ];
 
@@ -79,31 +82,34 @@ function SingleTicket({ item, index }: { item: EducationItem; index: number }) {
         index % 2 === 0 ? "rotate-[-1deg]" : "rotate-[1deg]"
       }`}
     >
-      {/* Ticket Wrapper - Responsive: Horizontal on mobile, vertical stacked layout or full horizontal flight pass */}
+      {/* Ticket Wrapper */}
       <div className="flex flex-col md:flex-row bg-[#161515] text-[#f1e6d1] border border-white/10 relative">
         
-        {/* Left Section: Linocut Artwork */}
-        <div className="w-full md:w-56 lg:w-64 h-44 md:h-auto shrink-0 relative overflow-hidden border-b md:border-b-0 md:border-r border-white/15">
+        {/* Left Section: Campus Photo with Red Theme Duotone Overlay */}
+        <div className="w-full md:w-56 lg:w-64 h-48 md:h-auto shrink-0 relative overflow-hidden border-b md:border-b-0 md:border-r border-white/15 bg-red-950">
           <img
-            src="/ticket-red-sketch.jpg"
-            alt="Linocut illustration"
-            className="w-full h-full object-cover filter contrast-[1.25] brightness-90"
+            src={item.image}
+            alt={`${item.institution} Campus`}
+            className="w-full h-full object-cover filter contrast-[1.2] brightness-95 saturate-[1.2]"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#161515] via-transparent to-transparent opacity-60 md:hidden" />
-          <div className="absolute bottom-2 left-3 font-['Silkscreen',monospace] text-[10px] tracking-wider text-white/70 uppercase">
+          {/* Red Theme Color Duotone Filter Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-red-950/90 via-red-900/40 to-red-900/20 mix-blend-multiply pointer-events-none" />
+          <div className="absolute inset-0 bg-red-800/35 mix-blend-color pointer-events-none" />
+          
+          <div className="absolute bottom-2.5 left-3 font-['Silkscreen',monospace] text-[10px] tracking-wider text-amber-100 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] z-10 font-bold">
             {item.degree} • {item.status}
           </div>
         </div>
 
         {/* Center Main Section: Ticket Information */}
         <div className="flex-1 p-5 sm:p-6 lg:p-7 flex flex-col justify-between space-y-4">
-          {/* Top Description (Instrument Serif) */}
+          {/* Top Description */}
           <p className="font-['Instrument_Serif',serif] text-xl sm:text-2xl lg:text-[26px] leading-[1.15] text-[#f1e6d1] tracking-wide max-w-2xl">
             {item.description}
           </p>
 
           <div className="space-y-1">
-            {/* Admit Label (Silkscreen Pixel Font) */}
+            {/* Admit Label */}
             <div className="font-['Silkscreen',monospace] text-base sm:text-lg tracking-[0.15em] text-white">
               {item.admitNo}
             </div>
@@ -133,7 +139,7 @@ function SingleTicket({ item, index }: { item: EducationItem; index: number }) {
         {/* Right Perforated Stub */}
         <div className="w-full md:w-36 lg:w-40 bg-[#ebdcc4] text-[#181616] shrink-0 relative flex flex-row md:flex-col justify-between items-center p-4 sm:p-5 border-t md:border-t-0 md:border-l-2 border-dashed border-[#161515]">
           
-          {/* Semi-circular Cutout Notches at Perforation Line */}
+          {/* Semi-circular Cutout Notches */}
           <div className="hidden md:block absolute -top-3 -left-3 w-6 h-6 rounded-full bg-[#0d1616] border border-black/20" />
           <div className="hidden md:block absolute -bottom-3 -left-3 w-6 h-6 rounded-full bg-[#0d1616] border border-black/20" />
           <div className="md:hidden absolute -top-3 -left-3 w-6 h-6 rounded-full bg-[#0d1616] border border-black/20" />
