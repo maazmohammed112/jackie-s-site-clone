@@ -346,10 +346,10 @@ export default function CorkboardGuestbook() {
                 {/* 3D MECHANICAL TALLY COUNTER WITH PULL LEVER & HANDWRITTEN WHITE HINT */}
                 <div className="relative shrink-0 pt-5">
                   
-                  {/* Pure White Handwritten Hint with Drawn Arrow (No Background Container) */}
-                  <div className="absolute -top-1.5 right-0 pointer-events-none flex items-center gap-1 font-['Caveat',cursive] text-white text-xs sm:text-sm font-bold whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] animate-bounce">
+                  {/* Black Handwritten Hint with Drawn Arrow (No Background Container) */}
+                  <div className="absolute -top-1.5 right-0 pointer-events-none flex items-center gap-1 font-['Caveat',cursive] text-[#201c16] text-xs sm:text-sm font-extrabold whitespace-nowrap animate-bounce">
                     <span>pull down to add your count!</span>
-                    <svg className="w-4 h-4 text-white rotate-[90deg] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg className="w-4 h-4 text-[#201c16] rotate-[90deg] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
