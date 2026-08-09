@@ -136,8 +136,8 @@ function StampRail({ side }: { side: "left" | "right" }) {
   return (
     <div
       aria-hidden="false"
-      className={`fixed top-0 z-30 block h-screen w-[45px] sm:w-[60px] md:w-[70px] opacity-90 pointer-events-auto select-none overflow-hidden ${
-        side === "left" ? "left-0 hidden sm:block" : "right-0"
+      className={`fixed top-0 z-30 hidden md:block h-screen w-[70px] opacity-90 pointer-events-auto select-none overflow-hidden ${
+        side === "left" ? "left-0" : "right-0"
       }`}
       style={{
         backgroundImage: `url(${stampStrip})`,
