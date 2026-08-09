@@ -123,6 +123,7 @@ export default function CorkboardGuestbook() {
   const [message, setMessage] = useState("");
   const [selectedStamp, setSelectedStamp] = useState("☕ CHAI APPROVED");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isHelmetShaking, setIsHelmetShaking] = useState(false);
 
   useEffect(() => {
     try {
@@ -131,6 +132,11 @@ export default function CorkboardGuestbook() {
       // ignore
     }
   }, [notes]);
+
+  const handleHelmetClick = () => {
+    setIsHelmetShaking(true);
+    setTimeout(() => setIsHelmetShaking(false), 800);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,20 +176,20 @@ export default function CorkboardGuestbook() {
   };
 
   return (
-    <section id="guestbook" className="relative my-24 px-4 sm:px-6 max-w-6xl mx-auto select-none">
+    <section id="guestbook" className="relative my-20 px-3 sm:px-6 max-w-7xl mx-auto select-none">
       
-      {/* Wooden Framed Outer Container matching reference image 1:1 */}
-      <div className="relative bg-[#1c1815] p-4 sm:p-7 rounded-[18px] border-[8px] border-[#382a1d] shadow-[0_30px_70px_rgba(0,0,0,0.9)]">
+      {/* Wooden Framed Outer Container */}
+      <div className="relative bg-[#1c1815] p-3 sm:p-6 lg:p-7 rounded-[18px] border-[6px] sm:border-[8px] border-[#382a1d] shadow-[0_30px_70px_rgba(0,0,0,0.9)]">
         
-        {/* Main Grid: Wooden Corkboard (Left) + Form & Stamp Selector (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Main 2-Column Grid: Corkboard Wall (Left 7 cols) + Forms & Stamps (Right 5 cols) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           
-          {/* LEFT COLUMN: Real Wooden Framed Corkboard */}
-          <div className="lg:col-span-8 relative min-h-[620px] bg-[#9e6f47] p-5 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] overflow-hidden">
+          {/* LEFT COLUMN: Wooden Corkboard Wall */}
+          <div className="lg:col-span-7 relative min-h-[580px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between">
             
             {/* Real Corkboard Surface Grain Texture */}
             <div
-              className="absolute inset-0 opacity-40 pointer-events-none"
+              className="absolute inset-0 opacity-40 pointer-events-none rounded-[8px]"
               style={{
                 backgroundImage: `
                   radial-gradient(circle at 50% 50%, #472d16 1.5px, transparent 1.5px),
@@ -194,41 +200,52 @@ export default function CorkboardGuestbook() {
               }}
             />
 
-            {/* Top Banner: Spiral Notebook Page Header */}
-            <div className="relative z-10 mb-6 bg-[#f4ead6] text-[#201c16] p-4 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex items-center justify-between">
-              <div>
-                <h2 className="font-['Gloria_Hallelujah',cursive] text-2xl sm:text-3xl font-bold text-[#201c16]">
-                  Techwazzy Life World
-                </h2>
-                <p className="font-['Caveat',cursive] text-lg text-[#201c16]/80 mt-0.5">
-                  Real visitors. Real vibes. Real stamps. ♡
-                </p>
+            {/* Top Area Container: Shakable Helmet Polaroid (Non-overlapping) + Header Banner */}
+            <div className="relative z-10 mb-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              
+              {/* SHAKABLE Polaroid Mecha Helmet Photo (Clicks or touches trigger physical shake animation on mobile & desktop) */}
+              <div
+                onClick={handleHelmetClick}
+                title="Click me to shake!"
+                className={`relative shrink-0 w-24 sm:w-26 bg-white p-2 shadow-xl border border-zinc-200 rotate-[-5deg] cursor-pointer transition-transform duration-300 hover:rotate-[-10deg] ${
+                  isHelmetShaking ? "animate-bounce" : ""
+                }`}
+              >
+                <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#b5a38a] rounded-sm opacity-70 border border-black/10" />
+                <img src="/maaz-helmet.png" alt="Techwazzy Studio" className="w-full h-16 object-contain bg-zinc-900 rounded-[2px]" />
+                <div className="font-['Silkscreen',monospace] text-[7px] text-center mt-1 text-zinc-700 font-bold">TECHWAZZY STUDIO</div>
               </div>
 
-              {/* Odometer Visitor Counter */}
-              <div className="hidden sm:flex flex-col items-end">
-                <div className="flex items-center gap-1 bg-[#181616] p-1.5 rounded-[4px] border border-white/20 shadow-inner">
-                  <span className="font-['Silkscreen',monospace] text-[9px] text-chalk/70 mr-1 uppercase">Visitors</span>
-                  <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">0</span>
-                  <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">2</span>
-                  <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">4</span>
-                  <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">7</span>
+              {/* Header Title Banner */}
+              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3.5 sm:p-4 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex items-center justify-between">
+                <div>
+                  <h2 className="font-['Gloria_Hallelujah',cursive] text-xl sm:text-2xl font-bold text-[#201c16] leading-tight">
+                    Techwazzy Life World
+                  </h2>
+                  <p className="font-['Caveat',cursive] text-sm sm:text-base text-[#201c16]/80 mt-0.5">
+                    Real visitors. Real vibes. Real stamps. ♡
+                  </p>
                 </div>
-                <span className="font-['Caveat',cursive] text-xs text-[#201c16]/80 mt-0.5 italic">
-                  amazing people so far! ↴
-                </span>
+
+                {/* Odometer Visitor Counter */}
+                <div className="hidden xs:flex flex-col items-end shrink-0">
+                  <div className="flex items-center gap-1 bg-[#181616] p-1.5 rounded-[4px] border border-white/20 shadow-inner">
+                    <span className="font-['Silkscreen',monospace] text-[8px] text-chalk/70 mr-1 uppercase">Visitors</span>
+                    <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-xs sm:text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">0</span>
+                    <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-xs sm:text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">2</span>
+                    <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-xs sm:text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">4</span>
+                    <span className="bg-zinc-800 text-white font-['Space_Mono',monospace] text-xs sm:text-sm px-1.5 py-0.5 rounded-[2px] font-bold border border-white/10">7</span>
+                  </div>
+                  <span className="font-['Caveat',cursive] text-[11px] text-[#201c16]/80 mt-0.5 italic">
+                    amazing people so far! ↴
+                  </span>
+                </div>
               </div>
+
             </div>
 
-            {/* Top-Left Polaroid Photo Accent */}
-            <div className="hidden md:block absolute top-5 left-5 z-20 w-28 bg-white p-2 shadow-xl border border-zinc-200 rotate-[-8deg] pointer-events-none">
-              <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#b5a38a] rounded-sm opacity-70" />
-              <img src="/maaz-helmet.png" alt="Techwazzy Studio" className="w-full h-20 object-contain bg-zinc-900 rounded-[2px]" />
-              <div className="font-['Silkscreen',monospace] text-[7px] text-center mt-1 text-zinc-700 font-bold">TECHWAZZY STUDIO</div>
-            </div>
-
-            {/* Sticky Notes Grid (Reference Image Layout 1:1) */}
-            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 pt-2">
+            {/* Sticky Notes Grid (Clean 2 or 3 Column Layout) */}
+            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1">
               {notes.map((note) => {
                 const stampObj = STAMPS.find((s) => s.label === note.stamp) ?? STAMPS[0]!;
 
@@ -236,24 +253,24 @@ export default function CorkboardGuestbook() {
                   <div
                     key={note.id}
                     style={{ transform: `rotate(${note.rotation}deg)` }}
-                    className={`relative p-4 rounded-[4px] shadow-[0_12px_24px_rgba(0,0,0,0.5)] border ${note.bgClass} transition-transform duration-300 hover:rotate-0 hover:z-30 hover:scale-[1.03] flex flex-col justify-between min-h-[190px]`}
+                    className={`relative p-3.5 rounded-[4px] shadow-[0_12px_24px_rgba(0,0,0,0.5)] border ${note.bgClass} transition-transform duration-300 hover:rotate-0 hover:z-30 hover:scale-[1.03] flex flex-col justify-between min-h-[175px]`}
                   >
                     {/* Pushpin Header */}
                     <span className={`absolute -top-2.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full ${note.pinColor} shadow-[0_2px_5px_rgba(0,0,0,0.6)] border border-white`} />
 
                     {/* Author Name */}
-                    <div className="font-['Caveat',cursive] text-sm text-[#201c16]/70 font-bold text-right">
+                    <div className="font-['Caveat',cursive] text-xs text-[#201c16]/70 font-bold text-right">
                       {note.name}
                     </div>
 
                     {/* Note Body Message */}
-                    <p className="font-['Caveat',cursive] text-lg sm:text-xl leading-snug font-bold my-2">
+                    <p className="font-['Caveat',cursive] text-base sm:text-lg leading-snug font-bold my-1.5">
                       "{note.message}"
                     </p>
 
                     {/* Rubber Stamp Ink Badge & Date */}
                     <div>
-                      <div className={`inline-block font-['Silkscreen',monospace] text-[10px] font-bold px-2 py-1 rounded-[3px] border-2 uppercase ${stampObj.color} ${stampObj.borderClass} bg-white/40 shadow-sm rotate-[-3deg]`}>
+                      <div className={`inline-block font-['Silkscreen',monospace] text-[9px] font-bold px-2 py-0.5 rounded-[3px] border-2 uppercase ${stampObj.color} ${stampObj.borderClass} bg-white/40 shadow-sm rotate-[-3deg]`}>
                         {note.stamp}
                       </div>
 
@@ -278,113 +295,113 @@ export default function CorkboardGuestbook() {
               })}
             </div>
 
-            {/* Right Side Torn Note Paper Scrap */}
-            <div className="hidden lg:block absolute bottom-6 right-6 z-20 max-w-[160px] bg-[#f4ead6] text-[#201c16] p-3 rounded-[4px] shadow-lg border border-[#201c16]/20 rotate-[4deg]">
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-6 bg-zinc-400/40 rounded-full" />
-              <p className="font-['Caveat',cursive] text-base leading-tight text-center font-bold">
+            {/* Bottom Right Torn Note Paper Scrap (Positioned cleanly below grid - NO OVERLAPPING TEXT) */}
+            <div className="relative z-10 mt-6 self-end max-w-[240px] bg-[#f4ead6] text-[#201c16] px-4 py-2.5 rounded-[4px] shadow-lg border border-[#201c16]/20 rotate-[2deg]">
+              <span className="absolute -top-2.5 left-4 w-3.5 h-3.5 bg-red-600 rounded-full shadow-sm border border-white" />
+              <p className="font-['Caveat',cursive] text-sm leading-tight text-center font-bold">
                 Every stamp tells a story. Thanks for being a part of mine! ♡
               </p>
             </div>
 
           </div>
 
-        </div>
-
-        {/* RIGHT COLUMN: Leave Note Form & Pick Reaction Stamp Panel */}
-        <div className="lg:col-span-4 space-y-6">
-          
-          {/* Top Tape Vibe Scrap */}
-          <div className="relative bg-[#f4ead6] text-[#201c16] px-4 py-2 rounded-[4px] shadow-md border border-[#201c16]/20 rotate-[-1deg] text-center">
-            <span className="absolute -top-2 left-6 w-12 h-4 bg-primary/40 rotate-[-5deg]" />
-            <p className="font-['Caveat',cursive] text-lg font-bold">
-              Drop your vibe. Leave your mark. 😊
-            </p>
-          </div>
-
-          {/* LEAVE A QUICK NOTE Spiral Form Card */}
-          <div className="relative bg-[#f4ead6] text-[#201c16] p-5 sm:p-6 rounded-[8px] shadow-[0_16px_36px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rotate-[1deg]">
+          {/* RIGHT COLUMN: Leave Note Form & Pick Reaction Stamp Panel (Fills dark empty space on the right side) */}
+          <div className="lg:col-span-5 space-y-5">
             
-            {/* Spiral Rings down the right edge */}
-            <div className="absolute right-2 top-4 bottom-4 flex flex-col justify-between opacity-40">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <span key={i} className="w-2.5 h-2.5 rounded-full bg-zinc-800 shadow-inner" />
-              ))}
+            {/* Top Tape Vibe Scrap */}
+            <div className="relative bg-[#f4ead6] text-[#201c16] px-4 py-2 rounded-[4px] shadow-md border border-[#201c16]/20 rotate-[-1deg] text-center">
+              <span className="absolute -top-2 left-6 w-12 h-4 bg-primary/40 rotate-[-5deg]" />
+              <p className="font-['Caveat',cursive] text-lg font-bold">
+                Drop your vibe. Leave your mark. 😊
+              </p>
             </div>
 
-            <h3 className="font-['Silkscreen',monospace] text-base font-bold text-[#201c16] mb-3 uppercase">
-              LEAVE A QUICK NOTE
-            </h3>
-
-            <form onSubmit={handleSubmit} className="space-y-3.5 pr-4">
+            {/* LEAVE A QUICK NOTE Form Card */}
+            <div className="relative bg-[#f4ead6] text-[#201c16] p-5 rounded-[8px] shadow-[0_16px_36px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rotate-[1deg]">
               
-              {/* Message Textarea */}
-              <div>
-                <textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Write something awesome..."
-                  rows={3}
-                  required
-                  maxLength={120}
-                  className="w-full bg-[#e8dec8] text-[#201c16] p-3 rounded-[4px] border border-[#201c16]/30 font-['Caveat',cursive] text-xl focus:outline-none focus:border-primary shadow-inner resize-none leading-snug"
-                />
-                <div className="text-right font-['Space_Mono',monospace] text-[10px] text-[#201c16]/60 mt-0.5">
-                  {message.length} / 120
-                </div>
+              {/* Spiral Rings */}
+              <div className="absolute right-2 top-4 bottom-4 flex flex-col justify-between opacity-40">
+                {Array.from({ length: 7 }).map((_, i) => (
+                  <span key={i} className="w-2.5 h-2.5 rounded-full bg-zinc-800 shadow-inner" />
+                ))}
               </div>
 
-              {/* Name Input */}
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
-                maxLength={30}
-                className="w-full bg-[#e8dec8] text-[#201c16] px-3 py-2 rounded-[4px] border border-[#201c16]/30 font-['Space_Mono',monospace] text-xs focus:outline-none focus:border-primary shadow-inner"
-              />
+              <h3 className="font-['Silkscreen',monospace] text-sm sm:text-base font-bold text-[#201c16] mb-3 uppercase">
+                LEAVE A QUICK NOTE
+              </h3>
 
-              {/* Pin Note Button */}
-              <button
-                type="submit"
-                disabled={isSubmitting || !message.trim()}
-                className="w-full flex items-center justify-center gap-2 font-['Silkscreen',monospace] text-xs font-bold bg-[#d9c39c] text-[#201c16] py-2.5 rounded-[4px] border-2 border-[#201c16]/30 shadow-md transition-transform hover:-rotate-1 active:scale-95 disabled:opacity-50 cursor-pointer"
-              >
-                <span>📌</span>
-                <span>{isSubmitting ? "PINNING..." : "PIN NOTE TO BOARD"}</span>
-              </button>
+              <form onSubmit={handleSubmit} className="space-y-3.5 pr-4">
+                
+                {/* Message Textarea */}
+                <div>
+                  <textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Write something awesome..."
+                    rows={3}
+                    required
+                    maxLength={120}
+                    className="w-full bg-[#e8dec8] text-[#201c16] p-3 rounded-[4px] border border-[#201c16]/30 font-['Caveat',cursive] text-xl focus:outline-none focus:border-primary shadow-inner resize-none leading-snug"
+                  />
+                  <div className="text-right font-['Space_Mono',monospace] text-[10px] text-[#201c16]/60 mt-0.5">
+                    {message.length} / 120
+                  </div>
+                </div>
 
-            </form>
+                {/* Name Input */}
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  maxLength={30}
+                  className="w-full bg-[#e8dec8] text-[#201c16] px-3 py-2 rounded-[4px] border border-[#201c16]/30 font-['Space_Mono',monospace] text-xs focus:outline-none focus:border-primary shadow-inner"
+                />
 
-          </div>
-
-          {/* PICK A REACTION STAMP Card (Grid of 8 Custom Rubber Stamps) */}
-          <div className="relative bg-[#f4ead6] text-[#201c16] p-5 rounded-[8px] shadow-[0_16px_36px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rotate-[-1deg]">
-            
-            <h4 className="font-['Silkscreen',monospace] text-xs font-bold text-[#201c16] mb-3 uppercase flex items-center justify-between">
-              <span>PICK A REACTION STAMP</span>
-              <span> stamp</span>
-            </h4>
-
-            {/* Grid of 8 Rubber Stamps (Customized per User Request) */}
-            <div className="grid grid-cols-2 gap-2">
-              {STAMPS.map((s) => (
+                {/* Pin Note Button */}
                 <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => setSelectedStamp(s.label)}
-                  className={`font-['Silkscreen',monospace] text-[9px] py-2 px-2 rounded-[4px] border-2 uppercase transition-all duration-200 cursor-pointer ${
-                    selectedStamp === s.label
-                      ? `${s.color} ${s.borderClass} bg-white font-bold scale-105 shadow-md`
-                      : "border-[#201c16]/25 bg-[#e8dec8] text-[#201c16]/70 hover:border-[#201c16]/60 hover:bg-white/50"
-                  }`}
+                  type="submit"
+                  disabled={isSubmitting || !message.trim()}
+                  className="w-full flex items-center justify-center gap-2 font-['Silkscreen',monospace] text-xs font-bold bg-[#d9c39c] text-[#201c16] py-2.5 rounded-[4px] border-2 border-[#201c16]/30 shadow-md transition-transform hover:-rotate-1 active:scale-95 disabled:opacity-50 cursor-pointer"
                 >
-                  {s.label}
+                  <span>📌</span>
+                  <span>{isSubmitting ? "PINNING..." : "PIN NOTE TO BOARD"}</span>
                 </button>
-              ))}
+
+              </form>
+
             </div>
 
-            <div className="text-right font-['Caveat',cursive] text-xs text-[#201c16]/70 mt-2 italic">
-              More coming soon... ➔
+            {/* PICK A REACTION STAMP Card (8 Custom Rubber Stamps) */}
+            <div className="relative bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 rounded-[8px] shadow-[0_16px_36px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rotate-[-1deg]">
+              
+              <h4 className="font-['Silkscreen',monospace] text-xs font-bold text-[#201c16] mb-3 uppercase flex items-center justify-between">
+                <span>PICK A REACTION STAMP</span>
+                <span> stamp</span>
+              </h4>
+
+              {/* Grid of 8 Rubber Stamps */}
+              <div className="grid grid-cols-2 gap-2">
+                {STAMPS.map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setSelectedStamp(s.label)}
+                    className={`font-['Silkscreen',monospace] text-[9px] py-2 px-1.5 rounded-[4px] border-2 uppercase transition-all duration-200 cursor-pointer text-center truncate ${
+                      selectedStamp === s.label
+                        ? `${s.color} ${s.borderClass} bg-white font-bold scale-105 shadow-md`
+                        : "border-[#201c16]/25 bg-[#e8dec8] text-[#201c16]/70 hover:border-[#201c16]/60 hover:bg-white/50"
+                    }`}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="text-right font-['Caveat',cursive] text-xs text-[#201c16]/70 mt-2 italic">
+                More coming soon... ➔
+              </div>
+
             </div>
 
           </div>
