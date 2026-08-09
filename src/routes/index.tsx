@@ -17,6 +17,7 @@ import MarginDoodles from "@/components/MarginDoodles";
 import CertificationsIndexBox from "@/components/CertificationsIndexBox";
 import SmartMaazAssistant from "@/components/SmartMaazAssistant";
 import TechWorldMemoriesConsole from "@/components/TechWorldMemoriesConsole";
+import CorkboardGuestbook from "@/components/CorkboardGuestbook";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -224,6 +225,12 @@ const NAV: {
         label: "memories console",
         href: "#memories",
         note: "retro GameBoy console",
+        icon: "spark",
+      },
+      {
+        label: "guestbook & reviews",
+        href: "#guestbook",
+        note: "pin a note or stamp",
         icon: "spark",
       },
       {
@@ -923,6 +930,11 @@ function PageBody() {
         {/* TECHWAZZY MEMORIES CONSOLE */}
         <section id="memories" className="mt-16 md:mt-24" data-reveal>
           <TechWorldMemoriesConsole />
+        </section>
+
+        {/* TORN PAPER GUESTBOOK & REVIEWS */}
+        <section id="guestbook" className="mt-16 md:mt-24" data-reveal>
+          <CorkboardGuestbook />
         </section>
 
         {/* CONNECT */}
