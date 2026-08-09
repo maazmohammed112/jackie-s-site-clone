@@ -67,6 +67,7 @@ const MEMORIES: MemoryCartridge[] = [
 export default function TechWorldMemoriesConsole() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showTitleOverlay, setShowTitleOverlay] = useState(true);
+  const [isStartActive, setIsStartActive] = useState(false);
   const [pressedBtn, setPressedBtn] = useState<string | null>(null);
 
   const activeMem = MEMORIES[activeIndex] ?? MEMORIES[0]!;
@@ -95,17 +96,10 @@ export default function TechWorldMemoriesConsole() {
     setTimeout(() => setPressedBtn(null), 150);
   };
 
-  // Pressing START shows title overlay, fades out, and shifts to next memory
+  // Clicking START button toggles neon green light ON and OFF
   const handleStartClick = () => {
     triggerBtnPress("START");
-    setShowTitleOverlay(true);
-
-    setTimeout(() => {
-      setShowTitleOverlay(false);
-      setTimeout(() => {
-        setActiveIndex((prev) => (prev + 1) % MEMORIES.length);
-      }, 250);
-    }, 1200);
+    setIsStartActive((prev) => !prev);
   };
 
   return (
@@ -320,11 +314,13 @@ export default function TechWorldMemoriesConsole() {
                   <button
                     type="button"
                     onClick={handleStartClick}
-                    aria-label="Play Next Memory (START Button)"
-                    title="Press START to play next memory"
-                    className={`w-9 h-3.5 rounded-full border border-white/20 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] transition-all cursor-pointer bg-gradient-to-b from-[#3a3d46] to-[#1c1e24] hover:brightness-125 ${
-                      pressedBtn === "START" ? "scale-95 bg-zinc-800" : ""
-                    }`}
+                    aria-label="Toggle START Light Button"
+                    title="Press START to toggle green light"
+                    className={`w-9 h-3.5 rounded-full border border-white/20 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] transition-all cursor-pointer ${
+                      isStartActive
+                        ? "bg-[#4DFF9A] shadow-[0_0_14px_#4DFF9A]"
+                        : "bg-gradient-to-b from-[#3a3d46] to-[#1c1e24] hover:brightness-125"
+                    } ${pressedBtn === "START" ? "scale-95" : ""}`}
                   />
                   <span className="font-['Silkscreen',monospace] text-[8px] text-chalk/70 font-bold mt-1">
                     START
@@ -419,16 +415,12 @@ export default function TechWorldMemoriesConsole() {
             })}
           </div>
 
-          {/* Interactive START Button Sticky Note Banner */}
-          <button
-            type="button"
-            onClick={handleStartClick}
-            className="relative mt-6 bg-[#f4ead6] hover:bg-white text-[#201c16] px-5 py-2.5 rounded-[6px] shadow-md border-2 border-[#201c16]/30 hover:border-primary rotate-[-1deg] transition-all cursor-pointer active:scale-95 group"
-          >
-            <p className="font-['Caveat',cursive] text-lg sm:text-xl font-bold text-center flex items-center justify-center gap-2">
-              <span className="group-hover:translate-x-1 transition-transform">Press START to play next memory ➔</span>
+          {/* Static Hint Sticky Note Banner (Non-Clickable) */}
+          <div className="relative mt-6 bg-[#f4ead6] text-[#201c16] px-5 py-2.5 rounded-[6px] shadow-md border border-[#201c16]/20 rotate-[-1deg]">
+            <p className="font-['Caveat',cursive] text-lg sm:text-xl font-bold text-center">
+              Press START to begin ➔
             </p>
-          </button>
+          </div>
 
         </div>
 
