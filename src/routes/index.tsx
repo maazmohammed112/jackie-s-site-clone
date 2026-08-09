@@ -121,11 +121,23 @@ function StampRail({ side }: { side: "left" | "right" }) {
   const [activeItemKey, setActiveItemKey] = useState<string | null>(null);
   const repeats = Array.from({ length: 15 });
 
+  const handleToggle = (key: string) => {
+    setActiveItemKey((prev) => {
+      const next = prev === key ? null : key;
+      if (next) {
+        setTimeout(() => {
+          setActiveItemKey((current) => (current === key ? null : current));
+        }, 2500);
+      }
+      return next;
+    });
+  };
+
   return (
     <div
       aria-hidden="false"
-      className={`fixed top-0 z-30 hidden h-screen w-[70px] opacity-90 md:block pointer-events-auto select-none overflow-hidden ${
-        side === "left" ? "left-0" : "right-0"
+      className={`fixed top-0 z-30 block h-screen w-[45px] sm:w-[60px] md:w-[70px] opacity-90 pointer-events-auto select-none overflow-hidden ${
+        side === "left" ? "left-0 hidden sm:block" : "right-0"
       }`}
       style={{
         backgroundImage: `url(${stampStrip})`,
@@ -141,13 +153,13 @@ function StampRail({ side }: { side: "left" | "right" }) {
               const isOpen = activeItemKey === itemKey;
 
               return (
-                <div key={itemKey} className="relative w-[70px] h-[68px] shrink-0">
+                <div key={itemKey} className="relative w-full h-[45px] sm:h-[60px] md:h-[68px] shrink-0">
                   <button
                     type="button"
-                    onClick={() => setActiveItemKey((prev) => (prev === itemKey ? null : itemKey))}
+                    onClick={() => handleToggle(itemKey)}
                     onTouchEnd={(e) => {
                       e.preventDefault();
-                      setActiveItemKey((prev) => (prev === itemKey ? null : itemKey));
+                      handleToggle(itemKey);
                     }}
                     onMouseEnter={() => setActiveItemKey(itemKey)}
                     onMouseLeave={() => setActiveItemKey(null)}
@@ -159,10 +171,10 @@ function StampRail({ side }: { side: "left" | "right" }) {
                   {isOpen && (
                     <div
                       className={`absolute top-1/2 -translate-y-1/2 whitespace-nowrap z-50 animate-fade-in pointer-events-none ${
-                        side === "right" ? "right-full mr-3 text-right" : "left-full ml-3 text-left"
+                        side === "right" ? "right-full mr-2 sm:mr-3 text-right" : "left-full ml-2 sm:ml-3 text-left"
                       }`}
                     >
-                      <span className="font-['Caveat',cursive] text-xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] tracking-wider uppercase">
+                      <span className="font-['Caveat',cursive] text-base sm:text-xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] tracking-wider uppercase">
                         {side === "right" ? `${item.word} ~` : `~ ${item.word}`}
                       </span>
                     </div>
@@ -858,16 +870,38 @@ function PageBody() {
       }
     };
 
+    let touchTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "BUTTON" || target.tagName === "A")) {
+        return;
+      }
+      touchTimer = setTimeout(() => {
+        window.dispatchEvent(new CustomEvent("maaz_copy_attempt"));
+      }, 350);
+    };
+
+    const handleTouchEnd = () => {
+      if (touchTimer) clearTimeout(touchTimer);
+    };
+
     window.addEventListener("copy", handlePreventCopy);
-    window.addEventListener("contextmenu", handlePreventCopy);
+    window.addEventListener("contextmenu", handlePreventCopy, { capture: true });
     window.addEventListener("dragstart", handlePreventCopy);
     window.addEventListener("keydown", handleKeyCopy);
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    window.addEventListener("touchmove", handleTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener("copy", handlePreventCopy);
-      window.removeEventListener("contextmenu", handlePreventCopy);
+      window.removeEventListener("contextmenu", handlePreventCopy, { capture: true } as EventListenerOptions);
       window.removeEventListener("dragstart", handlePreventCopy);
       window.removeEventListener("keydown", handleKeyCopy);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("touchmove", handleTouchEnd);
     };
   }, []);
 
