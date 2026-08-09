@@ -33,14 +33,14 @@ export default function LaunchToTopWidgets() {
   if (!isVisible) return null;
 
   return (
-    /* Positioned clear of the 70px right vertical stamp icon rail (right-20 sm:right-24 md:right-28 lg:right-32) */
-    <div className="fixed bottom-4 right-20 sm:bottom-6 sm:right-24 md:right-28 lg:right-32 z-50 flex items-end pointer-events-auto select-none animate-fade-in">
+    /* Perfectly aligned with Maaz Avatar Icon & RIGHT_DOODLES across all screen sizes (right-4 sm:right-6 md:right-20 lg:right-24) */
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:right-20 lg:right-24 z-50 flex items-end pointer-events-auto select-none animate-fade-in">
       
-      {/* PURE ORIGAMI 3D PAPER AIRPLANE WITH CURVED AIR RELEASE TRAILS */}
+      {/* PURE ORIGAMI 3D PAPER AIRPLANE (Sized to match Maaz icon: w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12) */}
       <div className="flex flex-col items-center group relative">
         
         {/* Floating Tooltip Label */}
-        <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 font-['Caveat',cursive] text-xs text-chalk bg-[#181616] px-2 py-0.5 rounded-[4px] border border-white/20 shadow-md mb-1.5 whitespace-nowrap">
+        <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 font-['Caveat',cursive] text-xs text-chalk bg-[#181616] px-2 py-0.5 rounded-[4px] border border-white/20 shadow-md mb-1.5 whitespace-nowrap pointer-events-none">
           Launch to Top ✈️
         </span>
 
@@ -50,9 +50,9 @@ export default function LaunchToTopWidgets() {
           onMouseEnter={() => airplaneState === "idle" && setAirplaneState("hover")}
           onMouseLeave={() => airplaneState === "hover" && setAirplaneState("idle")}
           aria-label="Launch paper plane to top of page"
-          className={`relative p-1.5 flex items-center justify-center cursor-pointer transition-all duration-300 bg-transparent border-0 outline-none ${
+          className={`relative p-1 flex items-center justify-center cursor-pointer transition-all duration-300 bg-transparent border-0 outline-none ${
             airplaneState === "hover"
-              ? "scale-125 rotate-[-15deg] filter drop-shadow-[0_10px_22px_rgba(255,255,255,0.45)]"
+              ? "scale-125 rotate-[-15deg] filter drop-shadow-[0_8px_18px_rgba(255,255,255,0.45)]"
               : airplaneState === "pressed"
               ? "scale-90"
               : airplaneState === "launch"
@@ -60,28 +60,28 @@ export default function LaunchToTopWidgets() {
               : "hover:scale-110 active:scale-95"
           }`}
         >
-          {/* Pure 3D Folded Origami Paper Plane SVG */}
+          {/* Pure 3D Folded Origami Paper Plane SVG (Matching Maaz icon dimensions) */}
           <svg
             viewBox="0 0 100 100"
-            className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 filter drop-shadow-[0_8px_18px_rgba(0,0,0,0.85)]"
+            className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)]"
           >
             {/* Main Fold Left Wing */}
-            <polygon points="50,12 12,82 50,66" fill="#FFFFFF" stroke="#181616" strokeWidth="3" strokeLinejoin="round" />
+            <polygon points="50,12 12,82 50,66" fill="#FFFFFF" stroke="#181616" strokeWidth="3.5" strokeLinejoin="round" />
             
             {/* Right Wing Shadow Facet */}
-            <polygon points="50,12 88,82 50,66" fill="#F3F4F6" stroke="#181616" strokeWidth="3" strokeLinejoin="round" />
+            <polygon points="50,12 88,82 50,66" fill="#F3F4F6" stroke="#181616" strokeWidth="3.5" strokeLinejoin="round" />
             
             {/* Center Fold Line */}
-            <line x1="50" y1="12" x2="50" y2="88" stroke="#181616" strokeWidth="3" strokeLinecap="round" />
+            <line x1="50" y1="12" x2="50" y2="88" stroke="#181616" strokeWidth="3.5" strokeLinecap="round" />
             
             {/* Bottom Left Keel Shadow */}
-            <polygon points="50,66 12,82 50,88" fill="#E5E7EB" stroke="#181616" strokeWidth="2" />
+            <polygon points="50,66 12,82 50,88" fill="#E5E7EB" stroke="#181616" strokeWidth="2.5" />
           </svg>
 
-          {/* Curved Swirling Air Release Trails (Visible on hover or launch) */}
+          {/* Curved Swirling Air Release Trails */}
           {(airplaneState === "hover" || airplaneState === "launch") && (
             <svg
-              className="absolute -bottom-6 w-16 h-8 text-white/80 animate-pulse pointer-events-none"
+              className="absolute -bottom-5 w-12 h-6 text-white/80 animate-pulse pointer-events-none"
               viewBox="0 0 60 30"
               fill="none"
               stroke="currentColor"
