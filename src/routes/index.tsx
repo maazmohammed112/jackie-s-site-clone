@@ -528,19 +528,9 @@ function ClickBurst() {
 
 function PinnedPoster() {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [p, setP] = useState(1);
-  const [isMobile, setIsMobile] = useState(false);
+  const posterRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   useEffect(() => {
     if (!open && !video) return;
@@ -559,53 +549,57 @@ function PinnedPoster() {
   }, [open, video]);
 
   useEffect(() => {
-    if (isMobile) {
-      setP(1);
-      return;
-    }
+    const wrapEl = wrapRef.current;
+    const posterEl = posterRef.current;
+    if (!wrapEl || !posterEl) return;
 
-    const el = wrapRef.current;
-    if (!el) return;
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const r = el.getBoundingClientRect();
-        const vh = window.innerHeight;
-        // 1 when the poster is centred in the viewport, 0 when far above/below
-        const center = r.top + r.height / 2;
-        const dist = Math.abs(center - vh / 2);
-        const range = vh / 2 + r.height / 2;
-        const t = 1 - dist / (range * 0.72);
-        setP(Math.min(1, Math.max(0, t)));
-      });
+    let ticking = false;
+
+    const updatePosition = () => {
+      const r = wrapEl.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const center = r.top + r.height / 2;
+      const dist = center - vh / 2;
+      const range = vh / 2 + r.height / 2;
+
+      // Calculate progress 0 (hidden behind console) to 1 (fully revealed out from behind)
+      const t = Math.min(1, Math.max(0, 1 - dist / (range * 0.75)));
+
+      // Smoothly slide translateY from -120px (behind console) to 0px out in the open
+      const translateY = (1 - t) * -120;
+      const rotate = -3 + t * 3;
+      const opacity = 0.35 + t * 0.65;
+
+      posterEl.style.transform = `translateY(${translateY}px) rotate(${rotate}deg)`;
+      posterEl.style.opacity = `${opacity}`;
+      ticking = false;
     };
-    onScroll();
+
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updatePosition);
+        ticking = true;
+      }
+    };
+
+    updatePosition();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
-      cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [isMobile]);
+  }, []);
 
   return (
     <>
-      <div ref={wrapRef} className="flex relative z-0 -mt-16 sm:-mt-24 md:-mt-32 justify-center scale-90 sm:scale-100">
+      <div ref={wrapRef} className="flex relative z-0 -mt-24 sm:-mt-32 justify-center scale-90 sm:scale-100 pointer-events-auto">
         <button
+          ref={posterRef}
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Open portrait of Mohammed Maaz"
-          className="relative rounded-[10px] bg-paper p-4 pt-9 shadow-[var(--shadow-paper)] transition-transform duration-200 hover:rotate-0"
-          style={
-            isMobile
-              ? { transform: "rotate(-2deg)", opacity: 1 }
-              : {
-                  transform: `translateY(${(1 - p) * 120}px) rotate(${-2 + p * 2}deg)`,
-                  opacity: 0.4 + p * 0.6,
-                }
-          }
+          className="relative rounded-[10px] bg-paper p-4 pt-9 shadow-[var(--shadow-paper)] cursor-pointer"
         >
           <span
             aria-hidden="true"
@@ -947,7 +941,7 @@ function PageBody() {
         </section>
 
         {/* TECHWAZZY MEMORIES CONSOLE */}
-        <section id="memories" className="mt-16 md:mt-24" data-reveal>
+        <section id="memories" className="relative z-20 mt-16 md:mt-24" data-reveal>
           <TechWorldMemoriesConsole />
         </section>
 
