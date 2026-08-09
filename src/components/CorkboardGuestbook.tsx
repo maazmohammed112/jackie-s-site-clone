@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import DistressedStamp from "./DistressedStamp";
+import { db, ref, onValue, push, update, runTransaction } from "../lib/firebase";
 
 export interface GuestbookNote {
   id: string;
@@ -12,6 +13,7 @@ export interface GuestbookNote {
   bgClass: string;
   pinColor: string;
   borderRadius: string;
+  createdAt: number;
 }
 
 export interface StampPreset {
@@ -41,93 +43,11 @@ const NOTE_THEMES = [
   { bgClass: "bg-[#fbf7ee] text-[#2c281e] border-[#e4dccb]", pinColor: "bg-red-500", borderRadius: "8px 14px 6px 16px" },
 ];
 
-const INITIAL_NOTES: GuestbookNote[] = [
-  {
-    id: "note-1",
-    name: "Arjun",
-    message: "Loved the vibe of your portfolio! Super creative and inspiring!",
-    stampKey: "loveIt",
-    date: "21 MAY 2024",
-    likes: 12,
-    rotation: -1.8,
-    bgClass: NOTE_THEMES[0]!.bgClass,
-    pinColor: NOTE_THEMES[0]!.pinColor,
-    borderRadius: NOTE_THEMES[0]!.borderRadius,
-  },
-  {
-    id: "note-2",
-    name: "Priya",
-    message: "Your projects are insane! Keep building and changing the world!",
-    stampKey: "genius",
-    date: "20 MAY 2024",
-    likes: 18,
-    rotation: 2.1,
-    bgClass: NOTE_THEMES[1]!.bgClass,
-    pinColor: NOTE_THEMES[1]!.pinColor,
-    borderRadius: NOTE_THEMES[1]!.borderRadius,
-  },
-  {
-    id: "note-3",
-    name: "Rahul",
-    message: "Agentic AI & SAP automation partner material right here.",
-    stampKey: "needToTalk",
-    date: "19 MAY 2024",
-    likes: 9,
-    rotation: -2.5,
-    bgClass: NOTE_THEMES[2]!.bgClass,
-    pinColor: NOTE_THEMES[2]!.pinColor,
-    borderRadius: NOTE_THEMES[2]!.borderRadius,
-  },
-  {
-    id: "note-4",
-    name: "Kaleem",
-    message: "Clean. Unique. Next level paper-craft portfolio!",
-    stampKey: "chaiApproved",
-    date: "18 MAY 2024",
-    likes: 15,
-    rotation: 1.5,
-    bgClass: NOTE_THEMES[3]!.bgClass,
-    pinColor: NOTE_THEMES[3]!.pinColor,
-    borderRadius: NOTE_THEMES[3]!.borderRadius,
-  },
-  {
-    id: "note-5",
-    name: "Sneha",
-    message: "The paper-craft theme is just *chef's kiss* ♡",
-    stampKey: "iWillStamp",
-    date: "17 MAY 2024",
-    likes: 22,
-    rotation: -1.2,
-    bgClass: NOTE_THEMES[4]!.bgClass,
-    pinColor: NOTE_THEMES[4]!.pinColor,
-    borderRadius: NOTE_THEMES[4]!.borderRadius,
-  },
-  {
-    id: "note-6",
-    name: "Zain",
-    message: "Keep shipping magic bro! Big fan 🥂",
-    stampKey: "legend",
-    date: "15 MAY 2024",
-    likes: 14,
-    rotation: 2.4,
-    bgClass: NOTE_THEMES[5]!.bgClass,
-    pinColor: NOTE_THEMES[5]!.pinColor,
-    borderRadius: NOTE_THEMES[5]!.borderRadius,
-  },
-];
-
 export default function CorkboardGuestbook() {
-  const [notes, setNotes] = useState<GuestbookNote[]>(() => {
-    try {
-      const saved = localStorage.getItem("maaz_guestbook_notes_v3");
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // fallback
-    }
-    return INITIAL_NOTES;
-  });
+  const [notes, setNotes] = useState<GuestbookNote[]>([]);
+  const [visitorCount, setVisitorCount] = useState<number>(247);
+  const [isLoadingNotes, setIsLoadingNotes] = useState(true);
 
-  const [visitorCount, setVisitorCount] = useState(247);
   const [leverPullCount, setLeverPullCount] = useState(0);
   const [isLeverPulled, setIsLeverPulled] = useState(false);
 
@@ -140,13 +60,53 @@ export default function CorkboardGuestbook() {
 
   const corkboardRef = useRef<HTMLDivElement>(null);
 
+  // 1. Real-time sync for Guestbook Notes from Firebase Realtime Database
   useEffect(() => {
-    try {
-      localStorage.setItem("maaz_guestbook_notes_v3", JSON.stringify(notes));
-    } catch {
-      // ignore
-    }
-  }, [notes]);
+    const notesRef = ref(db, "guestbook_notes");
+
+    const unsubscribe = onValue(
+      notesRef,
+      (snapshot) => {
+        setIsLoadingNotes(false);
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const loadedNotes: GuestbookNote[] = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
+
+          // Sort notes newest first by createdAt
+          loadedNotes.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+          setNotes(loadedNotes);
+        } else {
+          setNotes([]);
+        }
+      },
+      (error) => {
+        console.error("Firebase notes fetch error:", error);
+        setIsLoadingNotes(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  // 2. Real-time sync for Visitor Counter from Firebase Realtime Database
+  useEffect(() => {
+    const visitorRef = ref(db, "visitor_count");
+
+    const unsubscribe = onValue(visitorRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const val = snapshot.val();
+        setVisitorCount(typeof val === "number" ? val : 247);
+      } else {
+        // Initialize Firebase visitor counter if first time
+        runTransaction(visitorRef, () => 247);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleHelmetClick = () => {
     setIsHelmetShaking(true);
@@ -155,7 +115,10 @@ export default function CorkboardGuestbook() {
 
   const handlePullLever = () => {
     setIsLeverPulled(true);
-    setVisitorCount((prev) => prev + 1);
+
+    // Atomically increment visitor count in Firebase Realtime Database
+    const visitorRef = ref(db, "visitor_count");
+    runTransaction(visitorRef, (currentVal) => (currentVal || 247) + 1);
 
     const nextCount = leverPullCount + 1;
     setLeverPullCount(nextCount);
@@ -186,8 +149,7 @@ export default function CorkboardGuestbook() {
     const today = new Date();
     const formattedDate = `${today.getDate()} ${today.toLocaleString('default', { month: 'short' }).toUpperCase()} ${today.getFullYear()}`;
 
-    const newNote: GuestbookNote = {
-      id: `note-${Date.now()}`,
+    const newNote = {
       name: name.trim() || "Visitor",
       message: message.trim(),
       stampKey: selectedStampKey,
@@ -197,20 +159,26 @@ export default function CorkboardGuestbook() {
       bgClass: theme.bgClass,
       pinColor: theme.pinColor,
       borderRadius: theme.borderRadius,
+      createdAt: Date.now(),
     };
 
-    setTimeout(() => {
-      setNotes((prev) => [newNote, ...prev]);
-      setName("");
-      setMessage("");
-      setIsSubmitting(false);
-    }, 300);
+    // Push new note to Firebase Realtime Database
+    const notesRef = ref(db, "guestbook_notes");
+    push(notesRef, newNote)
+      .then(() => {
+        setName("");
+        setMessage("");
+        setIsSubmitting(false);
+      })
+      .catch((err) => {
+        console.error("Failed to pin note to Firebase:", err);
+        setIsSubmitting(false);
+      });
   };
 
   const handleLike = (id: string) => {
-    setNotes((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, likes: n.likes + 1 } : n))
-    );
+    const noteLikesRef = ref(db, `guestbook_notes/${id}/likes`);
+    runTransaction(noteLikesRef, (currentLikes) => (currentLikes || 0) + 1);
   };
 
   const latestSixNotes = notes.slice(0, 6);
@@ -298,7 +266,7 @@ export default function CorkboardGuestbook() {
                   </p>
                 </div>
 
-                {/* 3D MECHANICAL TALLY COUNTER WITH PULL LEVER (Matching 2nd Reference Image 1:1) */}
+                {/* 3D MECHANICAL TALLY COUNTER WITH PULL LEVER */}
                 <div className="relative shrink-0 bg-gradient-to-b from-[#d1d5db] via-[#9ca3af] to-[#4b5563] p-2 rounded-[8px] border-2 border-zinc-600 shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center gap-2">
                   
                   <div>
@@ -339,122 +307,140 @@ export default function CorkboardGuestbook() {
 
             </div>
 
-            {/* Top 6 Latest Sticky Notes Grid */}
-            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1">
-              {latestSixNotes.map((note) => {
-                const stampObj = STAMP_PRESETS[note.stampKey] ?? STAMP_PRESETS["chaiApproved"]!;
-
-                return (
-                  <div
-                    key={note.id}
-                    style={{
-                      transform: `rotate(${note.rotation}deg)`,
-                      borderRadius: note.borderRadius,
-                    }}
-                    className={`relative p-3.5 shadow-[0_12px_24px_rgba(0,0,0,0.5)] border ${note.bgClass} transition-transform duration-300 hover:rotate-0 hover:z-30 hover:scale-[1.03] flex flex-col justify-between min-h-[195px] overflow-hidden`}
-                  >
-                    {/* Pushpin Header */}
-                    <span className={`absolute -top-2.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full ${note.pinColor} shadow-[0_2px_5px_rgba(0,0,0,0.6)] border border-white`} />
-
-                    {/* Author Name */}
-                    <div className="font-['Caveat',cursive] text-xs text-[#201c16]/70 font-bold text-right">
-                      {note.name}
-                    </div>
-
-                    {/* Note Body Message */}
-                    <p className="font-['Caveat',cursive] text-base sm:text-lg leading-snug font-bold my-1.5 break-words">
-                      "{note.message}"
-                    </p>
-
-                    {/* SVG Distressed Rubber Stamp */}
-                    <div className="mt-1 flex items-center justify-start overflow-hidden max-w-full">
-                      <DistressedStamp
-                        text={stampObj.text}
-                        color={stampObj.color}
-                        width={135}
-                        height={55}
-                      />
-                    </div>
-
-                    {/* Date & Like Button */}
-                    <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#201c16]/10">
-                      <span className="font-['Space_Mono',monospace] text-[8px] text-[#201c16]/60">
-                        {note.date}
-                      </span>
-
-                      <button
-                        type="button"
-                        onClick={() => handleLike(note.id)}
-                        className="flex items-center gap-1 font-['Silkscreen',monospace] text-[9px] px-1.5 py-0.5 rounded-[3px] bg-white/60 border border-[#201c16]/20 hover:bg-white active:scale-90 transition-transform cursor-pointer"
-                      >
-                        <span>❤️</span>
-                        <span>{note.likes}</span>
-                      </button>
-                    </div>
-
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Older Notes Grid (Rendered if notes > 6) */}
-            {hasMoreThanSix && (
-              <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-6 mb-6">
-                {olderNotes.map((note) => {
-                  const stampObj = STAMP_PRESETS[note.stampKey] ?? STAMP_PRESETS["chaiApproved"]!;
-
-                  return (
-                    <div
-                      key={note.id}
-                      style={{
-                        transform: `rotate(${note.rotation}deg)`,
-                        borderRadius: note.borderRadius,
-                      }}
-                      className={`relative p-3.5 shadow-[0_12px_24px_rgba(0,0,0,0.5)] border ${note.bgClass} transition-transform duration-300 hover:rotate-0 hover:z-30 hover:scale-[1.03] flex flex-col justify-between min-h-[195px] overflow-hidden`}
-                    >
-                      {/* Pushpin Header */}
-                      <span className={`absolute -top-2.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full ${note.pinColor} shadow-[0_2px_5px_rgba(0,0,0,0.6)] border border-white`} />
-
-                      {/* Author Name */}
-                      <div className="font-['Caveat',cursive] text-xs text-[#201c16]/70 font-bold text-right">
-                        {note.name}
-                      </div>
-
-                      {/* Note Body Message */}
-                      <p className="font-['Caveat',cursive] text-base sm:text-lg leading-snug font-bold my-1.5 break-words">
-                        "{note.message}"
-                      </p>
-
-                      {/* SVG Distressed Rubber Stamp */}
-                      <div className="mt-1 flex items-center justify-start overflow-hidden max-w-full">
-                        <DistressedStamp
-                          text={stampObj.text}
-                          color={stampObj.color}
-                          width={135}
-                          height={55}
-                        />
-                      </div>
-
-                      {/* Date & Like Button */}
-                      <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#201c16]/10">
-                        <span className="font-['Space_Mono',monospace] text-[8px] text-[#201c16]/60">
-                          {note.date}
-                        </span>
-
-                        <button
-                          type="button"
-                          onClick={() => handleLike(note.id)}
-                          className="flex items-center gap-1 font-['Silkscreen',monospace] text-[9px] px-1.5 py-0.5 rounded-[3px] bg-white/60 border border-[#201c16]/20 hover:bg-white active:scale-90 transition-transform cursor-pointer"
-                        >
-                          <span>❤️</span>
-                          <span>{note.likes}</span>
-                        </button>
-                      </div>
-
-                    </div>
-                  );
-                })}
+            {/* Empty State / Loading State */}
+            {isLoadingNotes ? (
+              <div className="relative z-10 text-center my-12 text-[#201c16] font-['Caveat',cursive] text-2xl font-bold">
+                Loading corkboard notes from live database... 📌
               </div>
+            ) : notes.length === 0 ? (
+              <div className="relative z-10 text-center my-12 bg-[#f4ead6] p-6 rounded-[8px] border-2 border-dashed border-[#201c16]/30 max-w-md mx-auto">
+                <p className="font-['Caveat',cursive] text-2xl font-bold text-[#201c16] mb-1">
+                  Be the very first to pin a note! 📌
+                </p>
+                <p className="font-['Caveat',cursive] text-lg text-[#201c16]/80">
+                  Write something cool on the right panel and stamp it!
+                </p>
+              </div>
+            ) : (
+              <>
+                {/* Top 6 Latest Sticky Notes Grid */}
+                <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1">
+                  {latestSixNotes.map((note) => {
+                    const stampObj = STAMP_PRESETS[note.stampKey] ?? STAMP_PRESETS["chaiApproved"]!;
+
+                    return (
+                      <div
+                        key={note.id}
+                        style={{
+                          transform: `rotate(${note.rotation}deg)`,
+                          borderRadius: note.borderRadius,
+                        }}
+                        className={`relative p-3.5 shadow-[0_12px_24px_rgba(0,0,0,0.5)] border ${note.bgClass} transition-transform duration-300 hover:rotate-0 hover:z-30 hover:scale-[1.03] flex flex-col justify-between min-h-[195px] overflow-hidden`}
+                      >
+                        {/* Pushpin Header */}
+                        <span className={`absolute -top-2.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full ${note.pinColor} shadow-[0_2px_5px_rgba(0,0,0,0.6)] border border-white`} />
+
+                        {/* Author Name */}
+                        <div className="font-['Caveat',cursive] text-xs text-[#201c16]/70 font-bold text-right">
+                          {note.name}
+                        </div>
+
+                        {/* Note Body Message */}
+                        <p className="font-['Caveat',cursive] text-base sm:text-lg leading-snug font-bold my-1.5 break-words">
+                          "{note.message}"
+                        </p>
+
+                        {/* SVG Distressed Rubber Stamp */}
+                        <div className="mt-1 flex items-center justify-start overflow-hidden max-w-full">
+                          <DistressedStamp
+                            text={stampObj.text}
+                            color={stampObj.color}
+                            width={135}
+                            height={55}
+                          />
+                        </div>
+
+                        {/* Date & Like Button */}
+                        <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#201c16]/10">
+                          <span className="font-['Space_Mono',monospace] text-[8px] text-[#201c16]/60">
+                            {note.date}
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={() => handleLike(note.id)}
+                            className="flex items-center gap-1 font-['Silkscreen',monospace] text-[9px] px-1.5 py-0.5 rounded-[3px] bg-white/60 border border-[#201c16]/20 hover:bg-white active:scale-90 transition-transform cursor-pointer"
+                          >
+                            <span>❤️</span>
+                            <span>{note.likes}</span>
+                          </button>
+                        </div>
+
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Older Notes Grid (Rendered if notes > 6) */}
+                {hasMoreThanSix && (
+                  <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-6 mb-6">
+                    {olderNotes.map((note) => {
+                      const stampObj = STAMP_PRESETS[note.stampKey] ?? STAMP_PRESETS["chaiApproved"]!;
+
+                      return (
+                        <div
+                          key={note.id}
+                          style={{
+                            transform: `rotate(${note.rotation}deg)`,
+                            borderRadius: note.borderRadius,
+                          }}
+                          className={`relative p-3.5 shadow-[0_12px_24px_rgba(0,0,0,0.5)] border ${note.bgClass} transition-transform duration-300 hover:rotate-0 hover:z-30 hover:scale-[1.03] flex flex-col justify-between min-h-[195px] overflow-hidden`}
+                        >
+                          {/* Pushpin Header */}
+                          <span className={`absolute -top-2.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full ${note.pinColor} shadow-[0_2px_5px_rgba(0,0,0,0.6)] border border-white`} />
+
+                          {/* Author Name */}
+                          <div className="font-['Caveat',cursive] text-xs text-[#201c16]/70 font-bold text-right">
+                            {note.name}
+                          </div>
+
+                          {/* Note Body Message */}
+                          <p className="font-['Caveat',cursive] text-base sm:text-lg leading-snug font-bold my-1.5 break-words">
+                            "{note.message}"
+                          </p>
+
+                          {/* SVG Distressed Rubber Stamp */}
+                          <div className="mt-1 flex items-center justify-start overflow-hidden max-w-full">
+                            <DistressedStamp
+                              text={stampObj.text}
+                              color={stampObj.color}
+                              width={135}
+                              height={55}
+                            />
+                          </div>
+
+                          {/* Date & Like Button */}
+                          <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#201c16]/10">
+                            <span className="font-['Space_Mono',monospace] text-[8px] text-[#201c16]/60">
+                              {note.date}
+                            </span>
+
+                            <button
+                              type="button"
+                              onClick={() => handleLike(note.id)}
+                              className="flex items-center gap-1 font-['Silkscreen',monospace] text-[9px] px-1.5 py-0.5 rounded-[3px] bg-white/60 border border-[#201c16]/20 hover:bg-white active:scale-90 transition-transform cursor-pointer"
+                            >
+                              <span>❤️</span>
+                              <span>{note.likes}</span>
+                            </button>
+                          </div>
+
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
             )}
 
             {/* Bottom Right Torn Note Paper Scrap */}
@@ -527,7 +513,7 @@ export default function CorkboardGuestbook() {
                   className="w-full flex items-center justify-center gap-2 font-['Silkscreen',monospace] text-xs font-bold bg-[#d9c39c] text-[#201c16] py-2.5 rounded-[4px] border-2 border-[#201c16]/30 shadow-md transition-transform hover:-rotate-1 active:scale-95 disabled:opacity-50 cursor-pointer"
                 >
                   <span>📌</span>
-                  <span>{isSubmitting ? "PINNING..." : "PIN NOTE TO BOARD"}</span>
+                  <span>{isSubmitting ? "PINNING TO FIREBASE..." : "PIN NOTE TO BOARD"}</span>
                 </button>
 
               </form>
