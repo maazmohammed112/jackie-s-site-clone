@@ -240,7 +240,6 @@ export default function CorkboardGuestbook() {
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 h-5 w-24 rotate-[-2deg] bg-primary/40 shadow-sm" />
 
             <h3 className="font-['Silkscreen',monospace] text-base sm:text-lg font-bold text-[#201c16] mb-2 uppercase flex items-center gap-2">
-              <span>⚠️</span>
               <span>PUBLIC POST CONFIRMATION</span>
             </h3>
 
@@ -533,7 +532,7 @@ export default function CorkboardGuestbook() {
                               onClick={() => handleLike(note.id)}
                               className="flex items-center gap-1 font-['Silkscreen',monospace] text-[9px] px-1.5 py-0.5 rounded-[3px] bg-white/60 border border-[#201c16]/20 hover:bg-white active:scale-90 transition-transform cursor-pointer"
                             >
-                              <span>❤️</span>
+                              <span>LIKE</span>
                               <span>{note.likes}</span>
                             </button>
                           </div>
@@ -550,7 +549,7 @@ export default function CorkboardGuestbook() {
             <div className="relative z-10 mt-4 self-end max-w-[240px] bg-[#f4ead6] text-[#201c16] px-4 py-2.5 rounded-[4px] shadow-lg border border-[#201c16]/20 rotate-[2deg]">
               <span className="absolute -top-2.5 left-4 w-3.5 h-3.5 bg-red-600 rounded-full shadow-sm border border-white" />
               <p className="font-['Caveat',cursive] text-sm leading-tight text-center font-bold">
-                Every stamp tells a story. Thanks for being a part of mine! ♡
+                Every stamp tells a story. Thanks for being a part of mine!
               </p>
             </div>
 
@@ -563,7 +562,7 @@ export default function CorkboardGuestbook() {
             <div className="relative bg-[#f4ead6] text-[#201c16] px-4 py-2 rounded-[4px] shadow-md border border-[#201c16]/20 rotate-[-1deg] text-center">
               <span className="absolute -top-2 left-6 w-12 h-4 bg-primary/40 rotate-[-5deg]" />
               <p className="font-['Caveat',cursive] text-lg font-bold">
-                Drop your vibe. Leave your mark. 😊
+                Drop your vibe. Leave your mark.
               </p>
             </div>
 
@@ -626,7 +625,7 @@ export default function CorkboardGuestbook() {
                 {/* Handwritten Stamp Required Warning */}
                 {stampError && (
                   <p className="font-['Caveat',cursive] text-base sm:text-lg font-bold text-red-700 text-center animate-bounce pt-1">
-                    ⚠️ Please pick a reaction stamp below as well! 🎨
+                    Please pick a reaction stamp below as well!
                   </p>
                 )}
 
