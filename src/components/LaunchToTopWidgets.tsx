@@ -33,7 +33,8 @@ export default function LaunchToTopWidgets() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-end pointer-events-auto select-none animate-fade-in">
+    /* Positioned clear of the 70px right vertical stamp icon rail (right-20 sm:right-24 md:right-28 lg:right-32) */
+    <div className="fixed bottom-4 right-20 sm:bottom-6 sm:right-24 md:right-28 lg:right-32 z-50 flex items-end pointer-events-auto select-none animate-fade-in">
       
       {/* PURE ORIGAMI 3D PAPER AIRPLANE WITH CURVED AIR RELEASE TRAILS */}
       <div className="flex flex-col items-center group relative">
