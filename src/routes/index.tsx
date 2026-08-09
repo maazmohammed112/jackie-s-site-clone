@@ -528,9 +528,19 @@ function ClickBurst() {
 
 function PinnedPoster() {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [p, setP] = useState(0);
+  const [p, setP] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!open && !video) return;
@@ -549,6 +559,11 @@ function PinnedPoster() {
   }, [open, video]);
 
   useEffect(() => {
+    if (isMobile) {
+      setP(1);
+      return;
+    }
+
     const el = wrapRef.current;
     if (!el) return;
     let raf = 0;
@@ -573,20 +588,24 @@ function PinnedPoster() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <>
-      <div ref={wrapRef} className="flex relative z-0 -mt-16 sm:-mt-24 md:-mt-32 justify-center scale-90 sm:scale-100 transition-transform">
+      <div ref={wrapRef} className="flex relative z-0 -mt-16 sm:-mt-24 md:-mt-32 justify-center scale-90 sm:scale-100">
         <button
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Open portrait of Mohammed Maaz"
-          className="relative rounded-[10px] bg-paper p-4 pt-9 shadow-[var(--shadow-paper)] transition-transform duration-300 will-change-transform hover:rotate-0"
-          style={{
-            transform: `translateY(${(1 - p) * 260}px) rotate(${-2 + p * 2}deg)`,
-            opacity: 0.25 + p * 0.75,
-          }}
+          className="relative rounded-[10px] bg-paper p-4 pt-9 shadow-[var(--shadow-paper)] transition-transform duration-200 hover:rotate-0"
+          style={
+            isMobile
+              ? { transform: "rotate(-2deg)", opacity: 1 }
+              : {
+                  transform: `translateY(${(1 - p) * 120}px) rotate(${-2 + p * 2}deg)`,
+                  opacity: 0.4 + p * 0.6,
+                }
+          }
         >
           <span
             aria-hidden="true"
