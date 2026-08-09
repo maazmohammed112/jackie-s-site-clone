@@ -221,6 +221,12 @@ const NAV: {
     hint: "say hello",
     children: [
       {
+        label: "memories console",
+        href: "#memories",
+        note: "retro GameBoy console",
+        icon: "spark",
+      },
+      {
         label: "email",
         href: "mailto:maazmohammed112@gmail.com",
         note: "maazmohammed112@gmail.com",
