@@ -554,3 +554,19 @@ html {
 .loader-pulse {
   animation: loader-pulse 1.6s ease-in-out infinite;
 }
+
+/* Security & Protection: Disable text selection and image drag */
+body, img, a, button, p, span, h1, h2, h3, h4, h5, h6, div, svg {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+}
+
+input, textarea {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}

@@ -124,7 +124,7 @@ function StampRail({ side }: { side: "left" | "right" }) {
   return (
     <div
       aria-hidden="false"
-      className={`fixed top-0 z-20 hidden h-screen w-[70px] opacity-90 md:block pointer-events-auto select-none overflow-hidden ${
+      className={`fixed top-0 z-30 hidden h-screen w-[70px] opacity-90 md:block pointer-events-auto select-none overflow-hidden ${
         side === "left" ? "left-0" : "right-0"
       }`}
       style={{
@@ -144,11 +144,15 @@ function StampRail({ side }: { side: "left" | "right" }) {
                 <div key={itemKey} className="relative w-[70px] h-[68px] shrink-0">
                   <button
                     type="button"
-                    onClick={() => setActiveItemKey(isOpen ? null : itemKey)}
+                    onClick={() => setActiveItemKey((prev) => (prev === itemKey ? null : itemKey))}
+                    onTouchEnd={(e) => {
+                      e.preventDefault();
+                      setActiveItemKey((prev) => (prev === itemKey ? null : itemKey));
+                    }}
                     onMouseEnter={() => setActiveItemKey(itemKey)}
                     onMouseLeave={() => setActiveItemKey(null)}
                     aria-label={`View ${item.word} label`}
-                    className="w-full h-full cursor-pointer bg-transparent border-0 outline-none hover:bg-white/10 transition-colors"
+                    className="w-full h-full cursor-pointer bg-transparent border-0 outline-none hover:bg-white/10 active:bg-white/20 transition-colors"
                   />
 
                   {/* Pure Handwritten Font Text (NO background container required) */}
@@ -829,6 +833,43 @@ function PageBody() {
   const [checked, setChecked] = useState<string[]>([]);
   const [resumeOnly, setResumeOnly] = useState(false);
   const [revealOpen, setRevealOpen] = useState(false);
+
+  useEffect(() => {
+    const handlePreventCopy = (e: Event) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+        return;
+      }
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent("maaz_copy_attempt"));
+    };
+
+    const handleKeyCopy = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+        return;
+      }
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        (e.key === "c" || e.key === "C" || e.key === "u" || e.key === "U" || e.key === "s" || e.key === "S")
+      ) {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("maaz_copy_attempt"));
+      }
+    };
+
+    window.addEventListener("copy", handlePreventCopy);
+    window.addEventListener("contextmenu", handlePreventCopy);
+    window.addEventListener("dragstart", handlePreventCopy);
+    window.addEventListener("keydown", handleKeyCopy);
+
+    return () => {
+      window.removeEventListener("copy", handlePreventCopy);
+      window.removeEventListener("contextmenu", handlePreventCopy);
+      window.removeEventListener("dragstart", handlePreventCopy);
+      window.removeEventListener("keydown", handleKeyCopy);
+    };
+  }, []);
 
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));

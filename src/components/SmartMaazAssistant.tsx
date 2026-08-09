@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export default function SmartMaazAssistant() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | "like" | null>(null);
+  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | "like" | "copy" | null>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -26,7 +26,7 @@ export default function SmartMaazAssistant() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Listen for custom screen click, lever pull twice, and liked twice events
+  // Listen for custom screen click, lever pull twice, liked twice, and copy attempt events
   useEffect(() => {
     const handleScreenClick = () => {
       setCustomMsgType("screen");
@@ -43,14 +43,21 @@ export default function SmartMaazAssistant() {
       setOpen(true);
     };
 
+    const handleCopyAttempt = () => {
+      setCustomMsgType("copy");
+      setOpen(true);
+    };
+
     window.addEventListener("maaz_screen_clicked", handleScreenClick);
     window.addEventListener("maaz_lever_pulled_twice", handleLeverPulledTwice);
     window.addEventListener("maaz_liked_twice", handleLikedTwice);
+    window.addEventListener("maaz_copy_attempt", handleCopyAttempt);
 
     return () => {
       window.removeEventListener("maaz_screen_clicked", handleScreenClick);
       window.removeEventListener("maaz_lever_pulled_twice", handleLeverPulledTwice);
       window.removeEventListener("maaz_liked_twice", handleLikedTwice);
+      window.removeEventListener("maaz_copy_attempt", handleCopyAttempt);
     };
   }, []);
 
@@ -142,7 +149,17 @@ export default function SmartMaazAssistant() {
             </div>
 
             {/* Message Body */}
-            {customMsgType === "like" ? (
+            {customMsgType === "copy" ? (
+              /* Custom Copy / Right-Click Attempt Message */
+              <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
+                <p className="font-bold text-red-700 text-lg">
+                  Nooooo! You cannot select, copy, or download my stuff! 🔒
+                </p>
+                <p>
+                  Nice try though, hahhahha! All code and design assets are protected. Want to work together? Feel free to reach out via email!
+                </p>
+              </div>
+            ) : customMsgType === "like" ? (
               /* Custom Like Clicked Twice Funny Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p className="font-bold text-red-700 text-lg">
@@ -201,7 +218,7 @@ export default function SmartMaazAssistant() {
                 onClick={handleDismiss}
                 className="font-['Caveat',cursive] text-base sm:text-lg font-bold bg-primary text-primary-foreground px-4 py-1 sm:px-5 sm:py-1.5 rounded-[12px] border-2 border-primary-foreground/20 shadow-md transition-transform hover:-rotate-2 active:scale-95 cursor-pointer"
               >
-                {customMsgType === "like" ? "Haha! Guilty" : customMsgType === "lever" ? "Haha! Okay" : customMsgType === "screen" ? "Ohh!" : isMobile ? "I understand" : "Got it"}
+                {customMsgType === "copy" ? "My Bad! 😅" : customMsgType === "like" ? "Haha! Guilty" : customMsgType === "lever" ? "Haha! Okay" : customMsgType === "screen" ? "Ohh!" : isMobile ? "I understand" : "Got it"}
               </button>
             </div>
 
