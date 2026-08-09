@@ -68,16 +68,16 @@ export default function SmartMaazAssistant() {
     };
   }, []);
 
-  // Auto-close speech bubble when user scrolls
+  // Auto-close speech bubble when user scrolls, UNLESS it's a custom action message
   useEffect(() => {
-    if (!open) return;
+    if (!open || customMsgType !== null) return;
     const onScroll = () => {
       setOpen(false);
       setCustomMsgType(null);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [open]);
+  }, [open, customMsgType]);
 
   const handleDismiss = () => {
     setOpen(false);
