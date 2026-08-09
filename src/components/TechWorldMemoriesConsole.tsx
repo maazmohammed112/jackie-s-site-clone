@@ -81,13 +81,13 @@ export default function TechWorldMemoriesConsole() {
     return () => clearTimeout(timer);
   }, [activeIndex]);
 
-  // 2. Auto-play slideshow cycles smoothly through all 5 memory cartridges
+  // 2. Auto-play slideshow cycles smoothly through all 5 memory cartridges every 2.5s
   useEffect(() => {
     if (!isAutoPlaying) return;
 
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % MEMORIES.length);
-    }, 3500);
+    }, 2500);
 
     return () => clearInterval(interval);
   }, [isAutoPlaying]);
@@ -204,17 +204,24 @@ export default function TechWorldMemoriesConsole() {
                       }}
                     />
 
-                    {/* LCD Pixel Text Overlay — Shows for 3 seconds then disappears */}
-                    {showTitleOverlay && (
-                      <div className="absolute bottom-3 inset-x-0 text-center z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] transition-opacity duration-700 animate-fade-in px-2">
-                        <div className="font-['Silkscreen',monospace] text-xs sm:text-sm text-yellow-300 font-bold tracking-wider truncate">
-                          {activeMem.title}
+                    {/* LCD Pixel Status Overlay */}
+                    <div className="absolute bottom-2.5 inset-x-0 text-center z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] transition-all duration-300 px-2">
+                      {isAutoPlaying && (
+                        <div className="inline-block bg-[#0a2016]/90 border border-[#4DFF9A] text-[#4DFF9A] font-['Silkscreen',monospace] text-[9px] sm:text-[10px] px-2.5 py-1 rounded-[4px] font-bold mb-1.5 tracking-wider animate-pulse shadow-[0_0_12px_rgba(77,255,154,0.4)]">
+                          ● AUTO-SLIDESHOW : ACTIVE
                         </div>
-                        <div className="font-['Space_Mono',monospace] text-[10px] text-chalk/90 mt-0.5 font-bold truncate">
-                          {activeMem.tagline}
+                      )}
+                      {(showTitleOverlay || !isAutoPlaying) && (
+                        <div className="animate-fade-in bg-black/60 backdrop-blur-xs py-1.5 px-3 rounded-[6px] max-w-[90%] mx-auto border border-white/10">
+                          <div className="font-['Silkscreen',monospace] text-xs sm:text-sm text-yellow-300 font-bold tracking-wider truncate">
+                            {activeMem.title}
+                          </div>
+                          <div className="font-['Space_Mono',monospace] text-[10px] text-chalk/90 mt-0.5 font-bold truncate">
+                            {activeMem.tagline}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
@@ -322,8 +329,10 @@ export default function TechWorldMemoriesConsole() {
                   <button
                     type="button"
                     onClick={handleStartToggle}
+                    aria-label="Toggle Auto-Play Slideshow (START Button)"
+                    title="Press START to toggle auto slideshow"
                     className={`w-9 h-3.5 rounded-full border border-white/20 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] transition-all cursor-pointer ${
-                      isAutoPlaying ? "bg-[#4DFF9A] shadow-[0_0_10px_#4DFF9A]" : "bg-gradient-to-b from-[#3a3d46] to-[#1c1e24] hover:brightness-125"
+                      isAutoPlaying ? "bg-[#4DFF9A] shadow-[0_0_12px_#4DFF9A]" : "bg-gradient-to-b from-[#3a3d46] to-[#1c1e24] hover:brightness-125"
                     } ${pressedBtn === "START" ? "scale-95" : ""}`}
                   />
                   <span className="font-['Silkscreen',monospace] text-[8px] text-chalk/70 font-bold mt-1">
@@ -364,7 +373,7 @@ export default function TechWorldMemoriesConsole() {
             </p>
           </div>
 
-          {/* Stack of 5 3D Cartridges (ALL 5 CARTRIDGES UNLOCKED WITH REAL PHOTOS) */}
+          {/* Stack of 5 3D Cartridges */}
           <div className="w-full max-w-[340px] space-y-3.5">
             {MEMORIES.map((m, idx) => {
               const isActive = idx === activeIndex;
@@ -419,12 +428,25 @@ export default function TechWorldMemoriesConsole() {
             })}
           </div>
 
-          {/* Bottom Tape Banner */}
-          <div className="relative mt-6 bg-[#f4ead6] text-[#201c16] px-5 py-2 rounded-[6px] shadow-md border border-[#201c16]/20 rotate-[-1deg]">
-            <p className="font-['Caveat',cursive] text-lg font-bold text-center">
-              Press START to begin ➔
+          {/* Interactive START Button Sticky Note Banner */}
+          <button
+            type="button"
+            onClick={handleStartToggle}
+            className="relative mt-6 bg-[#f4ead6] hover:bg-white text-[#201c16] px-5 py-2.5 rounded-[6px] shadow-md border-2 border-[#201c16]/30 hover:border-primary rotate-[-1deg] transition-all cursor-pointer active:scale-95 group"
+          >
+            <p className="font-['Caveat',cursive] text-lg sm:text-xl font-bold text-center flex items-center justify-center gap-2">
+              {isAutoPlaying ? (
+                <>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping" />
+                  <span className="text-emerald-900 font-extrabold">Auto Slideshow Playing! Press START to Pause ❚❚</span>
+                </>
+              ) : (
+                <>
+                  <span className="group-hover:translate-x-1 transition-transform">Press START to begin auto slideshow ➔</span>
+                </>
+              )}
             </p>
-          </div>
+          </button>
 
         </div>
 
