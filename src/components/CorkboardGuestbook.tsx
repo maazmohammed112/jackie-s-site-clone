@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import DistressedStamp from "./DistressedStamp";
-import { db, ref, onValue, push, update, runTransaction } from "../lib/firebase";
+import { db, ref, onValue, push, runTransaction } from "../lib/firebase";
 
 export interface GuestbookNote {
   id: string;
@@ -45,7 +45,7 @@ const NOTE_THEMES = [
 
 export default function CorkboardGuestbook() {
   const [notes, setNotes] = useState<GuestbookNote[]>([]);
-  const [visitorCount, setVisitorCount] = useState<number>(247);
+  const [visitorCount, setVisitorCount] = useState<number>(0);
   const [isLoadingNotes, setIsLoadingNotes] = useState(true);
 
   const [leverPullCount, setLeverPullCount] = useState(0);
@@ -57,6 +57,12 @@ export default function CorkboardGuestbook() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isHelmetShaking, setIsHelmetShaking] = useState(false);
   const [showAllStamps, setShowAllStamps] = useState(false);
+
+  // Confirmation Modal State
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  // Local user likes tracking per note
+  const [userLikedNotes, setUserLikedNotes] = useState<Record<string, number>>({});
 
   const corkboardRef = useRef<HTMLDivElement>(null);
 
@@ -91,17 +97,17 @@ export default function CorkboardGuestbook() {
     return () => unsubscribe();
   }, []);
 
-  // 2. Real-time sync for Visitor Counter from Firebase Realtime Database
+  // 2. Real-time sync for Visitor Counter from Firebase Realtime Database (starts at 0)
   useEffect(() => {
     const visitorRef = ref(db, "visitor_count");
 
     const unsubscribe = onValue(visitorRef, (snapshot) => {
       if (snapshot.exists()) {
         const val = snapshot.val();
-        setVisitorCount(typeof val === "number" ? val : 247);
+        setVisitorCount(typeof val === "number" ? val : 0);
       } else {
-        // Initialize Firebase visitor counter if first time
-        runTransaction(visitorRef, () => 247);
+        // Initialize Firebase visitor counter to 0 if database is empty
+        runTransaction(visitorRef, () => 0);
       }
     });
 
@@ -118,7 +124,7 @@ export default function CorkboardGuestbook() {
 
     // Atomically increment visitor count in Firebase Realtime Database
     const visitorRef = ref(db, "visitor_count");
-    runTransaction(visitorRef, (currentVal) => (currentVal || 247) + 1);
+    runTransaction(visitorRef, (currentVal) => (currentVal || 0) + 1);
 
     const nextCount = leverPullCount + 1;
     setLeverPullCount(nextCount);
@@ -139,11 +145,19 @@ export default function CorkboardGuestbook() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Step 1: Open Paper Confirmation Modal
+  const handleOpenConfirmModal = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!message.trim()) return;
+    setShowConfirmModal(true);
+  };
+
+  // Step 2: Final Confirmed Post to Firebase Realtime Database
+  const handleConfirmPostNote = () => {
     if (!message.trim()) return;
 
     setIsSubmitting(true);
+    setShowConfirmModal(false);
 
     const theme = NOTE_THEMES[notes.length % NOTE_THEMES.length]!;
     const today = new Date();
@@ -176,7 +190,15 @@ export default function CorkboardGuestbook() {
       });
   };
 
+  // Liking a note & triggering funny Maaz reaction if liked twice
   const handleLike = (id: string) => {
+    const currentClicks = userLikedNotes[id] || 0;
+    setUserLikedNotes((prev) => ({ ...prev, [id]: currentClicks + 1 }));
+
+    if (currentClicks >= 1) {
+      window.dispatchEvent(new CustomEvent("maaz_liked_twice"));
+    }
+
     const noteLikesRef = ref(db, `guestbook_notes/${id}/likes`);
     runTransaction(noteLikesRef, (currentLikes) => (currentLikes || 0) + 1);
   };
@@ -189,16 +211,71 @@ export default function CorkboardGuestbook() {
   const allStampList = Object.values(STAMP_PRESETS);
   const visibleStamps = showAllStamps ? allStampList : allStampList.slice(0, 6);
 
-  // Format visitor counter to 5 digits (e.g. 0 0 2 4 7)
+  // Format visitor counter to 5 digits (e.g. 0 0 0 0 0)
   const countDigits = String(visitorCount).padStart(5, "0").split("");
+
+  const currentPreviewStamp = STAMP_PRESETS[selectedStampKey] ?? STAMP_PRESETS["chaiApproved"]!;
 
   return (
     <section id="guestbook" className="relative my-20 px-3 sm:px-6 max-w-7xl mx-auto select-none">
       
+      {/* PUBLIC POST CONFIRMATION PAPER MODAL */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+          <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] p-6 sm:p-7 max-w-md w-full rounded-[14px] border-2 border-[#201c16]/30 shadow-[0_25px_60px_rgba(0,0,0,0.9)] rotate-[-1deg]">
+            
+            {/* Washi Tape Accent */}
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 h-5 w-24 rotate-[-2deg] bg-primary/40 shadow-sm" />
+
+            <h3 className="font-['Silkscreen',monospace] text-base sm:text-lg font-bold text-[#201c16] mb-2 uppercase flex items-center gap-2">
+              <span>⚠️</span>
+              <span>PUBLIC POST CONFIRMATION</span>
+            </h3>
+
+            <p className="font-['Caveat',cursive] text-base sm:text-lg text-[#201c16]/90 leading-snug mb-4">
+              This note will be <strong>publicly visible to all visitors worldwide</strong> on the studio corkboard. Please double-check that you haven't included any private personal info (phone, address, passwords, etc.).
+            </p>
+
+            {/* Note Preview Box */}
+            <div className="bg-[#fff7d1] text-[#332b00] p-4 rounded-[6px] border border-[#e6dc9c] shadow-md my-4 rotate-[1deg]">
+              <div className="font-['Caveat',cursive] text-xs font-bold text-right text-[#201c16]/70">
+                {name.trim() || "Visitor"}
+              </div>
+              <p className="font-['Caveat',cursive] text-lg font-bold my-1">
+                "{message.trim()}"
+              </p>
+              <div className="mt-2 flex items-center justify-start">
+                <DistressedStamp text={currentPreviewStamp.text} color={currentPreviewStamp.color} width={120} height={46} />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3 mt-5">
+              <button
+                type="button"
+                onClick={() => setShowConfirmModal(false)}
+                className="flex-1 font-['Silkscreen',monospace] text-xs py-2.5 px-3 rounded-[4px] border border-[#201c16]/40 bg-[#e8dec8] text-[#201c16] hover:bg-white active:scale-95 transition-transform cursor-pointer"
+              >
+                CANCEL
+              </button>
+
+              <button
+                type="button"
+                onClick={handleConfirmPostNote}
+                className="flex-1 font-['Silkscreen',monospace] text-xs font-bold py-2.5 px-3 rounded-[4px] border-2 border-primary bg-primary text-primary-foreground shadow-md hover:-rotate-1 active:scale-95 transition-transform cursor-pointer"
+              >
+                POST NOTE
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
       {/* Wooden Framed Outer Container */}
       <div className="relative bg-[#1c1815] p-3 sm:p-6 lg:p-7 rounded-[18px] border-[6px] sm:border-[8px] border-[#382a1d] shadow-[0_30px_70px_rgba(0,0,0,0.9)]">
         
-        {/* Pinned Paper Note Indicator for Older Notes — Attached to Bottom Outer Cardboard Frame */}
+        {/* Pinned Paper Note Indicator for Older Notes */}
         {hasMoreThanSix && (
           <div
             onClick={handleScrollToOlderNotes}
@@ -478,7 +555,7 @@ export default function CorkboardGuestbook() {
                 LEAVE A QUICK NOTE
               </h3>
 
-              <form onSubmit={handleSubmit} className="space-y-3.5 pr-4">
+              <form onSubmit={handleOpenConfirmModal} className="space-y-3.5 pr-4">
                 
                 {/* Message Textarea */}
                 <div>
@@ -506,14 +583,13 @@ export default function CorkboardGuestbook() {
                   className="w-full bg-[#e8dec8] text-[#201c16] px-3 py-2 rounded-[4px] border border-[#201c16]/30 font-['Space_Mono',monospace] text-xs focus:outline-none focus:border-primary shadow-inner"
                 />
 
-                {/* Pin Note Button */}
+                {/* Pin Note Button (Emoji removed, opens confirmation paper modal) */}
                 <button
                   type="submit"
                   disabled={isSubmitting || !message.trim()}
-                  className="w-full flex items-center justify-center gap-2 font-['Silkscreen',monospace] text-xs font-bold bg-[#d9c39c] text-[#201c16] py-2.5 rounded-[4px] border-2 border-[#201c16]/30 shadow-md transition-transform hover:-rotate-1 active:scale-95 disabled:opacity-50 cursor-pointer"
+                  className="w-full font-['Silkscreen',monospace] text-xs font-bold bg-[#d9c39c] text-[#201c16] py-3 rounded-[4px] border-2 border-[#201c16]/30 shadow-md transition-transform hover:-rotate-1 active:scale-95 disabled:opacity-50 cursor-pointer uppercase tracking-wider"
                 >
-                  <span>📌</span>
-                  <span>{isSubmitting ? "PINNING TO FIREBASE..." : "PIN NOTE TO BOARD"}</span>
+                  {isSubmitting ? "PINNING TO FIREBASE..." : "PIN NOTE TO BOARD"}
                 </button>
 
               </form>
