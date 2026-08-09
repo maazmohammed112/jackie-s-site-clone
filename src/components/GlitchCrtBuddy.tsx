@@ -144,18 +144,37 @@ export default function GlitchCrtBuddy() {
           </clipPath>
         </defs>
 
-        {/* ===== monitor shell: static, never glitches ===== */}
-        <g id="frame" filter="url(#sketchy)" fill="none" stroke="var(--ink, #f2ece2)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M195,300 C160,315 145,335 150,352 C155,370 178,372 182,356 C186,340 168,332 158,344 C150,354 158,368 172,366" strokeWidth="3.5" />
-          <path d="M182,78 C182,64 196,58 214,57 L432,57 C452,58 464,66 465,80 L470,300 C470,318 456,330 436,332 L206,333 C188,332 176,320 176,302 Z" />
-          <path d="M215,96 C213,90 219,86 228,86 L410,87 C420,87 426,92 426,99 L430,258 C430,268 422,274 411,274 L226,275 C216,275 210,268 211,258 Z" />
-          <path d="M222,286 L378,286" />
-          <path d="M222,300 L378,300" />
-          <path d="M222,312 C240,308 260,308 278,312 C296,316 300,308 296,304" />
-          <circle cx="352" cy="312" r="7" />
-          <circle cx="378" cy="312" r="7" />
-          <path d="M206,333 L188,362 M226,333 L214,364 M416,332 L430,362 M436,332 L452,362" />
-          <path d="M180,364 C240,358 400,358 460,362" strokeWidth="3" />
+        {/* ===== monitor shell: static, crisp white & page theme cyan-blue ===== */}
+        <g id="frame" filter="url(#sketchy)" fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* cord - crisp white */}
+          <path d="M195,300 C160,315 145,335 150,352 C155,370 178,372 182,356 C186,340 168,332 158,344 C150,354 158,368 172,366" stroke="#ffffff" strokeWidth="4" />
+
+          {/* outer monitor shell - bright white with blue theme glow */}
+          <path
+            d="M182,78 C182,64 196,58 214,57 L432,57 C452,58 464,66 465,80 L470,300 C470,318 456,330 436,332 L206,333 C188,332 176,320 176,302 Z"
+            stroke="#ffffff"
+            strokeWidth="4.5"
+            style={{ filter: "drop-shadow(0 0 6px rgba(56, 189, 248, 0.5))" }}
+          />
+
+          {/* inner screen bezel - page theme cyan-blue */}
+          <path
+            d="M215,96 C213,90 219,86 228,86 L410,87 C420,87 426,92 426,99 L430,258 C430,268 422,274 411,274 L226,275 C216,275 210,268 211,258 Z"
+            stroke="#38bdf8"
+            strokeWidth="4"
+            style={{ filter: "drop-shadow(0 0 8px rgba(56, 189, 248, 0.7))" }}
+          />
+
+          {/* lower control panel - dual white & cyan-blue */}
+          <path d="M222,286 L378,286" stroke="#38bdf8" strokeWidth="3" />
+          <path d="M222,300 L378,300" stroke="#ffffff" strokeWidth="3" />
+          <path d="M222,312 C240,308 260,308 278,312 C296,316 300,308 296,304" stroke="#38bdf8" strokeWidth="3" />
+          <circle cx="352" cy="312" r="7" stroke="#ffffff" strokeWidth="3.5" fill="#0284c7" />
+          <circle cx="378" cy="312" r="7" stroke="#38bdf8" strokeWidth="3.5" fill="#ffffff" />
+
+          {/* feet - crisp white & cyan-blue */}
+          <path d="M206,333 L188,362 M226,333 L214,364 M416,332 L430,362 M436,332 L452,362" stroke="#ffffff" strokeWidth="4" />
+          <path d="M180,364 C240,358 400,358 460,362" stroke="#38bdf8" strokeWidth="3.5" />
         </g>
 
         {/* ===== screen content: this is the only thing that ever glitches ===== */}
