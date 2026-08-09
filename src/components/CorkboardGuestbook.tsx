@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import DistressedStamp from "./DistressedStamp";
 
 export interface GuestbookNote {
@@ -132,6 +132,9 @@ export default function CorkboardGuestbook() {
   const [selectedStampKey, setSelectedStampKey] = useState("chaiApproved");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isHelmetShaking, setIsHelmetShaking] = useState(false);
+  const [showAllStamps, setShowAllStamps] = useState(false);
+
+  const corkboardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -144,6 +147,15 @@ export default function CorkboardGuestbook() {
   const handleHelmetClick = () => {
     setIsHelmetShaking(true);
     setTimeout(() => setIsHelmetShaking(false), 800);
+  };
+
+  const handleScrollToOlderNotes = () => {
+    if (corkboardRef.current) {
+      corkboardRef.current.scrollTo({
+        top: corkboardRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -188,17 +200,42 @@ export default function CorkboardGuestbook() {
   const hasMoreThanSix = olderNotes.length > 0;
   const olderNotesCount = olderNotes.length;
 
+  const allStampList = Object.values(STAMP_PRESETS);
+  const visibleStamps = showAllStamps ? allStampList : allStampList.slice(0, 6);
+
   return (
     <section id="guestbook" className="relative my-20 px-3 sm:px-6 max-w-7xl mx-auto select-none">
       
       {/* Wooden Framed Outer Container */}
       <div className="relative bg-[#1c1815] p-3 sm:p-6 lg:p-7 rounded-[18px] border-[6px] sm:border-[8px] border-[#382a1d] shadow-[0_30px_70px_rgba(0,0,0,0.9)]">
         
-        {/* Main 2-Column Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+        {/* Pinned Paper Note Indicator for Older Notes — Attached to Bottom Outer Cardboard Frame (Non-overlapping) */}
+        {hasMoreThanSix && (
+          <div
+            onClick={handleScrollToOlderNotes}
+            title="Click to scroll to older notes"
+            className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-40 cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          >
+            <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] px-5 py-2.5 rounded-[4px] shadow-[0_12px_28px_rgba(0,0,0,0.85)] border-2 border-[#201c16]/30 rotate-[-1deg] flex items-center gap-3">
+              <span className="absolute -top-3 left-6 h-5 w-16 rotate-[-4deg] bg-primary/40 shadow-sm" />
+              <p className="font-['Caveat',cursive] text-base sm:text-lg font-bold text-[#201c16] whitespace-nowrap">
+                📌 There are {olderNotesCount} older notes below — click or scroll board down to view ↴
+              </p>
+              <span className="font-['Silkscreen',monospace] text-[9px] bg-amber-800 text-white px-2 py-0.5 rounded-[3px] shrink-0 font-bold">
+                +{olderNotesCount} OLDER
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Main 2-Column Grid (Left & Right Boxes Match Heights Perfectly) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           
-          {/* LEFT COLUMN: Wooden Corkboard Wall (Invisible scrollbar) */}
-          <div className="lg:col-span-7 relative max-h-[640px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {/* LEFT COLUMN: Wooden Corkboard Wall */}
+          <div
+            ref={corkboardRef}
+            className="lg:col-span-7 relative h-full min-h-[640px] max-h-[660px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
             
             {/* Real Corkboard Surface Grain Texture */}
             <div
@@ -257,7 +294,7 @@ export default function CorkboardGuestbook() {
 
             </div>
 
-            {/* Top 6 Latest Sticky Notes Grid (Random Shapes + SVG Distressed Rubber Stamp inside boundaries) */}
+            {/* Top 6 Latest Sticky Notes Grid */}
             <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1">
               {latestSixNotes.map((note) => {
                 const stampObj = STAMP_PRESETS[note.stampKey] ?? STAMP_PRESETS["chaiApproved"]!;
@@ -284,7 +321,7 @@ export default function CorkboardGuestbook() {
                       "{note.message}"
                     </p>
 
-                    {/* Authentic SVG Distressed Rubber Stamp (Contained strictly inside note boundaries) */}
+                    {/* SVG Distressed Rubber Stamp (Contained inside note boundaries) */}
                     <div className="mt-1 flex items-center justify-start overflow-hidden max-w-full">
                       <DistressedStamp
                         text={stampObj.text}
@@ -294,7 +331,7 @@ export default function CorkboardGuestbook() {
                       />
                     </div>
 
-                    {/* Date & Like Button Footer */}
+                    {/* Date & Like Button */}
                     <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#201c16]/10">
                       <span className="font-['Space_Mono',monospace] text-[8px] text-[#201c16]/60">
                         {note.date}
@@ -315,22 +352,9 @@ export default function CorkboardGuestbook() {
               })}
             </div>
 
-            {/* Pinned Paper Note Indicator — Rendered BELOW the top 6 notes and ABOVE older notes */}
+            {/* Older Notes Grid (Rendered if notes > 6) */}
             {hasMoreThanSix && (
-              <div className="relative z-10 my-6 bg-[#f4ead6] text-[#201c16] p-3.5 rounded-[4px] shadow-lg border border-[#201c16]/30 rotate-[-1deg] flex items-center justify-between">
-                <span className="absolute -top-2 left-4 w-3.5 h-3.5 bg-red-600 rounded-full shadow-md border border-white" />
-                <p className="font-['Caveat',cursive] text-base sm:text-lg font-bold text-[#201c16]">
-                  📌 There are {olderNotesCount} older notes below — scroll board down to view ↴
-                </p>
-                <span className="font-['Silkscreen',monospace] text-[10px] bg-amber-800 text-white px-2 py-1 rounded-[3px]">
-                  +{olderNotesCount} OLDER
-                </span>
-              </div>
-            )}
-
-            {/* Older Notes Grid (Rendered BELOW the Pinned Paper Note Indicator) */}
-            {hasMoreThanSix && (
-              <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1 mb-6">
+              <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-6 mb-6">
                 {olderNotes.map((note) => {
                   const stampObj = STAMP_PRESETS[note.stampKey] ?? STAMP_PRESETS["chaiApproved"]!;
 
@@ -356,7 +380,7 @@ export default function CorkboardGuestbook() {
                         "{note.message}"
                       </p>
 
-                      {/* Authentic SVG Distressed Rubber Stamp */}
+                      {/* SVG Distressed Rubber Stamp */}
                       <div className="mt-1 flex items-center justify-start overflow-hidden max-w-full">
                         <DistressedStamp
                           text={stampObj.text}
@@ -366,7 +390,7 @@ export default function CorkboardGuestbook() {
                         />
                       </div>
 
-                      {/* Date & Like Button Footer */}
+                      {/* Date & Like Button */}
                       <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#201c16]/10">
                         <span className="font-['Space_Mono',monospace] text-[8px] text-[#201c16]/60">
                           {note.date}
@@ -399,7 +423,7 @@ export default function CorkboardGuestbook() {
           </div>
 
           {/* RIGHT COLUMN: Leave Note Form & Pick Reaction Stamp Panel */}
-          <div className="lg:col-span-5 space-y-5">
+          <div className="lg:col-span-5 flex flex-col justify-between space-y-4">
             
             {/* Top Tape Vibe Scrap */}
             <div className="relative bg-[#f4ead6] text-[#201c16] px-4 py-2 rounded-[4px] shadow-md border border-[#201c16]/20 rotate-[-1deg] text-center">
@@ -465,7 +489,7 @@ export default function CorkboardGuestbook() {
 
             </div>
 
-            {/* PICK A REACTION STAMP Card (8 SVG Distressed Stamps) */}
+            {/* PICK A REACTION STAMP Card (With View More / Show Less Stamp Arrow Toggle) */}
             <div className="relative bg-[#f4ead6] text-[#201c16] p-4 sm:p-5 rounded-[8px] shadow-[0_16px_36px_rgba(0,0,0,0.7)] border-2 border-[#201c16]/20 rotate-[-1deg]">
               
               <h4 className="font-['Silkscreen',monospace] text-xs font-bold text-[#201c16] mb-3 uppercase flex items-center justify-between">
@@ -473,9 +497,9 @@ export default function CorkboardGuestbook() {
                 <span> stamp</span>
               </h4>
 
-              {/* Grid of 8 Rubber Stamps rendered with SVG Distressed Stamps */}
+              {/* Grid of Rubber Stamps */}
               <div className="grid grid-cols-2 gap-2">
-                {Object.values(STAMP_PRESETS).map((s) => (
+                {visibleStamps.map((s) => (
                   <button
                     key={s.id}
                     type="button"
@@ -489,15 +513,22 @@ export default function CorkboardGuestbook() {
                     <DistressedStamp
                       text={s.text}
                       color={s.color}
-                      width={125}
-                      height={48}
+                      width={120}
+                      height={46}
                     />
                   </button>
                 ))}
               </div>
 
-              <div className="text-right font-['Caveat',cursive] text-xs text-[#201c16]/70 mt-2 italic">
-                More coming soon... ➔
+              {/* View More / Show Less Arrow Toggle Button */}
+              <div className="mt-3 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowAllStamps((prev) => !prev)}
+                  className="font-['Caveat',cursive] text-sm font-bold text-[#201c16] bg-[#e8dec8] px-3 py-1 rounded-[4px] border border-[#201c16]/30 hover:bg-white active:scale-95 transition-transform cursor-pointer flex items-center gap-1 shadow-sm"
+                >
+                  <span>{showAllStamps ? "Show less ✕" : "More stamps ➔"}</span>
+                </button>
               </div>
 
             </div>
