@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export default function SmartMaazAssistant() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | "like" | "copy" | null>(null);
+  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | "like" | "copy" | "crt" | null>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -26,7 +26,7 @@ export default function SmartMaazAssistant() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Listen for custom screen click, lever pull twice, liked twice, and copy attempt events
+  // Listen for custom screen click, lever pull twice, liked twice, copy attempt, and CRT monitor click events
   useEffect(() => {
     const handleScreenClick = () => {
       setCustomMsgType("screen");
@@ -48,16 +48,23 @@ export default function SmartMaazAssistant() {
       setOpen(true);
     };
 
+    const handleCrtClick = () => {
+      setCustomMsgType("crt");
+      setOpen(true);
+    };
+
     window.addEventListener("maaz_screen_clicked", handleScreenClick);
     window.addEventListener("maaz_lever_pulled_twice", handleLeverPulledTwice);
     window.addEventListener("maaz_liked_twice", handleLikedTwice);
     window.addEventListener("maaz_copy_attempt", handleCopyAttempt);
+    window.addEventListener("maaz_crt_clicked", handleCrtClick);
 
     return () => {
       window.removeEventListener("maaz_screen_clicked", handleScreenClick);
       window.removeEventListener("maaz_lever_pulled_twice", handleLeverPulledTwice);
       window.removeEventListener("maaz_liked_twice", handleLikedTwice);
       window.removeEventListener("maaz_copy_attempt", handleCopyAttempt);
+      window.removeEventListener("maaz_crt_clicked", handleCrtClick);
     };
   }, []);
 
@@ -189,7 +196,18 @@ export default function SmartMaazAssistant() {
                   Use the memory cartridges on the right rack or the A / B & D-pad buttons to play memories!
                 </p>
               </div>
+            ) : customMsgType === "crt" ? (
+              /* Custom CRT Monitor Clicked Funny Message */
+              <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
+                <p className="font-bold text-emerald-800 text-lg">
+                  Hey! I know it's glitching! 📺
+                </p>
+                <p>
+                  Don't worry, Techwazzy technician is already on the way with a bigger hammer to fix it! Hahahha!
+                </p>
+              </div>
             ) : isMobile ? (
+              /* Mobile Default Message */
               /* Mobile Default Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p>
@@ -218,7 +236,7 @@ export default function SmartMaazAssistant() {
                 onClick={handleDismiss}
                 className="font-['Caveat',cursive] text-base sm:text-lg font-bold bg-primary text-primary-foreground px-4 py-1 sm:px-5 sm:py-1.5 rounded-[12px] border-2 border-primary-foreground/20 shadow-md transition-transform hover:-rotate-2 active:scale-95 cursor-pointer"
               >
-                {customMsgType === "copy" ? "My Bad! 😅" : customMsgType === "like" ? "Haha! Guilty" : customMsgType === "lever" ? "Haha! Okay" : customMsgType === "screen" ? "Ohh!" : isMobile ? "I understand" : "Got it"}
+                {customMsgType === "copy" ? "My Bad! 😅" : customMsgType === "like" ? "Haha! Guilty" : customMsgType === "lever" ? "Haha! Okay" : customMsgType === "screen" ? "Ohh!" : customMsgType === "crt" ? "Hahahha! 😂" : isMobile ? "I understand" : "Got it"}
               </button>
             </div>
 

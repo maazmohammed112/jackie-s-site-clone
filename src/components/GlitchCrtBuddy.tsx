@@ -29,6 +29,7 @@ export default function GlitchCrtBuddy() {
 
   const handleManualBurst = () => {
     setIsBurst(true);
+    window.dispatchEvent(new CustomEvent("maaz_crt_clicked"));
     setTimeout(() => setIsBurst(false), 350);
   };
 
