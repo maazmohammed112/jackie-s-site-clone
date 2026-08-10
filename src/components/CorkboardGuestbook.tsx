@@ -215,8 +215,8 @@ export default function CorkboardGuestbook() {
     runTransaction(noteLikesRef, (currentLikes) => (currentLikes || 0) + 1);
   };
 
-  const latestSixNotes = notes.slice(0, 6);
-  const olderNotes = notes.slice(6);
+  const latestNotes = notes.slice(0, 9);
+  const olderNotes = notes.slice(9);
   const hasMoreThanSix = olderNotes.length > 0;
   const olderNotesCount = olderNotes.length;
 
@@ -238,14 +238,10 @@ export default function CorkboardGuestbook() {
             
             {/* Washi Tape Accent */}
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 h-5 w-24 rotate-[-2deg] bg-primary/40 shadow-sm" />
-
-            <h3 className="font-['Silkscreen',monospace] text-base sm:text-lg font-bold text-[#201c16] mb-2 uppercase flex items-center gap-2">
-              <span>PUBLIC POST CONFIRMATION</span>
+            
+            <h3 className="font-['Silkscreen',monospace] text-base sm:text-lg font-bold text-[#201c16] text-center mb-1">
+              📌 CONFIRM YOUR STICKY NOTE
             </h3>
-
-            <p className="font-['Caveat',cursive] text-base sm:text-lg text-[#201c16]/90 leading-snug mb-4">
-              This note will be <strong>publicly visible to all visitors worldwide</strong> on the studio corkboard. Please double-check that you haven't included any private personal info (phone, address, passwords, etc.).
-            </p>
 
             {/* Note Preview Box */}
             <div className="bg-[#fff7d1] text-[#332b00] p-4 rounded-[6px] border border-[#e6dc9c] shadow-md my-4 rotate-[1deg]">
@@ -291,10 +287,10 @@ export default function CorkboardGuestbook() {
         {/* Main 2-Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           
-          {/* LEFT COLUMN: Wooden Corkboard Wall */}
+          {/* LEFT COLUMN: Wooden Corkboard Wall (Stretches to match right panel with zero bottom gap) */}
           <div
             ref={corkboardRef}
-            className="lg:col-span-7 relative h-full min-h-[640px] max-h-[660px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="lg:col-span-7 relative h-full min-h-[640px] lg:min-h-[770px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             
             {/* Real Corkboard Surface Grain Texture */}
@@ -424,9 +420,9 @@ export default function CorkboardGuestbook() {
               </div>
             ) : (
               <>
-                {/* Top 6 Latest Sticky Notes Grid */}
+                {/* Latest Sticky Notes Grid (Fills Corkboard Space) */}
                 <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1">
-                  {latestSixNotes.map((note) => {
+                  {latestNotes.map((note) => {
                     const stampObj = STAMP_PRESETS[note.stampKey] ?? STAMP_PRESETS["chaiApproved"]!;
 
                     return (
