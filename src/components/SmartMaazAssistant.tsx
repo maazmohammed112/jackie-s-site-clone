@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export default function SmartMaazAssistant() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | "like" | "copy" | "crt" | "crtProjects" | "crackedPhone" | null>(null);
+  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | "like" | "copy" | "crt" | "crtProjects" | "eduMangalayatan" | "eduAcharya" | "crackedPhone" | null>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -26,7 +26,7 @@ export default function SmartMaazAssistant() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Listen for custom screen click, lever pull twice, liked twice, copy attempt, CRT monitor click, and cracked phone click events
+  // Listen for custom action events
   useEffect(() => {
     const handleScreenClick = () => {
       setCustomMsgType("screen");
@@ -58,6 +58,16 @@ export default function SmartMaazAssistant() {
       setOpen(true);
     };
 
+    const handleEduMangalayatanClick = () => {
+      setCustomMsgType("eduMangalayatan");
+      setOpen(true);
+    };
+
+    const handleEduAcharyaClick = () => {
+      setCustomMsgType("eduAcharya");
+      setOpen(true);
+    };
+
     const handleCrackedPhoneClick = () => {
       setCustomMsgType("crackedPhone");
       setOpen(false);
@@ -72,6 +82,8 @@ export default function SmartMaazAssistant() {
     window.addEventListener("maaz_copy_attempt", handleCopyAttempt);
     window.addEventListener("maaz_crt_clicked", handleCrtClick);
     window.addEventListener("maaz_crt_projects_clicked", handleCrtProjectsClick);
+    window.addEventListener("maaz_edu_mangalayatan_clicked", handleEduMangalayatanClick);
+    window.addEventListener("maaz_edu_acharya_clicked", handleEduAcharyaClick);
     window.addEventListener("maaz_cracked_phone_clicked", handleCrackedPhoneClick);
 
     return () => {
@@ -81,6 +93,8 @@ export default function SmartMaazAssistant() {
       window.removeEventListener("maaz_copy_attempt", handleCopyAttempt);
       window.removeEventListener("maaz_crt_clicked", handleCrtClick);
       window.removeEventListener("maaz_crt_projects_clicked", handleCrtProjectsClick);
+      window.removeEventListener("maaz_edu_mangalayatan_clicked", handleEduMangalayatanClick);
+      window.removeEventListener("maaz_edu_acharya_clicked", handleEduAcharyaClick);
       window.removeEventListener("maaz_cracked_phone_clicked", handleCrackedPhoneClick);
     };
   }, []);
@@ -228,6 +242,26 @@ export default function SmartMaazAssistant() {
                   Don't worry, Techwazzy technician is already on the way with a bigger hammer to fix it! Hahahha!
                 </p>
               </div>
+            ) : customMsgType === "eduMangalayatan" ? (
+              /* Custom Mangalayatan University Image Clicked Message */
+              <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
+                <p className="font-bold text-red-700 text-lg">
+                  Ah, Mangalayatan University!
+                </p>
+                <p>
+                  Pursuing my Master of Computer Applications (MCA) online while building agentic AI systems and automation workflows from anywhere in the world! Zero campus traffic, 100% brain productivity, hahahha!
+                </p>
+              </div>
+            ) : customMsgType === "eduAcharya" ? (
+              /* Custom Acharya Institute Image Clicked Message */
+              <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
+                <p className="font-bold text-sky-800 text-lg">
+                  Acharya Institute of Graduate Studies!
+                </p>
+                <p>
+                  Where my BCA journey began! Mastering core computer science algorithms, database queries, and late-night coding sessions! Good old campus days, hahahha!
+                </p>
+              </div>
             ) : customMsgType === "crackedPhone" ? (
               /* Custom Cracked Phone Clicked Funny Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
@@ -270,7 +304,7 @@ export default function SmartMaazAssistant() {
                 onClick={handleDismiss}
                 className="font-['Caveat',cursive] text-base sm:text-lg font-bold bg-primary text-primary-foreground px-4 py-1 sm:px-5 sm:py-1.5 rounded-[12px] border-2 border-primary-foreground/20 shadow-md transition-transform hover:-rotate-2 active:scale-95 cursor-pointer"
               >
-                {customMsgType === "copy" ? "My Bad!" : customMsgType === "like" ? "Haha! Guilty" : customMsgType === "lever" ? "Haha! Okay" : customMsgType === "screen" ? "Ohh!" : customMsgType === "crt" ? "Hahahha!" : customMsgType === "crackedPhone" ? "Hahahha!" : isMobile ? "I understand" : "Got it"}
+                {customMsgType === "copy" ? "My Bad!" : customMsgType === "like" ? "Haha! Guilty" : customMsgType === "lever" ? "Haha! Okay" : customMsgType === "screen" ? "Ohh!" : customMsgType === "crt" ? "Hahahha!" : customMsgType === "eduMangalayatan" ? "Awesome!" : customMsgType === "eduAcharya" ? "Nostalgic!" : customMsgType === "crackedPhone" ? "Hahahha!" : isMobile ? "I understand" : "Got it"}
               </button>
             </div>
 

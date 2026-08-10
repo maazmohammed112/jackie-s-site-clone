@@ -86,11 +86,21 @@ function SingleTicket({ item, index }: { item: EducationItem; index: number }) {
       <div className="flex flex-col md:flex-row bg-[#161515] text-[#f1e6d1] border border-white/10 relative">
         
         {/* Left Section: Campus Photo with Red Theme Duotone Overlay */}
-        <div className="w-full md:w-56 lg:w-64 h-48 md:h-auto shrink-0 relative overflow-hidden border-b md:border-b-0 md:border-r border-white/15 bg-red-950">
+        <div
+          onClick={() => {
+            if (item.institution.toLowerCase().includes("mangalayatan")) {
+              window.dispatchEvent(new CustomEvent("maaz_edu_mangalayatan_clicked"));
+            } else {
+              window.dispatchEvent(new CustomEvent("maaz_edu_acharya_clicked"));
+            }
+          }}
+          title={`Click to hear Maaz's story about ${item.institution}!`}
+          className="w-full md:w-56 lg:w-64 h-48 md:h-auto shrink-0 relative overflow-hidden border-b md:border-b-0 md:border-r border-white/15 bg-red-950 cursor-pointer group"
+        >
           <img
             src={item.image}
             alt={`${item.institution} Campus`}
-            className="w-full h-full object-cover filter contrast-[1.2] brightness-95 saturate-[1.2]"
+            className="w-full h-full object-cover filter contrast-[1.2] brightness-95 saturate-[1.2] transition-transform duration-300 group-hover:scale-105"
           />
           {/* Red Theme Color Duotone Filter Overlays */}
           <div className="absolute inset-0 bg-gradient-to-t from-red-950/90 via-red-900/40 to-red-900/20 mix-blend-multiply pointer-events-none" />
