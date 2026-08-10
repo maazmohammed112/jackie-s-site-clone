@@ -210,6 +210,9 @@ export default function SmartMaazAssistant() {
                 <p>
                   What else should I explain for this also? Grow up now, hahahha!
                 </p>
+                <p className="text-primary font-bold">
+                  And hey! I know it's glitching! Don't worry, Techwazzy technician is already on the way with a bigger hammer to fix it! Hahahha!
+                </p>
               </div>
             ) : customMsgType === "crackedPhone" ? (
               /* Custom Cracked Phone Clicked Funny Message */
