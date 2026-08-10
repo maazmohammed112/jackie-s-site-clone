@@ -322,48 +322,51 @@ export default function CorkboardGuestbook() {
                 <div className="font-['Silkscreen',monospace] text-[7px] text-center mt-1 text-zinc-700 font-bold">TECHWAZZY STUDIO</div>
               </div>
 
-              {/* Header Title Banner (Fitted layout with zero overflow) */}
-              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3.5 sm:p-4 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4 max-w-full">
-                <div>
-                  <h2 className="font-['Gloria_Hallelujah',cursive] text-xl sm:text-2xl font-bold text-[#201c16] leading-tight">
-                    Techwazzy Life World
-                  </h2>
-                  <p className="font-['Caveat',cursive] text-sm sm:text-base text-[#201c16]/80 mt-0.5">
-                    Real visitors. Real vibes. Real stamps. ♡
-                  </p>
-                </div>
+              {/* Header Title & Visitor Counter Paper Card (Vertical stack layout: 100% zero clipping/overlap) */}
+              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3.5 sm:p-4 rounded-[8px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex flex-col gap-3 max-w-full">
+                
+                {/* Row 1: Title & Older Notes Banner */}
+                <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2.5 max-w-full">
+                  <div>
+                    <h2 className="font-['Gloria_Hallelujah',cursive] text-xl sm:text-2xl font-bold text-[#201c16] leading-tight">
+                      Techwazzy Life World
+                    </h2>
+                    <p className="font-['Caveat',cursive] text-sm sm:text-base text-[#201c16]/80 mt-0.5">
+                      Real visitors. Real vibes. Real stamps. ♡
+                    </p>
+                  </div>
 
-                {/* 3D MECHANICAL TALLY COUNTER WITH PULL LEVER */}
-                <div className="relative shrink-0 w-full xl:w-auto pt-1">
-                  
-                  {/* Pinned Paper Note Indicator (Rendered ABOVE count box ONLY if notes > 6) */}
+                  {/* Pinned Paper Note Indicator (Rendered ONLY if notes > 6) */}
                   {hasMoreThanSix && (
                     <div
                       onClick={handleScrollToOlderNotes}
                       title="Click to scroll to older notes"
-                      className="relative z-20 mb-2 cursor-pointer transition-transform hover:scale-[1.02] active:scale-95 flex justify-center"
+                      className="cursor-pointer transition-transform hover:scale-[1.02] active:scale-95 shrink-0"
                     >
-                      <div className="relative paper-grid torn-paper bg-[#fff7d1] text-[#201c16] px-3 py-1.5 rounded-[4px] shadow-sm border border-[#201c16]/30 rotate-[-1deg] flex items-center justify-between gap-2 max-w-full">
-                        <p className="font-['Caveat',cursive] text-xs sm:text-sm font-bold text-[#201c16] truncate min-w-0">
-                          📌 There are {olderNotesCount} older notes below — scroll board down to view ↴
-                        </p>
-                        <span className="font-['Silkscreen',monospace] text-[8px] bg-amber-800 text-white px-1.5 py-0.5 rounded-[3px] shrink-0 font-bold whitespace-nowrap">
-                          +{olderNotesCount} OLDER
+                      <div className="paper-grid torn-paper bg-[#fff7d1] text-[#201c16] px-2.5 py-1 rounded-[4px] shadow-sm border border-[#201c16]/30 rotate-[-1deg] flex items-center gap-1.5">
+                        <span className="font-['Caveat',cursive] text-xs sm:text-sm font-bold">
+                          📌 {olderNotesCount} older notes below ↴
+                        </span>
+                        <span className="font-['Silkscreen',monospace] text-[8px] bg-amber-800 text-white px-1.5 py-0.5 rounded-[3px] font-bold">
+                          +{olderNotesCount}
                         </span>
                       </div>
                     </div>
                   )}
+                </div>
 
-                  {/* Black Handwritten Hint */}
-                  <div className="relative mb-1 pointer-events-none flex items-center justify-end gap-1 font-['Caveat',cursive] text-[#201c16] text-xs sm:text-sm font-extrabold whitespace-nowrap animate-bounce">
-                    <span>pull down to add your count!</span>
-                    <svg className="w-4 h-4 text-[#201c16] rotate-[90deg] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-
-                  <div className="relative bg-gradient-to-b from-[#d1d5db] via-[#9ca3af] to-[#4b5563] p-2 pr-5 rounded-[8px] border-2 border-zinc-600 shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center justify-between gap-2 max-w-full">
+                {/* Row 2: 3D Mechanical Tally Counter Box */}
+                <div className="flex items-center justify-end w-full">
+                  <div className="relative bg-gradient-to-b from-[#d1d5db] via-[#9ca3af] to-[#4b5563] p-2 pr-6 rounded-[8px] border-2 border-zinc-600 shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center gap-2.5 max-w-full">
                     
+                    {/* Pull Down Hint */}
+                    <div className="hidden xs:flex items-center gap-1 font-['Caveat',cursive] text-[#201c16] text-xs font-extrabold pr-1 animate-bounce">
+                      <span>pull down to count!</span>
+                      <svg className="w-3.5 h-3.5 text-[#201c16] rotate-[90deg] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+
                     <div>
                       <div className="font-['Silkscreen',monospace] text-[8px] text-zinc-900 uppercase font-bold tracking-wider mb-0.5 text-center">
                         VISITORS
@@ -390,14 +393,13 @@ export default function CorkboardGuestbook() {
                       }`}
                     >
                       {/* Metallic Rod */}
-                      <div className="w-2.5 h-10 bg-gradient-to-b from-zinc-300 via-zinc-400 to-zinc-600 rounded-full border border-zinc-700 shadow-md flex flex-col items-center justify-start pt-1">
+                      <div className="w-2.5 h-9 bg-gradient-to-b from-zinc-300 via-zinc-400 to-zinc-600 rounded-full border border-zinc-700 shadow-md flex flex-col items-center justify-start pt-0.5">
                         {/* Red Rubber T-Grip Handle Top */}
-                        <span className="w-5 h-3.5 bg-red-600 rounded-sm border border-red-800 shadow-md group-hover:brightness-125" />
+                        <span className="w-4.5 h-3 bg-red-600 rounded-sm border border-red-800 shadow-md group-hover:brightness-125" />
                       </div>
                     </div>
 
                   </div>
-
                 </div>
 
               </div>
