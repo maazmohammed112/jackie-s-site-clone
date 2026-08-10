@@ -91,7 +91,7 @@ export default function CrtProjects() {
       <div className="crt-monitor rounded-[34px] p-4 pb-0">
         <div className="crt-bezel relative rounded-[22px] p-5">
           <div
-            onClick={() => window.dispatchEvent(new CustomEvent("maaz_crt_clicked"))}
+            onClick={() => window.dispatchEvent(new CustomEvent("maaz_crt_projects_clicked"))}
             className={`crt-screen relative min-h-[300px] overflow-hidden rounded-2xl cursor-pointer ${glitching ? "is-glitching" : ""}`}
           >
             <div

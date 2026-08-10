@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export default function SmartMaazAssistant() {
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | "like" | "copy" | "crt" | "crackedPhone" | null>(null);
+  const [customMsgType, setCustomMsgType] = useState<"screen" | "lever" | "like" | "copy" | "crt" | "crtProjects" | "crackedPhone" | null>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -53,6 +53,11 @@ export default function SmartMaazAssistant() {
       setOpen(true);
     };
 
+    const handleCrtProjectsClick = () => {
+      setCustomMsgType("crtProjects");
+      setOpen(true);
+    };
+
     const handleCrackedPhoneClick = () => {
       setCustomMsgType("crackedPhone");
       setOpen(false);
@@ -66,6 +71,7 @@ export default function SmartMaazAssistant() {
     window.addEventListener("maaz_liked_twice", handleLikedTwice);
     window.addEventListener("maaz_copy_attempt", handleCopyAttempt);
     window.addEventListener("maaz_crt_clicked", handleCrtClick);
+    window.addEventListener("maaz_crt_projects_clicked", handleCrtProjectsClick);
     window.addEventListener("maaz_cracked_phone_clicked", handleCrackedPhoneClick);
 
     return () => {
@@ -74,6 +80,7 @@ export default function SmartMaazAssistant() {
       window.removeEventListener("maaz_liked_twice", handleLikedTwice);
       window.removeEventListener("maaz_copy_attempt", handleCopyAttempt);
       window.removeEventListener("maaz_crt_clicked", handleCrtClick);
+      window.removeEventListener("maaz_crt_projects_clicked", handleCrtProjectsClick);
       window.removeEventListener("maaz_cracked_phone_clicked", handleCrackedPhoneClick);
     };
   }, []);
@@ -201,8 +208,8 @@ export default function SmartMaazAssistant() {
                   Use the memory cartridges on the right rack or the A / B & D-pad buttons to play memories!
                 </p>
               </div>
-            ) : customMsgType === "crt" ? (
-              /* Custom CRT Monitor Clicked Funny Message */
+            ) : customMsgType === "crtProjects" ? (
+              /* Custom CrtProjects Monitor Clicked Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p className="font-bold text-emerald-800 text-lg">
                   Yooooo! Just click on the next icon button!
@@ -210,8 +217,15 @@ export default function SmartMaazAssistant() {
                 <p>
                   What else should I explain for this also? Grow up now, hahahha!
                 </p>
-                <p className="text-primary font-bold">
-                  And hey! I know it's glitching! Don't worry, Techwazzy technician is already on the way with a bigger hammer to fix it! Hahahha!
+              </div>
+            ) : customMsgType === "crt" ? (
+              /* Custom Glitch CRT Buddy Monitor Clicked Message */
+              <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
+                <p className="font-bold text-emerald-800 text-lg">
+                  Hey! I know it's glitching!
+                </p>
+                <p>
+                  Don't worry, Techwazzy technician is already on the way with a bigger hammer to fix it! Hahahha!
                 </p>
               </div>
             ) : customMsgType === "crackedPhone" ? (
