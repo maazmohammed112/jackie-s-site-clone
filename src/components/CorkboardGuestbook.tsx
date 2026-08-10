@@ -323,7 +323,7 @@ export default function CorkboardGuestbook() {
               </div>
 
               {/* Header Title Banner (Fitted layout with zero overflow) */}
-              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3 sm:p-4 pr-5 sm:pr-6 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 max-w-full overflow-hidden">
+              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3.5 sm:p-4 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4 max-w-full">
                 <div>
                   <h2 className="font-['Gloria_Hallelujah',cursive] text-xl sm:text-2xl font-bold text-[#201c16] leading-tight">
                     Techwazzy Life World
@@ -334,17 +334,35 @@ export default function CorkboardGuestbook() {
                 </div>
 
                 {/* 3D MECHANICAL TALLY COUNTER WITH PULL LEVER */}
-                <div className="relative shrink-0 pt-5 pr-2">
+                <div className="relative shrink-0 w-full xl:w-auto pt-1">
                   
+                  {/* Pinned Paper Note Indicator (Rendered ABOVE count box ONLY if notes > 6) */}
+                  {hasMoreThanSix && (
+                    <div
+                      onClick={handleScrollToOlderNotes}
+                      title="Click to scroll to older notes"
+                      className="relative z-20 mb-2 cursor-pointer transition-transform hover:scale-[1.02] active:scale-95 flex justify-center"
+                    >
+                      <div className="relative paper-grid torn-paper bg-[#fff7d1] text-[#201c16] px-3 py-1.5 rounded-[4px] shadow-sm border border-[#201c16]/30 rotate-[-1deg] flex items-center justify-between gap-2 max-w-full">
+                        <p className="font-['Caveat',cursive] text-xs sm:text-sm font-bold text-[#201c16] truncate min-w-0">
+                          📌 There are {olderNotesCount} older notes below — scroll board down to view ↴
+                        </p>
+                        <span className="font-['Silkscreen',monospace] text-[8px] bg-amber-800 text-white px-1.5 py-0.5 rounded-[3px] shrink-0 font-bold whitespace-nowrap">
+                          +{olderNotesCount} OLDER
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Black Handwritten Hint */}
-                  <div className="absolute -top-1.5 right-2 pointer-events-none flex items-center gap-1 font-['Caveat',cursive] text-[#201c16] text-xs sm:text-sm font-extrabold whitespace-nowrap animate-bounce">
+                  <div className="relative mb-1 pointer-events-none flex items-center justify-end gap-1 font-['Caveat',cursive] text-[#201c16] text-xs sm:text-sm font-extrabold whitespace-nowrap animate-bounce">
                     <span>pull down to add your count!</span>
                     <svg className="w-4 h-4 text-[#201c16] rotate-[90deg] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
 
-                  <div className="relative bg-gradient-to-b from-[#d1d5db] via-[#9ca3af] to-[#4b5563] p-2 pr-4.5 rounded-[8px] border-2 border-zinc-600 shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center gap-2 max-w-full">
+                  <div className="relative bg-gradient-to-b from-[#d1d5db] via-[#9ca3af] to-[#4b5563] p-2 pr-5 rounded-[8px] border-2 border-zinc-600 shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center justify-between gap-2 max-w-full">
                     
                     <div>
                       <div className="font-['Silkscreen',monospace] text-[8px] text-zinc-900 uppercase font-bold tracking-wider mb-0.5 text-center">
@@ -459,24 +477,6 @@ export default function CorkboardGuestbook() {
                     );
                   })}
                 </div>
-
-                {/* Pinned Paper Note Indicator for Older Notes */}
-                {hasMoreThanSix && (
-                  <div
-                    onClick={handleScrollToOlderNotes}
-                    title="Click to scroll to older notes"
-                    className="relative z-20 my-4 cursor-pointer transition-transform hover:scale-[1.02] active:scale-95 flex justify-center"
-                  >
-                    <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] px-4 py-2 rounded-[4px] shadow-md border-2 border-[#201c16]/30 rotate-[-1deg] flex items-center justify-between gap-2 max-w-full">
-                      <p className="font-['Caveat',cursive] text-sm sm:text-base font-bold text-[#201c16] truncate min-w-0">
-                        📌 There are {olderNotesCount} older notes below — scroll board down to view ↴
-                      </p>
-                      <span className="font-['Silkscreen',monospace] text-[8px] bg-amber-800 text-white px-2 py-0.5 rounded-[3px] shrink-0 font-bold whitespace-nowrap">
-                        +{olderNotesCount} OLDER
-                      </span>
-                    </div>
-                  </div>
-                )}
 
                 {/* Older Notes Grid (Rendered if notes > 6) */}
                 {hasMoreThanSix && (
