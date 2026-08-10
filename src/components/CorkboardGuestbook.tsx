@@ -288,25 +288,6 @@ export default function CorkboardGuestbook() {
       {/* Wooden Framed Outer Container */}
       <div className="relative bg-[#1c1815] p-3 sm:p-6 lg:p-7 rounded-[18px] border-[6px] sm:border-[8px] border-[#382a1d] shadow-[0_30px_70px_rgba(0,0,0,0.9)]">
         
-        {/* Pinned Paper Note Indicator for Older Notes */}
-        {hasMoreThanSix && (
-          <div
-            onClick={handleScrollToOlderNotes}
-            title="Click to scroll to older notes"
-            className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-40 cursor-pointer transition-transform hover:scale-105 active:scale-95"
-          >
-            <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] px-5 py-2.5 rounded-[4px] shadow-[0_12px_28px_rgba(0,0,0,0.85)] border-2 border-[#201c16]/30 rotate-[-1deg] flex items-center gap-3">
-              <span className="absolute -top-3 left-6 h-5 w-16 rotate-[-4deg] bg-primary/40 shadow-sm" />
-              <p className="font-['Caveat',cursive] text-base sm:text-lg font-bold text-[#201c16] whitespace-nowrap">
-                📌 There are {olderNotesCount} older notes below — click or scroll board down to view ↴
-              </p>
-              <span className="font-['Silkscreen',monospace] text-[9px] bg-amber-800 text-white px-2 py-0.5 rounded-[3px] shrink-0 font-bold">
-                +{olderNotesCount} OLDER
-              </span>
-            </div>
-          </div>
-        )}
-
         {/* Main 2-Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           
@@ -328,6 +309,24 @@ export default function CorkboardGuestbook() {
                 backgroundSize: "12px 12px, 16px 16px, 8px 8px",
               }}
             />
+
+            {/* Pinned Paper Note Indicator for Older Notes (Confined inside Corkboard Note Wall) */}
+            {hasMoreThanSix && (
+              <div
+                onClick={handleScrollToOlderNotes}
+                title="Click to scroll to older notes"
+                className="relative z-20 mb-3 cursor-pointer transition-transform hover:scale-[1.02] active:scale-95 flex justify-center"
+              >
+                <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] px-4 py-2 rounded-[4px] shadow-md border-2 border-[#201c16]/30 rotate-[-1deg] flex items-center justify-between gap-2 max-w-full">
+                  <p className="font-['Caveat',cursive] text-sm sm:text-base font-bold text-[#201c16] truncate min-w-0">
+                    📌 {olderNotesCount} older notes below — scroll board down to view ↴
+                  </p>
+                  <span className="font-['Silkscreen',monospace] text-[8px] bg-amber-800 text-white px-2 py-0.5 rounded-[3px] shrink-0 font-bold whitespace-nowrap">
+                    +{olderNotesCount} OLDER
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* Top Area Container: Shakable Helmet Polaroid + Header Banner + Mechanical Counter with Pull Lever */}
             <div className="relative z-10 mb-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
