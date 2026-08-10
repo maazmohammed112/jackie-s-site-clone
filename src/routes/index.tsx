@@ -634,8 +634,8 @@ function PinnedPoster() {
       // Progress 0 (hidden behind upper turntable) to 1 (fully revealed in center view)
       const t = Math.min(1, Math.max(0, 1 - dist / (range * 0.75)));
 
-      // Smoothly slide translateY from -60px (behind upper section) to +110px (100% completely out in full view)
-      const translateY = -60 + t * 170;
+      // Smoothly slide translateY from -50px (behind upper section) to +150px (100% completely out in full view across all mobile & desktop screens)
+      const translateY = -50 + t * 200;
       const rotate = -4 + t * 4;
       const opacity = 0.3 + t * 0.7;
 
@@ -662,10 +662,10 @@ function PinnedPoster() {
 
   return (
     <>
-      <div ref={wrapRef} className="flex relative z-10 -mt-24 sm:-mt-28 justify-center scale-90 sm:scale-100 pointer-events-auto my-12 mb-28">
+      <div ref={wrapRef} className="flex relative z-10 -mt-24 sm:-mt-28 justify-center scale-90 sm:scale-100 pointer-events-auto my-12 mb-36">
         <div
           ref={posterRef}
-          className="group relative rounded-[14px] bg-paper p-4 pt-9 shadow-[var(--shadow-paper)] border-2 border-primary/30 transition-all duration-300"
+          className="group relative rounded-[14px] bg-paper p-3.5 sm:p-4 pt-9 shadow-[var(--shadow-paper)] border-2 border-primary/30 transition-all duration-300"
         >
           {/* Top Wooden / Metallic Pin Pinhead */}
           <span
@@ -683,18 +683,19 @@ function PinnedPoster() {
             />
           </div>
 
-          <div className="mt-3 flex items-center justify-between px-1">
+          {/* Bottom Controls Row: Pinned text + VIEW FILM button (No overlapping on mobile or desktop) */}
+          <div className="mt-3 flex items-center justify-between gap-2.5 px-0.5 max-w-full">
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="font-hand text-2xl text-ink/80 hover:text-primary transition-colors text-left"
+              className="font-hand text-xl sm:text-2xl text-ink/80 hover:text-primary transition-colors text-left truncate min-w-0"
             >
               pinned — that's me
             </button>
             <button
               type="button"
               onClick={() => setVideo(true)}
-              className="font-['Silkscreen',monospace] text-[10px] text-primary hover:bg-primary hover:text-white border border-primary/40 px-2.5 py-1 rounded-[4px] font-bold transition-all cursor-pointer shadow-xs active:scale-95 flex items-center gap-1"
+              className="font-['Silkscreen',monospace] text-[9px] sm:text-[10px] text-primary hover:bg-primary hover:text-white border border-primary/40 px-2 sm:px-2.5 py-1 rounded-[4px] font-bold transition-all cursor-pointer shadow-xs active:scale-95 flex items-center gap-1 shrink-0 whitespace-nowrap"
             >
               VIEW FILM ▶
             </button>
