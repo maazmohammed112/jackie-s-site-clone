@@ -287,24 +287,27 @@ export default function CorkboardGuestbook() {
         {/* Main 2-Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           
-          {/* LEFT COLUMN: Wooden Corkboard Wall */}
-          <div
-            ref={corkboardRef}
-            className="lg:col-span-7 relative h-full min-h-[640px] max-h-[680px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
+          {/* LEFT COLUMN CONTAINER: Corkboard Wall + Taped Paper Note for Desktop Viewers */}
+          <div className="lg:col-span-7 flex flex-col justify-between space-y-3">
             
-            {/* Real Corkboard Surface Grain Texture */}
+            {/* Wooden Corkboard Wall */}
             <div
-              className="absolute inset-0 opacity-40 pointer-events-none rounded-[8px]"
-              style={{
-                backgroundImage: `
-                  radial-gradient(circle at 50% 50%, #472d16 1.5px, transparent 1.5px),
-                  radial-gradient(circle at 20% 80%, #7a512c 2px, transparent 2px),
-                  radial-gradient(circle at 80% 20%, #38200b 1px, transparent 1px)
-                `,
-                backgroundSize: "12px 12px, 16px 16px, 8px 8px",
-              }}
-            />
+              ref={corkboardRef}
+              className="relative h-full min-h-[640px] max-h-[680px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              
+              {/* Real Corkboard Surface Grain Texture */}
+              <div
+                className="absolute inset-0 opacity-40 pointer-events-none rounded-[8px]"
+                style={{
+                  backgroundImage: `
+                    radial-gradient(circle at 50% 50%, #472d16 1.5px, transparent 1.5px),
+                    radial-gradient(circle at 20% 80%, #7a512c 2px, transparent 2px),
+                    radial-gradient(circle at 80% 20%, #38200b 1px, transparent 1px)
+                  `,
+                  backgroundSize: "12px 12px, 16px 16px, 8px 8px",
+                }}
+              />
 
             {/* Top Area Container: Shakable Helmet Polaroid + Header Banner + Mechanical Counter with Pull Lever */}
             <div className="relative z-10 mb-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -548,6 +551,19 @@ export default function CorkboardGuestbook() {
               <p className="font-['Caveat',cursive] text-sm leading-tight text-center font-bold">
                 Every stamp tells a story. Thanks for being a part of mine!
               </p>
+            </div>
+            </div>
+
+            {/* Taped Paper Note Box for Desktop Viewers */}
+            <div className="hidden lg:flex items-center justify-center pt-1">
+              <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] px-6 py-2.5 rounded-[6px] shadow-lg border-2 border-[#201c16]/30 rotate-[-1deg] text-center">
+                {/* Washi Tape Accents */}
+                <span className="absolute -top-3 left-6 h-5 w-14 rotate-[-4deg] bg-primary/40 shadow-sm" />
+                <span className="absolute -top-3 right-6 h-5 w-14 rotate-[3deg] bg-primary/40 shadow-sm" />
+                <p className="font-['Caveat',cursive] text-lg sm:text-xl font-extrabold text-[#201c16] tracking-wide">
+                  "You can do it, just do it!" <span className="text-primary italic">— maaz</span>
+                </p>
+              </div>
             </div>
 
           </div>
