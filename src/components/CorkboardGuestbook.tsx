@@ -215,8 +215,8 @@ export default function CorkboardGuestbook() {
     runTransaction(noteLikesRef, (currentLikes) => (currentLikes || 0) + 1);
   };
 
-  const latestNotes = notes.slice(0, 9);
-  const olderNotes = notes.slice(9);
+  const latestSixNotes = notes.slice(0, 6);
+  const olderNotes = notes.slice(6);
   const hasMoreThanSix = olderNotes.length > 0;
   const olderNotesCount = olderNotes.length;
 
@@ -229,7 +229,7 @@ export default function CorkboardGuestbook() {
   const currentPreviewStamp = selectedStampKey ? (STAMP_PRESETS[selectedStampKey] ?? STAMP_PRESETS["chaiApproved"]!) : null;
 
   return (
-    <section id="guestbook" className="relative my-20 px-3 sm:px-6 max-w-7xl mx-auto select-none">
+    <section id="guestbook" className="relative my-20 px-3 sm:px-6 max-w-7xl mx-auto select-none overflow-x-hidden">
       
       {/* PUBLIC POST CONFIRMATION PAPER MODAL */}
       {showConfirmModal && (
@@ -287,10 +287,10 @@ export default function CorkboardGuestbook() {
         {/* Main 2-Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           
-          {/* LEFT COLUMN: Wooden Corkboard Wall (Stretches to match right panel with zero bottom gap) */}
+          {/* LEFT COLUMN: Wooden Corkboard Wall */}
           <div
             ref={corkboardRef}
-            className="lg:col-span-7 relative h-full min-h-[640px] lg:min-h-[770px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="lg:col-span-7 relative h-full min-h-[640px] max-h-[680px] bg-[#9e6f47] p-4 sm:p-6 rounded-[12px] border-4 border-[#523820] shadow-[inset_0_4px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between overflow-y-auto [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             
             {/* Real Corkboard Surface Grain Texture */}
@@ -305,24 +305,6 @@ export default function CorkboardGuestbook() {
                 backgroundSize: "12px 12px, 16px 16px, 8px 8px",
               }}
             />
-
-            {/* Pinned Paper Note Indicator for Older Notes (Confined inside Corkboard Note Wall) */}
-            {hasMoreThanSix && (
-              <div
-                onClick={handleScrollToOlderNotes}
-                title="Click to scroll to older notes"
-                className="relative z-20 mb-3 cursor-pointer transition-transform hover:scale-[1.02] active:scale-95 flex justify-center"
-              >
-                <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] px-4 py-2 rounded-[4px] shadow-md border-2 border-[#201c16]/30 rotate-[-1deg] flex items-center justify-between gap-2 max-w-full">
-                  <p className="font-['Caveat',cursive] text-sm sm:text-base font-bold text-[#201c16] truncate min-w-0">
-                    📌 {olderNotesCount} older notes below — scroll board down to view ↴
-                  </p>
-                  <span className="font-['Silkscreen',monospace] text-[8px] bg-amber-800 text-white px-2 py-0.5 rounded-[3px] shrink-0 font-bold whitespace-nowrap">
-                    +{olderNotesCount} OLDER
-                  </span>
-                </div>
-              </div>
-            )}
 
             {/* Top Area Container: Shakable Helmet Polaroid + Header Banner + Mechanical Counter with Pull Lever */}
             <div className="relative z-10 mb-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -340,8 +322,8 @@ export default function CorkboardGuestbook() {
                 <div className="font-['Silkscreen',monospace] text-[7px] text-center mt-1 text-zinc-700 font-bold">TECHWAZZY STUDIO</div>
               </div>
 
-              {/* Header Title Banner */}
-              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3.5 sm:p-4 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+              {/* Header Title Banner (Fitted layout with zero overflow) */}
+              <div className="flex-1 bg-[#f4ead6] text-[#201c16] p-3 sm:p-4 pr-5 sm:pr-6 rounded-[6px] shadow-[0_8px_20px_rgba(0,0,0,0.5)] border border-[#201c16]/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 max-w-full overflow-hidden">
                 <div>
                   <h2 className="font-['Gloria_Hallelujah',cursive] text-xl sm:text-2xl font-bold text-[#201c16] leading-tight">
                     Techwazzy Life World
@@ -351,18 +333,18 @@ export default function CorkboardGuestbook() {
                   </p>
                 </div>
 
-                {/* 3D MECHANICAL TALLY COUNTER WITH PULL LEVER & HANDWRITTEN WHITE HINT */}
-                <div className="relative shrink-0 pt-5">
+                {/* 3D MECHANICAL TALLY COUNTER WITH PULL LEVER */}
+                <div className="relative shrink-0 pt-5 pr-2">
                   
-                  {/* Black Handwritten Hint with Drawn Arrow (No Background Container) */}
-                  <div className="absolute -top-1.5 right-0 pointer-events-none flex items-center gap-1 font-['Caveat',cursive] text-[#201c16] text-xs sm:text-sm font-extrabold whitespace-nowrap animate-bounce">
+                  {/* Black Handwritten Hint */}
+                  <div className="absolute -top-1.5 right-2 pointer-events-none flex items-center gap-1 font-['Caveat',cursive] text-[#201c16] text-xs sm:text-sm font-extrabold whitespace-nowrap animate-bounce">
                     <span>pull down to add your count!</span>
                     <svg className="w-4 h-4 text-[#201c16] rotate-[90deg] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
 
-                  <div className="relative bg-gradient-to-b from-[#d1d5db] via-[#9ca3af] to-[#4b5563] p-2 rounded-[8px] border-2 border-zinc-600 shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center gap-2">
+                  <div className="relative bg-gradient-to-b from-[#d1d5db] via-[#9ca3af] to-[#4b5563] p-2 pr-4.5 rounded-[8px] border-2 border-zinc-600 shadow-[0_6px_16px_rgba(0,0,0,0.6)] flex items-center gap-2 max-w-full">
                     
                     <div>
                       <div className="font-['Silkscreen',monospace] text-[8px] text-zinc-900 uppercase font-bold tracking-wider mb-0.5 text-center">
@@ -385,7 +367,7 @@ export default function CorkboardGuestbook() {
                     <div
                       onClick={handlePullLever}
                       title="Pull lever to increment visitor count!"
-                      className={`group relative cursor-pointer transition-transform duration-200 ${
+                      className={`group relative cursor-pointer transition-transform duration-200 shrink-0 ${
                         isLeverPulled ? "translate-y-2 rotate-12 scale-95" : "hover:translate-y-0.5"
                       }`}
                     >
@@ -420,9 +402,9 @@ export default function CorkboardGuestbook() {
               </div>
             ) : (
               <>
-                {/* Latest Sticky Notes Grid (Fills Corkboard Space) */}
+                {/* Top 6 Sticky Notes Grid */}
                 <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1">
-                  {latestNotes.map((note) => {
+                  {latestSixNotes.map((note) => {
                     const stampObj = STAMP_PRESETS[note.stampKey] ?? STAMP_PRESETS["chaiApproved"]!;
 
                     return (
@@ -478,9 +460,27 @@ export default function CorkboardGuestbook() {
                   })}
                 </div>
 
+                {/* Pinned Paper Note Indicator for Older Notes */}
+                {hasMoreThanSix && (
+                  <div
+                    onClick={handleScrollToOlderNotes}
+                    title="Click to scroll to older notes"
+                    className="relative z-20 my-4 cursor-pointer transition-transform hover:scale-[1.02] active:scale-95 flex justify-center"
+                  >
+                    <div className="relative paper-grid torn-paper bg-[#f4ead6] text-[#201c16] px-4 py-2 rounded-[4px] shadow-md border-2 border-[#201c16]/30 rotate-[-1deg] flex items-center justify-between gap-2 max-w-full">
+                      <p className="font-['Caveat',cursive] text-sm sm:text-base font-bold text-[#201c16] truncate min-w-0">
+                        📌 There are {olderNotesCount} older notes below — scroll board down to view ↴
+                      </p>
+                      <span className="font-['Silkscreen',monospace] text-[8px] bg-amber-800 text-white px-2 py-0.5 rounded-[3px] shrink-0 font-bold whitespace-nowrap">
+                        +{olderNotesCount} OLDER
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 {/* Older Notes Grid (Rendered if notes > 6) */}
                 {hasMoreThanSix && (
-                  <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-6 mb-6">
+                  <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-2 mb-6">
                     {olderNotes.map((note) => {
                       const stampObj = STAMP_PRESETS[note.stampKey] ?? STAMP_PRESETS["chaiApproved"]!;
 
