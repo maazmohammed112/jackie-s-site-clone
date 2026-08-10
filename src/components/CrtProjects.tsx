@@ -91,7 +91,8 @@ export default function CrtProjects() {
       <div className="crt-monitor rounded-[34px] p-4 pb-0">
         <div className="crt-bezel relative rounded-[22px] p-5">
           <div
-            className={`crt-screen relative min-h-[300px] overflow-hidden rounded-2xl ${glitching ? "is-glitching" : ""}`}
+            onClick={() => window.dispatchEvent(new CustomEvent("maaz_crt_clicked"))}
+            className={`crt-screen relative min-h-[300px] overflow-hidden rounded-2xl cursor-pointer ${glitching ? "is-glitching" : ""}`}
           >
             <div
               className={`relative z-[2] flex min-h-[240px] flex-col gap-3 px-5 pb-16 pt-6 sm:flex-row sm:gap-4 ${glitching ? "crt-jitter" : ""}`}
@@ -124,9 +125,12 @@ export default function CrtProjects() {
 
             <button
               type="button"
-              onClick={next}
+              onClick={(e) => {
+                e.stopPropagation();
+                next();
+              }}
               aria-label="Next project"
-              className="crt-next absolute bottom-4 right-4 z-[4] flex h-11 w-11 items-center justify-center"
+              className="crt-next absolute bottom-4 right-4 z-[4] flex h-11 w-11 items-center justify-center cursor-pointer"
             >
               <span className="crt-arrow" />
             </button>

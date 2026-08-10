@@ -205,10 +205,10 @@ export default function SmartMaazAssistant() {
               /* Custom CRT Monitor Clicked Funny Message */
               <div className="font-['Caveat',cursive] text-base sm:text-lg leading-snug text-[#201c16] space-y-2 mb-3">
                 <p className="font-bold text-emerald-800 text-lg">
-                  Hey! I know it's glitching!
+                  Yooooo! Just click on the next icon button!
                 </p>
                 <p>
-                  Don't worry, Techwazzy technician is already on the way with a bigger hammer to fix it! Hahahha!
+                  What else should I explain for this also? Grow up now, hahahha!
                 </p>
               </div>
             ) : customMsgType === "crackedPhone" ? (
