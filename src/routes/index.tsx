@@ -20,6 +20,7 @@ import TechWorldMemoriesConsole from "@/components/TechWorldMemoriesConsole";
 import CorkboardGuestbook from "@/components/CorkboardGuestbook";
 import LaunchToTopWidgets from "@/components/LaunchToTopWidgets";
 import GlitchCrtBuddy from "@/components/GlitchCrtBuddy";
+import VintageVinylPlayer from "@/components/VintageVinylPlayer";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -596,7 +597,7 @@ function ClickBurst() {
 
 function PinnedPoster() {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const posterRef = useRef<HTMLButtonElement>(null);
+  const posterRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState(false);
 
@@ -630,13 +631,13 @@ function PinnedPoster() {
       const dist = center - vh / 2;
       const range = vh / 2 + r.height / 2;
 
-      // Calculate progress 0 (hidden behind console) to 1 (fully revealed out from behind)
+      // Progress 0 (hidden behind upper turntable) to 1 (fully revealed in center view)
       const t = Math.min(1, Math.max(0, 1 - dist / (range * 0.75)));
 
-      // Smoothly slide translateY from -120px (behind console) to 0px out in the open
-      const translateY = (1 - t) * -120;
-      const rotate = -3 + t * 3;
-      const opacity = 0.35 + t * 0.65;
+      // Smoothly slide translateY from -60px (behind upper section) to +110px (100% completely out in full view)
+      const translateY = -60 + t * 170;
+      const rotate = -4 + t * 4;
+      const opacity = 0.3 + t * 0.7;
 
       posterEl.style.transform = `translateY(${translateY}px) rotate(${rotate}deg)`;
       posterEl.style.opacity = `${opacity}`;
@@ -661,47 +662,44 @@ function PinnedPoster() {
 
   return (
     <>
-      <div ref={wrapRef} className="flex relative z-0 -mt-24 sm:-mt-32 justify-center scale-90 sm:scale-100 pointer-events-auto">
-        <button
+      <div ref={wrapRef} className="flex relative z-10 -mt-24 sm:-mt-28 justify-center scale-90 sm:scale-100 pointer-events-auto my-12 mb-28">
+        <div
           ref={posterRef}
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Open portrait of Mohammed Maaz"
-          className="relative rounded-[10px] bg-paper p-4 pt-9 shadow-[var(--shadow-paper)] cursor-pointer"
+          className="group relative rounded-[14px] bg-paper p-4 pt-9 shadow-[var(--shadow-paper)] border-2 border-primary/30 transition-all duration-300"
         >
+          {/* Top Wooden / Metallic Pin Pinhead */}
           <span
             aria-hidden="true"
-            className="absolute left-1/2 top-3 h-4 w-4 -translate-x-1/2 rounded-full bg-primary shadow-[0_2px_6px_rgba(0,0,0,.45)]"
+            className="absolute left-1/2 top-3.5 h-4.5 w-4.5 -translate-x-1/2 rounded-full bg-primary shadow-[0_3px_8px_rgba(0,0,0,.5)] border border-white/40 z-20"
           />
-          <img
-            src={maazPoster.url}
-            alt="Portrait of Mohammed Maaz with a hand-drawn mecha helmet doodle"
-            loading="lazy"
-            className="w-56 rounded-[4px] md:w-72"
-          />
-          <span className="mt-3 block text-center font-hand text-2xl text-ink/80">
-            pinned — that's me
-          </span>
-        </button>
-      </div>
 
-      {/* play my portfolio film */}
-      <div className="relative z-10 mt-6 flex justify-center px-4">
-        <button
-          type="button"
-          onClick={() => setVideo(true)}
-          className="group flex max-w-full items-center gap-3 rounded-[14px] border-[3px] border-primary bg-paper/95 px-5 py-3 text-left shadow-[0_14px_30px_rgba(0,0,0,.4)] transition-transform hover:-rotate-1"
-        >
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary text-background">
-            <svg viewBox="0 0 24 24" className="h-5 w-5 translate-x-[1px]" fill="currentColor" aria-hidden="true">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </span>
-          <span className="min-w-0">
-            <span className="block font-marker text-sm text-primary">play my portfolio film</span>
-            <span className="block truncate font-hand text-xl text-ink/70">15 seconds · paper-craft cinema</span>
-          </span>
-        </button>
+          {/* Clean Poster Image Container (Clicking opens sticker photo modal) */}
+          <div className="relative overflow-hidden rounded-[8px] cursor-pointer" onClick={() => setOpen(true)}>
+            <img
+              src={maazPoster.url}
+              alt="Portrait of Mohammed Maaz with a hand-drawn mecha helmet doodle"
+              loading="lazy"
+              className="w-56 md:w-72 rounded-[6px] object-cover filter brightness-95 transition-transform duration-300 group-hover:scale-[1.02]"
+            />
+          </div>
+
+          <div className="mt-3 flex items-center justify-between px-1">
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="font-hand text-2xl text-ink/80 hover:text-primary transition-colors text-left"
+            >
+              pinned — that's me
+            </button>
+            <button
+              type="button"
+              onClick={() => setVideo(true)}
+              className="font-['Silkscreen',monospace] text-[10px] text-primary hover:bg-primary hover:text-white border border-primary/40 px-2.5 py-1 rounded-[4px] font-bold transition-all cursor-pointer shadow-xs active:scale-95 flex items-center gap-1"
+            >
+              VIEW FILM ▶
+            </button>
+          </div>
+        </div>
       </div>
 
       {video && (
@@ -1070,6 +1068,11 @@ function PageBody() {
         {/* TECHWAZZY MEMORIES CONSOLE */}
         <section id="memories" className="relative z-20 mt-16 md:mt-24" data-reveal>
           <TechWorldMemoriesConsole />
+        </section>
+
+        {/* VINTAGE VINYL TURNTABLE */}
+        <section id="turntable" className="relative z-20 mt-16 md:mt-24" data-reveal>
+          <VintageVinylPlayer />
         </section>
 
         {/* CONNECT */}

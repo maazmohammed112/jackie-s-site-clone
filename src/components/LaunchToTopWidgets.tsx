@@ -14,8 +14,9 @@ const DESTINATIONS: FlightDestination[] = [
   { id: "education", label: "EDUCATION & DEGREE", subtitle: "FLIGHT 04 • B.E. DATA SCIENCE", anchorId: "education" },
   { id: "certifications", label: "CERTIFICATIONS", subtitle: "FLIGHT 05 • SAP & AI BADGES", anchorId: "certifications" },
   { id: "memories", label: "TECH MEMORIES CONSOLE", subtitle: "FLIGHT 06 • RETRO LCD CONSOLE", anchorId: "memories" },
-  { id: "guestbook", label: "STUDIO GUESTBOOK", subtitle: "FLIGHT 07 • REACTION STAMP BOARD", anchorId: "guestbook" },
-  { id: "connect", label: "CONNECT & CONTACT", subtitle: "FLIGHT 08 • LET'S CHAT & EMAIL", anchorId: "connect" },
+  { id: "turntable", label: "VINTAGE VINYL TURNTABLE", subtitle: "FLIGHT 07 • STEREO RECORD PLAYER", anchorId: "turntable" },
+  { id: "guestbook", label: "STUDIO GUESTBOOK", subtitle: "FLIGHT 08 • REACTION STAMP BOARD", anchorId: "guestbook" },
+  { id: "connect", label: "CONNECT & CONTACT", subtitle: "FLIGHT 09 • LET'S CHAT & EMAIL", anchorId: "connect" },
 ];
 
 export default function LaunchToTopWidgets() {
