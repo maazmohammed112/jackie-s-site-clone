@@ -17,9 +17,12 @@ export default function SpotlightIllustrationReveal({
   const colorImgRef = useRef<HTMLImageElement | null>(null);
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
-  // Permanent Full Paint Unlock State
+  // Permanent Full Paint Unlock State & Cinematic Transition
   const [isFullyPainted, setIsFullyPainted] = useState(false);
   const isFullyPaintedRef = useRef(false);
+  const unlockStartTime = useRef<number | null>(null);
+  const unlockStartPos = useRef({ x: 512, y: 512 });
+  const UNLOCK_DURATION = 2400; // 2.4s cinematic slow reveal
 
   // Animation & coordinate state
   const targetPos = useRef({ x: 512, y: 512 });
@@ -39,7 +42,7 @@ export default function SpotlightIllustrationReveal({
 
   const CANVAS_SIZE = 1024;
   const SPOTLIGHT_RADIUS = 260; // Normal hover size
-  const FULL_PAINT_RADIUS = 1550; // Covers entire 1024x1024 diagonally
+  const FULL_PAINT_RADIUS = 1600; // Covers entire canvas
 
   // Helper to draw handwritten quote directly onto the sign
   const drawSignText = (ctx: CanvasRenderingContext2D, isColorMode: boolean) => {
@@ -152,13 +155,13 @@ export default function SpotlightIllustrationReveal({
       // Draw rich warm color text onto the color sign
       drawSignText(offCtx, true);
 
-      // Create smooth, feathered radial alpha mask
+      // Create smooth, feathered radial alpha mask with cinematic soft fade
       offCtx.globalCompositeOperation = "destination-in";
       const radGrad = offCtx.createRadialGradient(x, y, 0, x, y, r);
       radGrad.addColorStop(0, "rgba(0, 0, 0, 1.0)");
-      radGrad.addColorStop(0.4, "rgba(0, 0, 0, 0.98)");
-      radGrad.addColorStop(0.75, "rgba(0, 0, 0, 0.65)");
-      radGrad.addColorStop(0.9, "rgba(0, 0, 0, 0.25)");
+      radGrad.addColorStop(0.45, "rgba(0, 0, 0, 0.98)");
+      radGrad.addColorStop(0.78, "rgba(0, 0, 0, 0.65)");
+      radGrad.addColorStop(0.92, "rgba(0, 0, 0, 0.22)");
       radGrad.addColorStop(1, "rgba(0, 0, 0, 0.0)");
 
       offCtx.fillStyle = radGrad;
@@ -174,16 +177,16 @@ export default function SpotlightIllustrationReveal({
       ctx.globalAlpha = op;
       ctx.drawImage(offCanvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-      // 3. Draw soft magical highlight aura ring around spotlight edge (only when not fully bloomed)
-      if (r < FULL_PAINT_RADIUS * 0.7) {
-        const auraGrad = ctx.createRadialGradient(x, y, r * 0.7, x, y, r * 1.05);
+      // 3. Draw soft magical highlight shimmer aura ring around expanding reveal wave
+      if (r < FULL_PAINT_RADIUS * 0.9) {
+        const auraGrad = ctx.createRadialGradient(x, y, r * 0.72, x, y, r * 1.06);
         auraGrad.addColorStop(0, "rgba(255, 240, 200, 0.0)");
-        auraGrad.addColorStop(0.5, `rgba(255, 235, 180, ${(0.18 * op).toFixed(3)})`);
+        auraGrad.addColorStop(0.5, `rgba(255, 235, 170, ${(0.24 * op).toFixed(3)})`);
         auraGrad.addColorStop(1, "rgba(255, 240, 200, 0.0)");
 
         ctx.fillStyle = auraGrad;
         ctx.beginPath();
-        ctx.arc(x, y, r * 1.05, 0, Math.PI * 2);
+        ctx.arc(x, y, r * 1.06, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -191,11 +194,41 @@ export default function SpotlightIllustrationReveal({
     }
   }, [imagesLoaded]);
 
-  // 60fps RAF Lerping Loop
+  // 60fps Animation Loop with Cinematic Easing for Full Unlock
   const animate = useCallback(() => {
-    // Slower, more majestic bloom when fully unlocking
-    const lerp = isFullyPaintedRef.current ? 0.065 : 0.18;
+    if (unlockStartTime.current !== null) {
+      // Cinematic slow logo reveal progression
+      const elapsed = performance.now() - unlockStartTime.current;
+      const rawProgress = Math.min(1, elapsed / UNLOCK_DURATION);
 
+      // Luxurious cubic ease-out curve
+      const easeProgress = 1 - Math.pow(1 - rawProgress, 3.5);
+
+      const startX = unlockStartPos.current.x;
+      const startY = unlockStartPos.current.y;
+      // Gently drift center toward the middle for a balanced full-frame finish
+      currentPos.current.x = startX + (512 - startX) * easeProgress * 0.65;
+      currentPos.current.y = startY + (512 - startY) * easeProgress * 0.65;
+
+      currentRadius.current = 120 + (FULL_PAINT_RADIUS - 120) * easeProgress;
+      currentOpacity.current = Math.min(1, 0.3 + easeProgress * 0.7);
+
+      drawFrame();
+
+      if (rawProgress < 1) {
+        rafId.current = requestAnimationFrame(animate);
+      } else {
+        // Complete full paint state
+        currentRadius.current = FULL_PAINT_RADIUS;
+        currentOpacity.current = 1.0;
+        drawFrame();
+        rafId.current = null;
+      }
+      return;
+    }
+
+    // Normal interactive hover / peek tracking
+    const lerp = 0.18;
     currentPos.current.x += (targetPos.current.x - currentPos.current.x) * lerp;
     currentPos.current.y += (targetPos.current.y - currentPos.current.y) * lerp;
     currentRadius.current += (targetRadius.current - currentRadius.current) * lerp;
@@ -242,22 +275,22 @@ export default function SpotlightIllustrationReveal({
     };
   };
 
-  // Full Paint Unlock Trigger on Click / Tap
+  // Cinematic Logo-Style Full Paint Unlock Trigger on Click / Tap
   const handleFullPaintUnlock = (clientX?: number, clientY?: number) => {
     if (isFullyPaintedRef.current) return;
     isFullyPaintedRef.current = true;
     setIsFullyPainted(true);
     setHasInteracted(true);
 
-    if (clientX !== undefined && clientY !== undefined) {
-      const coords = getCanvasCoords(clientX, clientY);
-      targetPos.current = coords;
-    } else {
-      targetPos.current = { x: 512, y: 512 };
-    }
+    const startCoords =
+      clientX !== undefined && clientY !== undefined
+        ? getCanvasCoords(clientX, clientY)
+        : { x: 512, y: 512 };
 
-    targetRadius.current = FULL_PAINT_RADIUS;
-    targetOpacity.current = 1.0;
+    unlockStartPos.current = startCoords;
+    currentPos.current = startCoords;
+    unlockStartTime.current = performance.now();
+
     ensureAnimation();
   };
 
@@ -266,7 +299,7 @@ export default function SpotlightIllustrationReveal({
     setHasInteracted(true);
     if (touchTimer.current) clearTimeout(touchTimer.current);
 
-    // If not yet unlocked, trigger full watercolor unlock transition on tap/click!
+    // If not yet unlocked, trigger cinematic watercolor slow reveal on tap/click!
     if (!isFullyPaintedRef.current) {
       handleFullPaintUnlock(e.clientX, e.clientY);
       return;
@@ -276,7 +309,7 @@ export default function SpotlightIllustrationReveal({
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    // If already fully painted, no need to shrink
+    // If already fully painted, keep full painting visible
     if (isFullyPaintedRef.current) return;
 
     if (!isHoveredRef.current && e.pointerType === "mouse") {
@@ -361,7 +394,7 @@ export default function SpotlightIllustrationReveal({
       aria-label="Interactive illustration of Maaz holding 'Chai is important while coding' sign. Click or tap to paint fully in watercolor."
       role="img"
     >
-      {/* High Performance 2D Canvas for Spotlight Color Reveal & Drawn Quote */}
+      {/* High Performance 2D Canvas for Cinematic Spotlight & Full Paint Reveal */}
       <canvas
         ref={canvasRef}
         width={CANVAS_SIZE}
