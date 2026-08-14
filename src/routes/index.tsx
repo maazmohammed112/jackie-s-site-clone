@@ -21,6 +21,7 @@ import CorkboardGuestbook from "@/components/CorkboardGuestbook";
 import LaunchToTopWidgets from "@/components/LaunchToTopWidgets";
 import GlitchCrtBuddy from "@/components/GlitchCrtBuddy";
 import VintageVinylPlayer from "@/components/VintageVinylPlayer";
+import SpotlightIllustrationReveal from "@/components/SpotlightIllustrationReveal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -964,13 +965,7 @@ function PageBody() {
                   <MapPin className="h-4 w-4" /> Bengaluru, India • GMT +5:30
                 </p>
               </div>
-              <img
-                src={heroDoodle}
-                alt="Hand-drawn sketch of a small character holding a card in front of a browser window surrounded by plants and birds"
-                width={1024}
-                height={1024}
-                className="mx-auto w-full max-w-sm"
-              />
+              <SpotlightIllustrationReveal className="mx-auto w-full max-w-sm" />
             </div>
           </PaperCard>
         </section>
